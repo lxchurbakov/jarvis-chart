@@ -9,9 +9,8 @@ import RenderProvider from './providers/RenderProvider';
 import MatrixProvider from './providers/MatrixProvider';
 import MatrixTransformer from './providers/MatrixTransformer';
 
-import Candle from './components/Candle';
-
-const transform = (matrixB) => (matrixA) => Matrix.multiply(matrixA, matrixB);
+import Candles from './components/Candles';
+import EventsWindow from './components/EventsWindow';
 
 let lastClose = 50;
 
@@ -29,95 +28,60 @@ const generateRandomData = () => {
 
 const data = (new Array(100)).fill(0).map(() => generateRandomData());
 
+const onClick = () => console.log('onClick');
+const onPath = () => console.log('onPath');
+
 class Chart extends React.Component {
-  constructor() {
+  constructor () {
     super();
 
-    this.state = { scaleX: 1 };
+    this.state = {
+      scale: Matrix.identity(),
+      translate: Matrix.identity()
+    };
+  }
 
-    setInterval(() => {
-      this.setState((state) => ({ scaleX: state.scaleX + 0.001 }))
-    }, 20);
+  onZoom = (delta, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const modifier = Matrix.scale(1 - (delta / 1000), 1);
+
+    this.setState((state) => {
+      return {
+        scale: Matrix.multiply(state.scale, modifier)
+      };
+    });
+  }
+
+  onDrag = (x, y, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const modifier = Matrix.translate(x, 0);
+
+    this.setState((state) => {
+      return {
+        translate: Matrix.multiply(state.translate, modifier)
+      };
+    });
+  }
+
+  getMatrix = () => {
+    return Matrix.multiply(Matrix.translate(500, 0), Matrix.multiply(this.state.scale, this.state.translate));
   }
 
   render () {
-    const { scaleX } = this.state;
-
     return (
-      <RenderProvider render={SvgRender}>
-        <MatrixProvider matrix={Matrix.identity()}>
-
-          <MatrixTransformer transform={transform(Matrix.scale(scaleX, -4))}>
-            <MatrixTransformer transform={transform(Matrix.translate(0, -100))}>
-
-              {data.map(({ min, max, open, close }, index) => (
-                <MatrixTransformer key={index} transform={transform(Matrix.translate(index * 10, 0))}>
-                  <Candle min={min} max={max} open={open} close={close} />
-                </MatrixTransformer>
-              ))}
-
-            </MatrixTransformer>
-          </MatrixTransformer>
-
-        </MatrixProvider>
-      </RenderProvider>
+      <EventsWindow onClick={onClick} onZoom={this.onZoom} onDrag={this.onDrag} onPath={onPath}>
+        <RenderProvider render={SvgRender}>
+          <MatrixProvider matrix={this.getMatrix()}>
+            <Candles data={data} />
+          </MatrixProvider>
+        </RenderProvider>
+      </EventsWindow>
     );
   }
 };
-
-/*
-<RenderProvider render={SvgRender}>
-  <ChartWindow>
-    <ChartDataGraph type="candles" data={data} />
-    <ChartDataLegend type="candles" data={data} />
-    <ChartDataDraws draws={draws} />
-  </ChartWindow>
-</RenderProvider>
-*/
-
-/*
-const Candle = ({ max, min, open, close }) => {
-  const lineDiff = max - min;
-  const topPadding = max - Math.max(open, close);
-  const bodyDiff = Math.abs(open - close);
-  const bodyDirection = open < close ? 'up' : 'down';
-
-  const color = bodyDirection === 'up' ? '#15E6C1' : '#FA2C50';
-
-  // Assume width is 10
-  return (
-    <Group>
-      <Line x0={5} y0={0} x1={5} y1={lineDiff} color={color} width={1} />
-      <Transform matrix={Matrix.translate(0, topPadding)}>
-        <Rectangle width={10} height={bodyDiff} color={color} />
-      </Transform>
-    </Group>
-  );
-};
-
-const translate = Matrix.translate(100, 0);
-const rotate = Matrix.rotate(Matrix.toRad(30));
-
-const matrix = Matrix.mul(rotate, translate);
-const matrixTransform = matrix.toCss();
-
-<div style={{ position: 'relative', width: 400, height: '400px', background: '#f0f0f0' }}>
-  <svg width="400" height="400">
-    <Transform matrix={Matrix.translate(0, 100)}>
-      <Transform matrix={Matrix.scale(1, -1)}>
-        <Transform matrix={Matrix.translate(0, 0)}>
-          <Candle max={90} min={45} open={50} close={70} />
-        </Transform>
-        <Transform matrix={Matrix.translate(15, 0)}>
-          <Candle max={85} min={12} open={70} close={20} />
-        </Transform>
-        <Transform matrix={Matrix.translate(30, 0)}>
-          <Candle max={36} min={0} open={20} close={10} />
-        </Transform>
-      </Transform>
-    </Transform>
-  </svg>
-</div>
-*/
 
 export default Chart;
