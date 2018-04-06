@@ -2,21 +2,51 @@ import React from 'react';
 
 import Matrix from '../matrix';
 
-import SvgRender from './render/SvgRender';
-import CanvasRender from './render/CanvasRender';
+import SvgRender from './render/svg';
+import CanvasRender from './render/canvas';
 
 import RenderProvider from './providers/RenderProvider';
 import MatrixProvider from './providers/MatrixProvider';
+import MatrixTransformer from './providers/MatrixTransformer';
 
-import Circle from './elements/Circle';
+import Candle from './components/Candle';
+
+const transform = (matrixB) => (matrixA) => Matrix.multiply(matrixA, matrixB);
+
+let lastClose = 50;
+
+const generateRandomData = () => {
+  const open = lastClose;
+  const close = Math.min(90, Math.max(10, open + (Math.random() * 30) - 15));
+
+  lastClose = close;
+
+  const min = Math.max(5, Math.min(close, open) - Math.random() * 20);
+  const max = Math.min(95, Math.max(close, open) + Math.random() * 20);
+
+  return { min, max, close, open };
+};
+
+const data = (new Array(100)).fill(0).map(() => generateRandomData());
 
 class Chart extends React.Component {
   render () {
     return (
-      <RenderProvider render={CanvasRender}>
+      <RenderProvider render={SvgRender}>
         <MatrixProvider matrix={Matrix.identity()}>
-          <Circle cx={100} cy={100} radius={20} color="red" />
-          <Circle cx={100} cy={150} radius={40} color="red" />
+
+          <MatrixTransformer transform={transform(Matrix.scale(1.4, -4))}>
+            <MatrixTransformer transform={transform(Matrix.translate(0, -100))}>
+
+              {data.map(({ min, max, open, close }, index) => (
+                <MatrixTransformer key={index} transform={transform(Matrix.translate(index * 10, 0))}>
+                  <Candle min={min} max={max} open={open} close={close} />
+                </MatrixTransformer>
+              ))}
+
+            </MatrixTransformer>
+          </MatrixTransformer>
+
         </MatrixProvider>
       </RenderProvider>
     );
