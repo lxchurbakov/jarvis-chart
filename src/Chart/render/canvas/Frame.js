@@ -11,7 +11,26 @@ class Frame extends React.Component {
   constructor () {
     super();
 
-    this.canvasElementId = `canvas-${globalCanvasContextsCount++}`;
+    this.listeners = [];
+  }
+
+  renderFrame = (time) => {
+    const element = this.element;
+    const context = element.getContext("2d");
+
+    context.clearRect(0, 0, 1000, 1000);
+
+    this.listeners.forEach(listener => listener(context));
+
+    this.requestID = requestAnimationFrame(this.renderFrame);
+  }
+
+  componentDidMount () {
+    this.renderFrame();
+  }
+
+  componentWillUnmount () {
+    cancelAnimationFrame(this.requestID);
   }
 
   render () {
@@ -19,18 +38,16 @@ class Frame extends React.Component {
     const { children } = this.props;
 
     return (
-      <canvas id={canvasElementId} width="1000" height="1000">{children}</canvas>
+      <canvas ref={element => this.element = element} width="1000" height="1000">{children}</canvas>
     );
   }
 
   static childContextTypes = {
-    canvasElementId: PropTypes.any
+    listeners: PropTypes.any
   }
 
   getChildContext () {
-    const canvasElementId = this.canvasElementId;
-
-    return { canvasElementId };
+    return { listeners: this.listeners };
   }
 }
 

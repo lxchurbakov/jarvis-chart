@@ -30,12 +30,24 @@ const generateRandomData = () => {
 const data = (new Array(100)).fill(0).map(() => generateRandomData());
 
 class Chart extends React.Component {
+  constructor() {
+    super();
+
+    this.state = { scaleX: 1 };
+
+    setInterval(() => {
+      this.setState((state) => ({ scaleX: state.scaleX + 0.001 }))
+    }, 20);
+  }
+
   render () {
+    const { scaleX } = this.state;
+
     return (
-      <RenderProvider render={SvgRender}>
+      <RenderProvider render={CanvasRender}>
         <MatrixProvider matrix={Matrix.identity()}>
 
-          <MatrixTransformer transform={transform(Matrix.scale(1.4, -4))}>
+          <MatrixTransformer transform={transform(Matrix.scale(scaleX, -4))}>
             <MatrixTransformer transform={transform(Matrix.translate(0, -100))}>
 
               {data.map(({ min, max, open, close }, index) => (

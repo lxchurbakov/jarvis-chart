@@ -3,27 +3,24 @@ import PropTypes from 'prop-types';
 
 class CanvasElement extends React.Component {
   static contextTypes = {
-    canvasElementId: PropTypes.any
+    listeners: PropTypes.any
   }
 
-  canvasRender () {
+  constructor () {
+    super();
+
+  }
+
+  componentDidMount () {
+    this.context.listeners.push((context) => this.updateCanvas(context, this.props));
+  }
+
+  updateCanvas () {
     throw 'not implemented';
   }
 
   render () {
-    const { canvasElementId } = this.context;
-
-    const canvasElement = document.getElementById(canvasElementId);
-
-    if (canvasElement) {
-      this.canvasRender(canvasElement.getContext("2d"), this.props);
-    } else {
-      setTimeout(() => {
-        this.canvasRender(document.getElementById(canvasElementId).getContext("2d"), this.props);
-      }, 100);
-    }
-
-    return null;
+    return [];
   }
 }
 

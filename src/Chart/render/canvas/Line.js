@@ -2,7 +2,7 @@ import React from 'react';
 import CanvasElement from './CanvasElement';
 
 class Line extends CanvasElement {
-  canvasRender (context, props) {
+  updateCanvas (context, props) {
     const { x0, y0, x1, y1, color, width, matrix } = props;
 
     const x0real = x0 * matrix.get(0, 0) + y0 * matrix.get(0, 1) + 1 * matrix.get(0, 2);

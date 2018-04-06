@@ -2,7 +2,7 @@ import React from 'react';
 import CanvasElement from './CanvasElement';
 
 class Reactangle extends CanvasElement {
-  canvasRender (context, props) {
+  updateCanvas (context, props) {
     const { width, height, color, matrix } = props;
 
     const x0 = 0;
