@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Matrix from '../matrix';
+import Matrix from '../../matrix';
 
 import SvgRender from './render/svg';
 import CanvasRender from './render/canvas';
@@ -10,6 +10,7 @@ import MatrixProvider from './providers/MatrixProvider';
 import MatrixTransformer from './providers/MatrixTransformer';
 
 import Candles from './components/Candles';
+import Timeline from './components/Timeline';
 import EventsWindow from './components/EventsWindow';
 
 let lastClose = 50;
@@ -57,23 +58,34 @@ class Chart extends React.Component {
     this.setState((state) => ({ translateX: state.translateX + (x / this.state.zoomX), translateY: state.translateY - (y / this.state.zoomY) }));
   }
 
+  /**
+   * Create Main Chart Matrix
+   */
   getMatrix = () => {
-    return Matrix.multiply(Matrix.translate(500, 0), Matrix.multiply(this.state.scale, this.state.translate));
+    const zoomY      = Matrix.scale(1, 5);
+    const reverseY   = Matrix.scale(1, -1);
+    const translateY = Matrix.translate(0, 500);
+
+    const translateX    = Matrix.translate(this.state.translateX - 450, 0);
+    const zoomX         = Matrix.scale(this.state.zoomX, 1);
+    const translateBack = Matrix.translate(450, 0);
+
+    return Matrix.join(
+      zoomY,
+      reverseY, translateY, translateX,
+      zoomX,
+      translateBack,
+    );
   }
 
   render () {
     return (
       <div style={{ width: 900, height: 500, border: '1px dashed #ccc', overflow: 'hidden', margin: '0 auto' }}>
         <EventsWindow onClick={onClick} onZoom={this.onZoom} onDrag={this.onDrag} onPath={onPath}>
-          <RenderProvider render={SvgRender}>
-            /* Move the beginnig to the center */
-            <MatrixProvider matrix={Matrix.multiply(Matrix.translate(450, 250), Matrix.scale(1, -1))}>
-              /* Simple example of scaling */
-              <MatrixTransformer transform={Matrix.transform(Matrix.scale(this.state.zoomX, this.state.zoomY))}>
-                <MatrixTransformer transform={Matrix.transform(Matrix.translate(this.state.translateX, 0))}>
-                  <Candles data={data} />
-                </MatrixTransformer>
-              </MatrixTransformer>
+          <RenderProvider render={CanvasRender}>
+            <MatrixProvider matrix={this.getMatrix()}>
+              <Candles data={data} />
+              <Timeline data={data} nth={3} />
             </MatrixProvider>
           </RenderProvider>
         </EventsWindow>

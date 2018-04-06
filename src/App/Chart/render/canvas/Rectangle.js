@@ -1,9 +1,9 @@
 import React from 'react';
 import CanvasElement from './CanvasElement';
 
-import Matrix from '../../../matrix';
+import Matrix from '../../../../matrix';
 
-class Reactangle extends CanvasElement {
+class Rectangle extends CanvasElement {
   updateCanvas (context, props) {
     const { width, height, color, matrix } = props;
 
@@ -22,4 +22,4 @@ class Reactangle extends CanvasElement {
   }
 }
 
-export default Reactangle;
+export default Rectangle;

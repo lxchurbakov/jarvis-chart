@@ -19,6 +19,16 @@ class Matrix {
     return this.matrix[y][x];
   }
 
+  getValues () {
+    const [
+      [ a,  b, _0],
+      [ c,  d, _1],
+      [tx, ty, _2]
+    ] = this.matrix;
+
+    return { a, b, c, d, tx, ty };
+  }
+
   toCss () {
     const [
       [ a,  b, _0],
@@ -78,18 +88,22 @@ Matrix.rotate = (alpha) => {
 };
 
 Matrix.resetScale = (matrix, x = true, y = true) => {
-  const a = x ? (1 / matrix.get(0, 0)) : matrix.get(0, 0);
-  const b = matrix.get(1, 0);
-  const c = matrix.get(0, 1);
-  const d = y ? (1 / matrix.get(1, 1)) : matrix.get(1, 1);
-  const tx = matrix.get(0, 2);
-  const ty = matrix.get(1, 2);
+  const a = x ? (1 / matrix.get(0, 0)) : 1;
+  const b = 0;
+  const c = 0;
+  const d = y ? (1 / matrix.get(1, 1)) : 1;
+  const tx = 0;
+  const ty = 0;
 
   return new Matrix(a, b, c, d, tx, ty);
 };
 
+Matrix.resetTranslate = (matrix, x = true, y = true) => {
+  return Matrix.translate(x ? -matrix.get(0, 2) : 0, y ? -matrix.get(1, 2) : 0);
+};
+
 const matrixMultiplicationStep = (A, B, x, y) =>
-  A.get(x, 0) * B.get(0, y) + A.get(x, 1) * B.get(1, y) + A.get(x, 2) * B.get(2, y);
+  A.get(0, y) * B.get(x, 0) + A.get(1, y) * B.get(x, 1) + A.get(2, y) * B.get(x, 2);
 
 Matrix.multiply = (A, B) => {
   const a = matrixMultiplicationStep(A, B, 0, 0);
@@ -103,6 +117,8 @@ Matrix.multiply = (A, B) => {
   return new Matrix(a, b, c, d, tx, ty);
 };
 
+Matrix.join = (...matrixes) => matrixes.reduce((result, matrix) => Matrix.multiply(result, matrix), Matrix.identity());
+
 Matrix.apply = (A, B) => {
   const [a, b] = A;
 
@@ -112,8 +128,8 @@ Matrix.apply = (A, B) => {
   return [ areal, breal ];
 };
 
-Matrix.transform     = (B) => (A) => Matrix.multiply(A, B);
-Matrix.transformLeft = (A) => (B) => Matrix.multiply(A, B);
+Matrix.transformRight = (B) => (A) => Matrix.multiply(A, B);
+Matrix.transformLeft  = (A) => (B) => Matrix.multiply(A, B);
 
 Matrix.toRad = (alpha) => (alpha / 360) * Math.PI * 2;
 

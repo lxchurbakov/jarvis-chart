@@ -30,4 +30,10 @@ const Frame = ({ children }) => (
   </svg>
 );
 
+// const Text = ({ font, text, textAlign, color, matrix }) => (
+//   <Transform matrix={matrix}>
+//     <line x1={x0} y1={y0} x2={x1} y2={y1} style={{ stroke: color, strokeWidth: width }} />
+//   </Transform>
+// );
+
 export default { Frame, Group, Line, Rectangle };

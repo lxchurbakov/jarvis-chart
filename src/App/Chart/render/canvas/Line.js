@@ -1,7 +1,7 @@
 import React from 'react';
 import CanvasElement from './CanvasElement';
 
-import Matrix from '../../../matrix';
+import Matrix from '../../../../matrix';
 
 class Line extends CanvasElement {
   updateCanvas (context, props) {

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Matrix from '../../../matrix';
+import Matrix from '../../../../matrix';
 import MatrixTransformer from '../../providers/MatrixTransformer';
 
-import { Line, Rectangle, Group } from '../../elements';
+import { Line, Rectangle, Group, Text } from '../../elements';
 
 const Candle = ({ min, max, open, close }) => {
   const marginBottom = min;
@@ -17,7 +17,7 @@ const Candle = ({ min, max, open, close }) => {
   return (
     <Group>
       <Line x0={3.5} y0={marginBottom} x1={3.5} y1={marginBottom + lineHeight} color={color} />
-      <MatrixTransformer transform={matrix => Matrix.multiply(matrix, Matrix.translate(0, marginBottom + paddingBottom))}>
+      <MatrixTransformer transform={Matrix.transformLeft(Matrix.translate(0, marginBottom + paddingBottom))}>
         <Rectangle width={7} height={bodyHeight} color={color} />
       </MatrixTransformer>
     </Group>
