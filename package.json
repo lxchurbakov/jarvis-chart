@@ -17,6 +17,7 @@
   "homepage": "https://github.com/mcfinley/jarvis-chart#readme",
   "dependencies": {
     "extendme": "^1.0.0",
+    "prop-types": "^15.6.1",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
     "styled-components": "^3.2.5"
@@ -24,6 +25,7 @@
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-loader": "^7.1.4",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.1",
