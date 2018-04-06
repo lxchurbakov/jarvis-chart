@@ -14,8 +14,8 @@ class MatrixTransformer extends React.Component {
   };
 
   render() {
-    const { transform, matrix } = this.context;
-    const { children } = this.props;
+    const { matrix } = this.context;
+    const { transform, children } = this.props;
 
     return (
       <MatrixProvider matrix={transform(matrix)}>
