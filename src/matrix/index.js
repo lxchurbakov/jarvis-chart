@@ -31,7 +31,7 @@ class Matrix {
   }
 }
 
-Matrix.nope = (x, y) => {
+Matrix.identity = (x, y) => {
   const a = 1;
   const b = 0;
   const c = 0;
@@ -74,6 +74,17 @@ Matrix.rotate = (alpha) => {
   const d = cos;
   const tx = 0;
   const ty = 0;
+
+  return new Matrix(a, b, c, d, tx, ty);
+};
+
+Matrix.resetScale = (matrix, x = true, y = true) => {
+  const a = x ? (1 / matrix.get(0, 0)) : matrix.get(0, 0);
+  const b = matrix.get(1, 0);
+  const c = matrix.get(0, 1);
+  const d = y ? (1 / matrix.get(1, 1)) : matrix.get(1, 1);
+  const tx = matrix.get(0, 2);
+  const ty = matrix.get(1, 2);
 
   return new Matrix(a, b, c, d, tx, ty);
 };
