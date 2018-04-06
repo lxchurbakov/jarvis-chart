@@ -12,12 +12,6 @@ const Rectangle = ({ width, height, color, matrix }) => (
   </Transform>
 );
 
-const Circle = ({ cx, cy, radius, color, matrix }) => (
-  <Transform matrix={matrix}>
-    <circle cx={cx} cy={cy} r={radius} fill={color} />
-  </Transform>
-);
-
 const Line = ({ x0, y0, x1, y1, width = 1 , color, matrix }) => (
   <Transform matrix={matrix}>
     <line x1={x0} y1={y0} x2={x1} y2={y1} style={{ stroke: color, strokeWidth: width }} />
@@ -36,4 +30,4 @@ const Frame = ({ children }) => (
   </svg>
 );
 
-export default { Frame, Group, Circle, Line, Rectangle };
+export default { Frame, Group, Line, Rectangle };

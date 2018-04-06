@@ -44,7 +44,7 @@ class Chart extends React.Component {
     const { scaleX } = this.state;
 
     return (
-      <RenderProvider render={CanvasRender}>
+      <RenderProvider render={SvgRender}>
         <MatrixProvider matrix={Matrix.identity()}>
 
           <MatrixTransformer transform={transform(Matrix.scale(scaleX, -4))}>

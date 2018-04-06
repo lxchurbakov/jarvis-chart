@@ -104,6 +104,15 @@ Matrix.multiply = (A, B) => {
   return new Matrix(a, b, c, d, tx, ty);
 };
 
+Matrix.apply = (A, B) => {
+  const [a, b] = A;
+
+  const areal = a * B.get(0, 0) + b * B.get(0, 1) + 1 * B.get(0, 2);
+  const breal = a * B.get(1, 0) + b * B.get(1, 1) + 1 * B.get(1, 2);
+
+  return [ areal, breal ];
+};
+
 Matrix.toRad = (alpha) => (alpha / 360) * Math.PI * 2;
 
 export default Matrix;
