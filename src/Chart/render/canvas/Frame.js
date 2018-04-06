@@ -26,6 +26,15 @@ class Frame extends React.Component {
   }
 
   componentDidMount () {
+    const element = this.element;
+    const parentNode = element.parentNode;
+
+    const parentWidth = parentNode.offsetWidth;
+    const parentHeight = parentNode.offsetHeight;
+
+    this.element.width = parentWidth;
+    this.element.height = parentHeight;
+
     this.renderFrame();
   }
 
@@ -38,7 +47,7 @@ class Frame extends React.Component {
     const { children } = this.props;
 
     return (
-      <canvas ref={element => this.element = element} width="1000" height="1000">{children}</canvas>
+      <canvas ref={element => this.element = element} width="1" height="1">{children}</canvas>
     );
   }
 

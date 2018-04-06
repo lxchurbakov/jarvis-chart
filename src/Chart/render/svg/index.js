@@ -25,7 +25,7 @@ const Group = ({ children, ...props }) => (
 );
 
 const Frame = ({ children }) => (
-  <svg width="1000" height="1000">
+  <svg width="100%" height="100%">
     {children}
   </svg>
 );

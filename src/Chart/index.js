@@ -73,13 +73,15 @@ class Chart extends React.Component {
 
   render () {
     return (
-      <EventsWindow onClick={onClick} onZoom={this.onZoom} onDrag={this.onDrag} onPath={onPath}>
-        <RenderProvider render={SvgRender}>
-          <MatrixProvider matrix={this.getMatrix()}>
-            <Candles data={data} />
-          </MatrixProvider>
-        </RenderProvider>
-      </EventsWindow>
+      <div style={{width: 900, height: 500, border: '1px dashed #ccc', overflow: 'hidden', margin: '0 auto' }}>
+        <EventsWindow onClick={onClick} onZoom={this.onZoom} onDrag={this.onDrag} onPath={onPath}>
+          <RenderProvider render={CanvasRender}>
+            <MatrixProvider matrix={this.getMatrix()}>
+              <Candles data={data} />
+            </MatrixProvider>
+          </RenderProvider>
+        </EventsWindow>
+      </div>
     );
   }
 };
