@@ -92,7 +92,7 @@ Matrix.resetScale = (matrix, x = true, y = true) => {
 const matrixMultiplicationStep = (A, B, x, y) =>
   A.get(x, 0) * B.get(0, y) + A.get(x, 1) * B.get(1, y) + A.get(x, 2) * B.get(2, y);
 
-Matrix.mul = (A, B) => {
+Matrix.multiply = (A, B) => {
   const a = matrixMultiplicationStep(A, B, 0, 0);
   const b = matrixMultiplicationStep(A, B, 1, 0);
   const c = matrixMultiplicationStep(A, B, 0, 1);
