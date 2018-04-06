@@ -5,7 +5,6 @@
  * [ c,  d, 0]
  * [tx, ty, 1]
  *
- *
  */
 class Matrix {
   constructor (a, b, c, d, tx, ty) {
@@ -112,6 +111,9 @@ Matrix.apply = (A, B) => {
 
   return [ areal, breal ];
 };
+
+Matrix.transform     = (B) => (A) => Matrix.multiply(A, B);
+Matrix.transformLeft = (A) => (B) => Matrix.multiply(A, B);
 
 Matrix.toRad = (alpha) => (alpha / 360) * Math.PI * 2;
 

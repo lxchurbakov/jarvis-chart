@@ -36,8 +36,10 @@ class Chart extends React.Component {
     super();
 
     this.state = {
-      scale: Matrix.identity(),
-      translate: Matrix.identity()
+      zoomX: 1,
+      zoomY: 1,
+      translateX: 0,
+      translateY: 0,
     };
   }
 
@@ -45,26 +47,14 @@ class Chart extends React.Component {
     e.preventDefault();
     e.stopPropagation();
 
-    const modifier = Matrix.scale(1 - (delta / 1000), 1);
-
-    this.setState((state) => {
-      return {
-        scale: Matrix.multiply(state.scale, modifier)
-      };
-    });
+    this.setState((state) => ({ zoomX: state.zoomX - (delta / 1000), zoomY: state.zoomY - (delta / 1000) }));
   }
 
   onDrag = (x, y, e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const modifier = Matrix.translate(x, 0);
-
-    this.setState((state) => {
-      return {
-        translate: Matrix.multiply(state.translate, modifier)
-      };
-    });
+    this.setState((state) => ({ translateX: state.translateX + (x / this.state.zoomX), translateY: state.translateY - (y / this.state.zoomY) }));
   }
 
   getMatrix = () => {
@@ -73,11 +63,17 @@ class Chart extends React.Component {
 
   render () {
     return (
-      <div style={{width: 900, height: 500, border: '1px dashed #ccc', overflow: 'hidden', margin: '0 auto' }}>
+      <div style={{ width: 900, height: 500, border: '1px dashed #ccc', overflow: 'hidden', margin: '0 auto' }}>
         <EventsWindow onClick={onClick} onZoom={this.onZoom} onDrag={this.onDrag} onPath={onPath}>
-          <RenderProvider render={CanvasRender}>
-            <MatrixProvider matrix={this.getMatrix()}>
-              <Candles data={data} />
+          <RenderProvider render={SvgRender}>
+            /* Move the beginnig to the center */
+            <MatrixProvider matrix={Matrix.multiply(Matrix.translate(450, 250), Matrix.scale(1, -1))}>
+              /* Simple example of scaling */
+              <MatrixTransformer transform={Matrix.transform(Matrix.scale(this.state.zoomX, this.state.zoomY))}>
+                <MatrixTransformer transform={Matrix.transform(Matrix.translate(this.state.translateX, 0))}>
+                  <Candles data={data} />
+                </MatrixTransformer>
+              </MatrixTransformer>
             </MatrixProvider>
           </RenderProvider>
         </EventsWindow>
