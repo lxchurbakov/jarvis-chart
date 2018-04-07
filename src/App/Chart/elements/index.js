@@ -1,7 +1,9 @@
-import Line from './Line';
-import Rectangle from './Rectangle';
-import Group from './Group';
-import Circle from './Circle';
-import Text from './Text';
+import Proxy from './Proxy';
+
+const Line = Proxy('Line');
+const Rectangle = Proxy('Rectangle');
+const Group = Proxy('Group');
+const Circle = Proxy('Circle');
+const Text = Proxy('Text');
 
 export { Line, Rectangle, Group, Circle, Text };
