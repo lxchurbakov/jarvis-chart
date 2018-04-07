@@ -6,9 +6,9 @@ const Transform = ({ matrix, children, origin = 'auto' }) => (
   </g>
 );
 
-const Rectangle = ({ width, height, color, matrix }) => (
+const Rectangle = ({ x, y, width, height, color, matrix }) => (
   <Transform matrix={matrix}>
-    <rect width={width} height={height} style={{ fill: color }} />
+    <rect x={x} y={y} width={width} height={height} style={{ fill: color }} />
   </Transform>
 );
 

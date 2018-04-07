@@ -5,20 +5,19 @@ import Matrix from '../../../../matrix';
 
 class Rectangle extends CanvasElement {
   updateCanvas (context, props) {
-    const { width, height, color, matrix } = props;
+    const { x, y, width, height, color, matrix } = props;
 
-    const x0 = 0;
-    const y0 = 0;
-    const x1 = width;
-    const y1 = height;
+    const { a, b, c, d, tx, ty } = matrix.getValues();
 
-    const [ x0real, y0real ] = Matrix.apply([x0, y0], matrix);
-    const [ x1real, y1real ] = Matrix.apply([x1, y1], matrix);
-
+    context.save();
+    context.transform(a, b, c, d, tx, ty);
     context.beginPath();
-    context.rect(x0real, y0real, x1real - x0real, y1real - y0real);
+    context.rect(x, y, width, height);
     context.fillStyle = color;
     context.fill();
+    context.restore();
+
+
   }
 }
 

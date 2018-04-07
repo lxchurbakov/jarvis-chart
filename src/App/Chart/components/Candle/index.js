@@ -17,9 +17,7 @@ const Candle = ({ min, max, open, close }) => {
   return (
     <Group>
       <Line x0={3.5} y0={marginBottom} x1={3.5} y1={marginBottom + lineHeight} color={color} />
-      <MatrixTransformer transform={Matrix.transformLeft(Matrix.translate(0, marginBottom + paddingBottom))}>
-        <Rectangle width={7} height={bodyHeight} color={color} />
-      </MatrixTransformer>
+      <Rectangle x={0} y={marginBottom + paddingBottom} width={7} height={bodyHeight} color={color} />
     </Group>
   );
 };
