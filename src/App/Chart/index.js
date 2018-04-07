@@ -85,7 +85,7 @@ class Chart extends React.Component {
           <RenderProvider render={CanvasRender}>
             <MatrixProvider matrix={this.getMatrix()}>
               <Candles data={data} />
-              <Timeline data={data} nth={3} />
+              <Timeline data={data} nth={5} />
             </MatrixProvider>
           </RenderProvider>
         </EventsWindow>
