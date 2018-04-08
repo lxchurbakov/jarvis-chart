@@ -28,4 +28,4 @@ class OptionsProvider extends React.Component {
   };
 };
 
-export default RenderProvider;
+export default OptionsProvider;
