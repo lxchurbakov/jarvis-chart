@@ -82,7 +82,7 @@ class Chart extends React.Component {
     return (
       <div style={{ width: 900, height: 500, border: '1px dashed #ccc', overflow: 'hidden', margin: '0 auto' }}>
         <EventsWindow onClick={onClick} onZoom={this.onZoom} onDrag={this.onDrag} onPath={onPath}>
-          <RenderProvider render={CanvasRender}>
+          <RenderProvider render={SvgRender}>
             <MatrixProvider matrix={this.getMatrix()}>
               <Candles data={data} />
               <Timeline data={data} nth={5} />

@@ -4,12 +4,10 @@ import CanvasElement from './CanvasElement';
 import Matrix from '../../../../matrix';
 
 /**
- * Text Element implementations
+ * Text Element implementation
  *
  * props:
- *   fontWeight
- *   fontSize
- *   fontFamily
+ *   font
  *   text
  *   textAlign
  *   color
@@ -19,7 +17,7 @@ import Matrix from '../../../../matrix';
  */
 class Text extends CanvasElement {
   updateCanvas (context, props) {
-    const { font, text, matrix, textAlign = 'center', color = 'black' } = props;
+    const { x, y, font, text, matrix, textAlign = 'center', color = 'black' } = props;
 
     const { a, b, c, d, tx, ty } = matrix.getValues();
 
@@ -28,7 +26,7 @@ class Text extends CanvasElement {
     context.font = font;
     context.textAlign = textAlign;
     context.fillStyle = color;
-    context.fillText(text, 0, 0);
+    context.fillText(text, x, y);
     context.restore();
   }
 }

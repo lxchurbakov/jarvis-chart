@@ -7,17 +7,21 @@ class Line extends CanvasElement {
   updateCanvas (context, props) {
     const { x0, y0, x1, y1, color, width, matrix } = props;
 
-    const [ x0real, y0real ] = Matrix.apply([x0, y0], matrix);
-    const [ x1real, y1real ] = Matrix.apply([x1, y1], matrix);
+    const { a, b, c, d, tx, ty } = matrix.getValues();
+
+    context.save();
+    context.transform(a, b, c, d, tx, ty);
 
     context.beginPath();
-    context.moveTo(x0real, y0real);
-    context.lineTo(x1real, y1real);
+    context.moveTo(x0, y0);
+    context.lineTo(x1, y1);
     context.lineWidth = width;
 
     // set line color
     context.strokeStyle = color;
     context.stroke();
+
+    context.restore();
   }
 }
 
