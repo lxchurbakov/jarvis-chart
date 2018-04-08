@@ -1,0 +1,64 @@
+import createEventEmitter from './event-emitter';
+
+export default (node, options) => {
+  const div = document.createElement('div');
+
+  div.style.width  = "100%";
+  div.style.height = "100%";
+  div.style.position = "absolute";
+
+  node.appendChild(div);
+
+  const eventEmitter = createEventEmitter();
+
+  let inside = false;
+  let mousedown = false;
+  let lastpos = null;
+
+  div.addEventListener('wheel', (e) => {
+    eventEmitter.emit('wheel', { delta: e.deltaY, e });
+  });
+
+  div.addEventListener('click', (e) => {
+    eventEmitter.emit('click', e);
+  });
+
+  div.addEventListener('mousedown', (e) => {
+    eventEmitter.emit('mousedown', e);
+    mousedown = true;
+    lastpos = { x: e.clientX, y: e.clientY };
+  });
+
+  div.addEventListener('mouseup', (e) => {
+    eventEmitter.emit('mouseup', e);
+    mousedown = false;
+  });
+
+  div.addEventListener('mousemove', (e) => {
+    eventEmitter.emit('mousemove', e);
+
+    if (mousedown) {
+      if (lastpos) {
+        const x = e.clientX - lastpos.x;
+        const y = e.clientY - lastpos.y;
+
+        eventEmitter.emit('drag', { x, y, e });
+      }
+
+      lastpos = { x: e.clientX, y: e.clientY };
+    }
+  });
+
+  div.addEventListener('mouseover', (e) => {
+    eventEmitter.emit('mouseover', e);
+    inside = true;
+  });
+
+  div.addEventListener('mouseout', (e) => {
+    eventEmitter.emit('mouseout', e);
+    mousedown = false;
+    inside = false;
+  });
+
+  return eventEmitter;
+};

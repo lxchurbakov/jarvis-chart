@@ -2,11 +2,15 @@ const buildSvgContext = (node, options) => {
   const width  = node.offsetWidth;
   const height = node.offsetHeight;
 
-  node.innerHTML = `
-    <svg width='${width}' height='${height}'></svg>
-  `;
+  const xmlns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(xmlns, "svg");
 
-  const context = node.children[0];
+  svg.setAttributeNS(null, "width", width);
+  svg.setAttributeNS(null, "height", height);
+
+  node.appendChild(svg);
+
+  const context = svg;
 
   let content;
 
@@ -22,11 +26,14 @@ const buildCanvasContext = (node, options) => {
   const width  = node.offsetWidth;
   const height = node.offsetHeight;
 
-  node.innerHTML = `
-    <canvas id='canvas-0' width='${width}' height='${height}'></canvas>
-  `;
+  const canvas = document.createElement('canvas');
 
-  const context = node.children[0].getContext('2d');
+  canvas.width = width;
+  canvas.height = height;
+
+  node.appendChild(canvas);
+
+  const context = canvas.getContext('2d');
 
   context.clear = () => context.clearRect(0, 0, width, height);
   context.flush = () => { /* nope */ };

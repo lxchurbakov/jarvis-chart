@@ -63,6 +63,15 @@ Matrix.resetScale = (matrix, x = true, y = true) => {
   return new Matrix(a, b, c, d, tx, ty);
 };
 
+Matrix.dropScale = (matrix, x = true, y = true) => {
+  let { a, b, c, d, tx, ty } = matrix.getValues();
+
+  a = 1;
+  d = 1;
+
+  return new Matrix(a, b, c, d, tx, ty);
+};
+
 Matrix.resetTranslate = (matrix, x = true, y = true) =>
   Matrix.translate(x ? -matrix.get(0, 2) : 0, y ? -matrix.get(1, 2) : 0)
 

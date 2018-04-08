@@ -7,7 +7,7 @@ export default ({ matrix }, options, context, cb) => {
         `);
       }
 
-      cb();
+      cb(matrix);
 
       if (matrix) {
         context.push('</g>');
@@ -21,7 +21,7 @@ export default ({ matrix }, options, context, cb) => {
         context.transform(a, b, c, d, tx, ty);
       }
 
-      cb();
+      cb(matrix);
 
       if (matrix) {
         context.restore();
