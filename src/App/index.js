@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import Chart from './Chart';
 import Description from './Description';
 
-import UI from './UI';
-
 class App extends React.Component {
   render () {
     return (
@@ -13,7 +11,6 @@ class App extends React.Component {
         <Description />
         <div>
           <Chart ref={chart => this.chart = chart}/>
-          <UI />
         </div>
       </div>
     );

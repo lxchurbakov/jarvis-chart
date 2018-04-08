@@ -47,11 +47,12 @@ class Chart extends React.Component {
     const firstCandleVisible = -Math.floor(startOffset / candleWidth) - 1;
     const candlesVisibleCount = Math.ceil(900 / candleWidth) + 1;
 
-    return values.slice(Math.max(firstCandleVisible, 0), candlesVisibleCount + firstCandleVisible);
+    return { first: Math.max(firstCandleVisible, 0), count: candlesVisibleCount };
   }
 
   calculateAutoZoom = () => {
-    const candlesVisible = this.getVisibleCandles();
+    const { first, count } = this.getVisibleCandles();
+    const candlesVisible = values.slice(first, first + count);
 
     const max = candlesVisible.reduce((res, candle) => Math.max(res, candle.max), -Infinity);
     const min = candlesVisible.reduce((res, candle) => Math.min(res, candle.min), Infinity);
@@ -97,13 +98,15 @@ class Chart extends React.Component {
   )
 
   render () {
+    const { first, count } = this.getVisibleCandles();
+
     return (
       <div style={{ width: 900, height: 500, border: '1px dashed #ccc', overflow: 'hidden', margin: '0 auto' }}>
         <EventsWindow onClick={onClick} onZoom={this.onZoom} onDrag={this.onDrag} onPath={onPath}>
           <RenderProvider render={CanvasRender}>
             <MatrixProvider matrix={this.getMatrix()}>
 
-              <Data values={values} />
+              <Data values={values} first={first} count={count} />
               <Timeline values={values} nth={5} />
 
               <Priceline />

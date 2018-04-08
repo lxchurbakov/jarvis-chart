@@ -5,13 +5,15 @@ import MatrixTransformer from '../../providers/MatrixTransformer';
 
 import Candle from './Candle';
 
-const Candles = ({ values }) => {
+import { MatrixConsumer } from '../../elements'
+
+const Candles = ({ values, first, count }) => {
   return (
-    values.map(({ min, max, open, close }, index) => (
-      <MatrixTransformer key={index} transform={Matrix.transformLeft(Matrix.translate(index * 10, 0))}>
-        <Candle min={min} max={max} open={open} close={close} />
-      </MatrixTransformer>
-    ))
+    <MatrixConsumer>
+      {values.slice(first, first + count).map(({ min, max, open, close }, index) => (
+        <Candle x={(index + first) * 10} y={0} min={min} max={max} open={open} close={close} />
+      ))}
+    </MatrixConsumer>
   );
 };
 

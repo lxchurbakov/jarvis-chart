@@ -11,7 +11,11 @@ class CanvasElement extends React.Component {
   }
 
   componentDidMount () {
-    this.context.listeners.push((context) => this.updateCanvas(context, this.props));
+    this.index = this.context.listeners.push((context) => this.updateCanvas(context, this.props)) - 1;
+  }
+
+  componentWillUnmount () {
+    this.context.listeners[this.index] = null;
   }
 
   updateCanvas () {

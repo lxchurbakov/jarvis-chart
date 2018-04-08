@@ -5,7 +5,7 @@ import MatrixTransformer from '../../../providers/MatrixTransformer';
 
 import { Line, Rectangle, Group, Text } from '../../../elements';
 
-const Candle = ({ min, max, open, close }) => {
+const Candle = ({ x, y, min, max, open, close }) => {
   const marginBottom = min;
   const lineHeight = max - min;
   const bodyHeight = Math.abs(open - close);
@@ -16,8 +16,8 @@ const Candle = ({ min, max, open, close }) => {
 
   return (
     <Group>
-      <Line x0={3.5} y0={marginBottom} x1={3.5} y1={marginBottom + lineHeight} color={color} />
-      <Rectangle x={0} y={marginBottom + paddingBottom} width={7} height={bodyHeight} color={color} />
+      <Line x0={3.5 + x} y0={marginBottom + y} x1={3.5 + x} y1={marginBottom + lineHeight + y} color={color} />
+      <Rectangle x={0 + x} y={marginBottom + paddingBottom + y} width={7} height={bodyHeight} color={color} />
     </Group>
   );
 };

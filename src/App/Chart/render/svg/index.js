@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /* Helper for transformations */
 const Transform = ({ matrix, children, origin = 'auto' }) => matrix ? (
@@ -50,4 +51,28 @@ const Group = ({ children, ...props }) => (
   </g>
 );
 
-export default { Frame, Group, Line, Rectangle, Circle, Text };
+class MatrixConsumer extends React.Component {
+  static contextTypes = {
+    matrix: PropTypes.any
+  };
+
+  render () {
+    const { children } = this.props;
+    const { matrix } = this.context;
+    return (
+      <Transform matrix={matrix}>
+        {children}
+      </Transform>
+    );
+  }
+
+  getChildContext () {
+    return { matrix: null };
+  }
+
+  static childContextTypes = {
+    matrix: PropTypes.any
+  };
+}
+
+export default { Frame, Group, Line, Rectangle, Circle, Text, MatrixConsumer };

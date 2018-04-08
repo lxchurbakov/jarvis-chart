@@ -29,13 +29,17 @@ class Frame extends React.Component {
   /* Render all the listeners */
   renderFrame = (time) => {
     this.renderingContext.clearRect(0, 0, 1000, 1000);
-    this.listeners.forEach(listener => listener(this.renderingContext));
+    this.listeners.forEach(listener => listener && listener(this.renderingContext));
     this.requestID = requestAnimationFrame(this.renderFrame);
   }
 
   /* Since updating changes the element */
   componentDidUpdate () {
     this.updateRenderingContext();
+  }
+
+  shouldComponentUpdate() {
+    return false;
   }
 
   componentDidMount () {

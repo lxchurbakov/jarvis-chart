@@ -40,51 +40,16 @@ class Matrix {
   }
 }
 
-Matrix.identity = (x, y) => {
-  const a = 1;
-  const b = 0;
-  const c = 0;
-  const d = 1;
-  const tx = 0;
-  const ty = 0;
+Matrix.identity  = (x, y) => new Matrix(1, 0, 0, 1, 0, 0);
 
-  return new Matrix(a, b, c, d, tx, ty);
-};
-
-Matrix.scale = (x, y) => {
-  const a = x;
-  const b = 0;
-  const c = 0;
-  const d = y;
-  const tx = 0;
-  const ty = 0;
-
-  return new Matrix(a, b, c, d, tx, ty);
-};
-
-Matrix.translate = (x, y) => {
-  const a = 1;
-  const b = 0;
-  const c = 0;
-  const d = 1;
-  const tx = x;
-  const ty = y;
-
-  return new Matrix(a, b, c, d, tx, ty);
-};
+Matrix.scale     = (x, y) => new Matrix(x, 0, 0, y, 0, 0);
+Matrix.translate = (x, y) => new Matrix(1, 0, 0, 1, x, y);
 
 Matrix.rotate = (alpha) => {
   const cos = Math.cos(alpha)
   const sin = Math.sin(alpha);
 
-  const a = cos;
-  const b = sin;
-  const c = -sin;
-  const d = cos;
-  const tx = 0;
-  const ty = 0;
-
-  return new Matrix(a, b, c, d, tx, ty);
+  return new Matrix(cos, sin, -sin, cos, 0, 0);
 };
 
 Matrix.resetScale = (matrix, x = true, y = true) => {
@@ -98,9 +63,8 @@ Matrix.resetScale = (matrix, x = true, y = true) => {
   return new Matrix(a, b, c, d, tx, ty);
 };
 
-Matrix.resetTranslate = (matrix, x = true, y = true) => {
-  return Matrix.translate(x ? -matrix.get(0, 2) : 0, y ? -matrix.get(1, 2) : 0);
-};
+Matrix.resetTranslate = (matrix, x = true, y = true) =>
+  Matrix.translate(x ? -matrix.get(0, 2) : 0, y ? -matrix.get(1, 2) : 0)
 
 const matrixMultiplicationStep = (A, B, x, y) =>
   A.get(0, y) * B.get(x, 0) + A.get(1, y) * B.get(x, 1) + A.get(2, y) * B.get(x, 2);
