@@ -1,6 +1,6 @@
 const value = (min, max, open, close, time) => ({ min, max, open, close, time });
 
-export const values = [
+export default [
   value(13, 101,  20,  70, '15:34'),
   value(13, 101,  20,  70, '15:34'),
   value(16, 112,  70,  90, '15:35'),

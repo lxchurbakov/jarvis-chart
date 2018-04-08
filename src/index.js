@@ -5,6 +5,22 @@ import React from 'react';
 
 import App from "./App";
 
-const node = document.getElementById("root");
+import initChart from './jarvis-chart';
 
-ReactDOM.render(<App />, node);
+const root = document.getElementById('root');
+
+ReactDOM.render(<App />, root);
+
+const chart = document.getElementById('chart');
+
+/* Initialize Chart */
+const options  = { render: 'canvas' };
+const render = initChart(chart, options);
+
+let x = 1;
+
+render({ x: 1 })
+
+setInterval(() => {
+  render({ x: x++});
+}, 10);
