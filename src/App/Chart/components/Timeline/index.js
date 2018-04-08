@@ -18,7 +18,7 @@ const Timeline = ({ data, nth = 1 }) => {
                 <MatrixTransformer key={index} transform={Matrix.transformLeft(Matrix.translate(index * 10 + 3.5, 0))}>
                   <MatrixTransformer transform={matrix => Matrix.multiply(Matrix.resetScale(matrix), matrix)}>
                     <Circle cx={0} cy={0} color="#15E6C1" radius={3} />
-                    <Text x={0} y={20} font="normal 100 13px Open Sans" text="15:04" color="#ccc" textAlign="center" />
+                    <Text x={0} y={20} font="normal 100 13px Open Sans" text={`15:${(index / 100).toFixed(2).split('.')[1]}`} color="#ccc" textAlign="center" />
                   </MatrixTransformer>
                 </MatrixTransformer>
               ) : null

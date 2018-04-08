@@ -8,7 +8,6 @@ class CanvasElement extends React.Component {
 
   constructor () {
     super();
-
   }
 
   componentDidMount () {

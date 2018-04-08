@@ -11,16 +11,12 @@ class Line extends CanvasElement {
 
     context.save();
     context.transform(a, b, c, d, tx, ty);
-
     context.beginPath();
     context.moveTo(x0, y0);
     context.lineTo(x1, y1);
     context.lineWidth = width;
-
-    // set line color
     context.strokeStyle = color;
     context.stroke();
-
     context.restore();
   }
 }

@@ -3,18 +3,6 @@ import CanvasElement from './CanvasElement';
 
 import Matrix from '../../../../matrix';
 
-/**
- * Text Element implementation
- *
- * props:
- *   font
- *   text
- *   textAlign
- *   color
- *   x
- *   y
- *
- */
 class Text extends CanvasElement {
   updateCanvas (context, props) {
     const { x, y, font, text, matrix, textAlign = 'center', color = 'black' } = props;

@@ -69,9 +69,6 @@ class EventsWindow extends React.Component {
   }
 
   componentDidMount () {
-    console.log('listener has been mounted');
-    console.log(this.div);
-
     this.div.addEventListener('mouseover', this.mouseOver);
     this.div.addEventListener('mouseout', this.mouseOver);
     this.div.addEventListener('mousedown', this.mouseDown);

@@ -16,8 +16,6 @@ class Rectangle extends CanvasElement {
     context.fillStyle = color;
     context.fill();
     context.restore();
-
-
   }
 }
 
