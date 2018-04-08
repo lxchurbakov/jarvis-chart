@@ -9,14 +9,12 @@ import RenderProvider from './providers/RenderProvider';
 import MatrixProvider from './providers/MatrixProvider';
 import MatrixTransformer from './providers/MatrixTransformer';
 
-import Candles from './components/Candles';
+import Data from './components/Data';
 import Timeline from './components/Timeline';
 import Priceline from './components/Priceline';
 import EventsWindow from './components/EventsWindow';
 
-import generateRandomData from './data';
-
-const data = (new Array(100)).fill(0).map(() => generateRandomData());
+import { values } from './values';
 
 const onClick = () => console.log('onClick');
 const onPath  = () => console.log('onPath');
@@ -33,11 +31,44 @@ class Chart extends React.Component {
     };
   }
 
+  getVisibleCandles = () => {
+    const { translateX, zoomX } = this.state;
+    const matrix = this.getMatrix();
+
+    const start  = [ 0, 0];
+    const candle = [10, 0];
+
+    const startInValues = Matrix.apply(start, matrix);
+    const candleInValues = Matrix.apply(candle, matrix);
+
+    const startOffset = startInValues[0];
+    const candleWidth = candleInValues[0] - startInValues[0];
+
+    const firstCandleVisible = -Math.floor(startOffset / candleWidth) - 1;
+    const candlesVisibleCount = Math.ceil(900 / candleWidth) + 1;
+
+    return values.slice(Math.max(firstCandleVisible, 0), candlesVisibleCount + firstCandleVisible);
+  }
+
+  calculateAutoZoom = () => {
+    const candlesVisible = this.getVisibleCandles();
+
+    const max = candlesVisible.reduce((res, candle) => Math.max(res, candle.max), -Infinity);
+    const min = candlesVisible.reduce((res, candle) => Math.min(res, candle.min), Infinity);
+
+    const zoom = 500 / (max - min);
+    const translate = -min;
+
+    this.setState((state) => ({ zoomY: zoom }));
+    this.setState((state) => ({ translateY: translate }));
+  }
+
   onZoom = (delta, e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    this.setState((state) => ({ zoomX: state.zoomX - (delta / 1000), zoomY: state.zoomX - (delta / 1000), }));
+    this.setState((state) => ({ zoomX: state.zoomX - (delta / 1000), zoomY: state.zoomY - (delta / 1000), }));
+    this.calculateAutoZoom();
   }
 
   onDrag = (x, y, e) => {
@@ -45,6 +76,7 @@ class Chart extends React.Component {
     e.stopPropagation();
 
     this.setState((state) => ({ translateX: state.translateX + (x / state.zoomX), translateY: state.translateY - (y / state.zoomY) }));
+    this.calculateAutoZoom();
   }
 
   /**
@@ -55,9 +87,9 @@ class Chart extends React.Component {
     Matrix.translate(this.state.translateX, this.state.translateY),
 
     // Apply zoom (in the middle)
-    Matrix.translate(-450, -250),
+    Matrix.translate(-450, 0),
     Matrix.scale(this.state.zoomX, this.state.zoomY),
-    Matrix.translate(450, 250),
+    Matrix.translate(450, 0),
 
     // Make the left bottom corner the center of XY
     Matrix.scale(1, -1),
@@ -70,9 +102,12 @@ class Chart extends React.Component {
         <EventsWindow onClick={onClick} onZoom={this.onZoom} onDrag={this.onDrag} onPath={onPath}>
           <RenderProvider render={CanvasRender}>
             <MatrixProvider matrix={this.getMatrix()}>
-              <Candles data={data} />
-              <Timeline data={data} nth={5} />
+
+              <Data values={values} />
+              <Timeline values={values} nth={5} />
+
               <Priceline />
+
             </MatrixProvider>
           </RenderProvider>
         </EventsWindow>

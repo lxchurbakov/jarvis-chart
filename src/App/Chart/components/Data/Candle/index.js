@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Matrix from '../../../../matrix';
-import MatrixTransformer from '../../providers/MatrixTransformer';
+import Matrix from '../../../../../matrix';
+import MatrixTransformer from '../../../providers/MatrixTransformer';
 
-import { Line, Rectangle, Group, Text } from '../../elements';
+import { Line, Rectangle, Group, Text } from '../../../elements';
 
 const Candle = ({ min, max, open, close }) => {
   const marginBottom = min;

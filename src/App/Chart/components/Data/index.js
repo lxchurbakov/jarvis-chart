@@ -3,11 +3,11 @@ import React from 'react';
 import Matrix from '../../../../matrix';
 import MatrixTransformer from '../../providers/MatrixTransformer';
 
-import Candle from '../Candle';
+import Candle from './Candle';
 
-const Candles = ({ data }) => {
+const Candles = ({ values }) => {
   return (
-    data.map(({ min, max, open, close }, index) => (
+    values.map(({ min, max, open, close }, index) => (
       <MatrixTransformer key={index} transform={Matrix.transformLeft(Matrix.translate(index * 10, 0))}>
         <Candle min={min} max={max} open={open} close={close} />
       </MatrixTransformer>
