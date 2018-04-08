@@ -117,7 +117,17 @@ Matrix.multiply = (A, B) => {
   return new Matrix(a, b, c, d, tx, ty);
 };
 
-Matrix.join = (...matrixes) => matrixes.reduce((result, matrix) => Matrix.multiply(result, matrix), Matrix.identity());
+Array.prototype.reduceRight = function (predicate, defaultValue) {
+  let result = defaultValue;
+
+  for (let i = this.length - 1; i >= 0; --i) {
+    result = predicate(result, this[i], i, this);
+  }
+
+  return result;
+};
+
+Matrix.join = (...matrixes) => matrixes.reduceRight((result, matrix) => Matrix.multiply(matrix, result), Matrix.identity());
 
 Matrix.apply = (A, B) => {
   const [a, b] = A;
