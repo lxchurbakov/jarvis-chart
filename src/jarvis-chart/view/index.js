@@ -70,23 +70,80 @@ const attachEvents = doOnce((state, options, handler) => {
 
     handler.emit('world-click', { x: xworld, y: yworld });
   });
+
+  handler.on('path', ({ x, y }) => {
+    const [ xworld, yworld ] = Matrix.apply([x, y], matrixForWorld(state, options).reverse());
+
+    handler.emit('world-path', { x: xworld, y: yworld });
+  });
+
+  handler.on('mousedown', ({ x, y }) => {
+    const [ xworld, yworld ] = Matrix.apply([x, y], matrixForWorld(state, options).reverse());
+
+    handler.emit('world-mousedown', { x: xworld, y: yworld });
+  });
+
+  handler.on('mouseup', ({ x, y }) => {
+    const [ xworld, yworld ] = Matrix.apply([x, y], matrixForWorld(state, options).reverse());
+
+    handler.emit('world-mouseup', { x: xworld, y: yworld });
+  });
 });
+
+const modes = {
+  'view': 'Режим просмотра',
+  'points': 'Режим добавления точек',
+  'brush': 'Режим кисти',
+};
 
 export default (state, options, context, handler) => {
 
   attachEvents(state, options, handler);
 
-  const { values, elements } = state;
+  const { values, elements, brush, showIndicator } = state;
+
+
 
   group({ matrix: matrixForWorld(state, options) }, options, context, () => {
 
     dataset({ values }, options, context);
-    grid({ values }, options, context);
+    grid({ values, showIndicator }, options, context);
 
     elements.forEach((element) => {
-      group({ matrix: Matrix.join(Matrix.resetScale(context.matrix.get(), true, true), Matrix.translate(element.x, element.y)) }, options, context, () => {
-        circle({ cx: 0, cy: 0, radius: 20, color: 'red' }, options, context);
-      });
+      if (element.type === 'point') {
+        group({ matrix: Matrix.join(Matrix.resetScale(context.matrix.get(), true, true), Matrix.translate(element.x, element.y)) }, options, context, () => {
+          circle({ cx: 0, cy: 0, radius: 5, color: 'black' }, options, context);
+        });
+      } else if (element.type === 'brush') {
+        element.points.forEach((point, index) => {
+          if (index > 1) {
+            const prev = element.points[index - 1];
+
+            line({ x0: prev.x, y0: prev.y, x1: point.x, y1: point.y, color: '#ccc', width: 2 }, options, context);
+          }
+        });
+      }
     });
+
+    if (brush)
+      brush.forEach((point, index) => {
+        if (index > 1) {
+          const prev = brush[index - 1];
+
+          line({ x0: prev.x, y0: prev.y, x1: point.x, y1: point.y, color: '#ccc', width: 2 }, options, context);
+        }
+      });
   });
+
+  /* Метка режима */
+  text({ x: 15, y: 28, font: '100 13px Open Sans', textAlign: 'left', text: modes[state.mode] }, options, context);
+
+  /* Метка Автозума */
+  text({ x: 15, y: 45, font: '100 13px Open Sans', textAlign: 'left', text: 'Автоматический вертикальный зум ' + (state.autoZoomY ? 'включен' : 'выключен') }, options, context);
+
+  /* Метка Индикаторов */
+  text({ x: 15, y: 62, font: '100 13px Open Sans', textAlign: 'left', text: 'Индикатор ' + (state.showIndicator ? 'включен' : 'выключен') }, options, context);
+
+  /* Метка Индикаторов */
+  text({ x: 15, y: 79, font: '100 13px Open Sans', textAlign: 'left', text: 'Средство отрисовки: ' + (options.render) }, options, context);
 };

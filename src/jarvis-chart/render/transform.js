@@ -54,14 +54,13 @@ export default (options) => {
 
   /**
    * Check point for visibility
+   *
+   * TODO works not right
    */
   const crop = (x, y) => {
     const point = [x, y];
 
-    console.log(point)
-
     const [ x1, y1 ] = screen(point);
-    console.log({ x1, y1 })
 
     return crop.raw(x1, y1);
   };

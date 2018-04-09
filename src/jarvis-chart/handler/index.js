@@ -17,6 +17,7 @@ export default (node, options) => {
   let lasttime = null;
 
   div.addEventListener('wheel', (e) => {
+    e.preventDefault();
     eventEmitter.emit('wheel', { delta: e.deltaY, e });
   });
 
@@ -47,21 +48,21 @@ export default (node, options) => {
   div.addEventListener('mousemove', (e) => {
     eventEmitter.emit('mousemove', e);
 
-    {
-      const rect = e.target.getBoundingClientRect();
-
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      eventEmitter.emit('path', { x, y, e });
-    }
-
     if (mousedown) {
       if (lastpos) {
         const x = e.clientX - lastpos.x;
         const y = e.clientY - lastpos.y;
 
         eventEmitter.emit('drag', { x, y, e });
+
+        {
+          const rect = e.target.getBoundingClientRect();
+
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          eventEmitter.emit('path', { x, y, e });
+        }
       }
 
       lastpos = { x: e.clientX, y: e.clientY };

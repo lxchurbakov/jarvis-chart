@@ -18,7 +18,8 @@ export default (node, options) => {
     zoom: { x: 1, y: 1 },
     elements: [],
     values: options.values,
-    // autoZoomY: true
+    autoZoomY: false,
+    mode: 'view'
   };
 
   /* Chart API */

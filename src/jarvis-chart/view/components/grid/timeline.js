@@ -21,7 +21,7 @@ const matrixForTimepoint = (matrix, index) =>
     Matrix.translate(index * OFFSET + 3.5, 0)
   );
 
-export default ({ values, matrix }, options, context) => {
+export default ({ values, matrix, showIndicator }, options, context) => {
 
   group({ matrix: matrixForTimeline(context.matrix.get(), context.matrix.screen.dimensions().height - 40) }, options, context, () => {
     line({ x0: -20000, y0: 0, x1: 20000, y1: 0, color: '#ccc' }, options, context);
@@ -38,6 +38,23 @@ export default ({ values, matrix }, options, context) => {
 
     /* Draw only ten timepoints per screen */
     const nth    = Math.floor(count / 10);
+
+    if (showIndicator) {
+      values
+        .forEach(({ max, min, time }, index) => {
+          /* Draw only visible elements */
+          if (index < offset || index > offset + count) return;
+
+          group({ matrix: matrixForTimepoint(context.matrix.get(), index) }, options, context, () => {
+            const v = (max - min) / 10;
+
+            rectangle({ x: 0, y: - v, width: 7, height: v, color: '#15E6C155' }, options, context);
+            // circle({ cx: 0, cy: 0, radius: 3, color: '#15E6C1', crop: false }, options, context);
+            // text({ x: 0, y: 20, text: time, color: '#ccc', crop: false }, options, con/text);
+            // line({ x0: 0, y0: -2000, x1: 0, y1: 2000, color: '#ddd' }, options, context);
+          });
+        });
+    }
 
     values
       .forEach(({ time }, index) => {
