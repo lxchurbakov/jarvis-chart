@@ -1,4 +1,4 @@
-import createEventEmitter from './event-emitter';
+import EventEmitter from '../lib/event-emitter';
 
 export default (node, options) => {
   const div = document.createElement('div');
@@ -9,7 +9,7 @@ export default (node, options) => {
 
   node.appendChild(div);
 
-  const eventEmitter = createEventEmitter();
+  const eventEmitter = EventEmitter();
 
   let inside = false;
   let mousedown = false;

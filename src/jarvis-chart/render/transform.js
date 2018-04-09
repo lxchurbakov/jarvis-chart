@@ -1,4 +1,4 @@
-import Matrix from '../../matrix'
+import Matrix from '../lib/matrix'
 
 /**
  * Since we need to keep track of what is the current matrix, we need
@@ -58,7 +58,10 @@ export default (options) => {
   const crop = (x, y) => {
     const point = [x, y];
 
+    console.log(point)
+
     const [ x1, y1 ] = screen(point);
+    console.log({ x1, y1 })
 
     return crop.raw(x1, y1);
   };

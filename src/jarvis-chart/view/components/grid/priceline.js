@@ -4,7 +4,7 @@ import rectangle from '../../primitives/rectangle';
 import text from '../../primitives/text';
 import group from '../../primitives/group';
 
-import Matrix from '../../../../matrix';
+import Matrix from '../../../lib/matrix';
 
 const matrixForTimeline = (matrix, position) =>
   Matrix.join(

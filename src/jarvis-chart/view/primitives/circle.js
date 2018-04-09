@@ -1,10 +1,11 @@
 export default ({ cx, cy, radius, color, matrix, crop = true }, options, context) => {
-  /* Auto Crop Element when unseen */
-  if (
-    crop &&
-    !context.matrix.crop(cx - radius, cy - radius) &&
-    !context.matrix.crop(cx + radius, cy + radius)
-  ) return;
+  /* Auto Crop Element when invisible */
+  /* TODO does not work, screen coords are not calculated correctly */
+  // if (
+  //   crop &&
+  //   !context.matrix.crop(cx - radius, cy - radius) &&
+  //   !context.matrix.crop(cx + radius, cy + radius)
+  // ) return;
 
   switch (options.render) {
     case 'svg':

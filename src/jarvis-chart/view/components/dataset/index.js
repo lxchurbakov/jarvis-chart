@@ -4,7 +4,7 @@ import rectangle from '../../primitives/rectangle';
 import text from '../../primitives/text';
 import group from '../../primitives/group';
 
-import Matrix from '../../../../matrix';
+import Matrix from '../../../lib/matrix';
 
 const candle = ({ x, y, min, max, open, close }, options, context) => {
   const marginBottom = min;

@@ -1,3 +1,35 @@
+// import Matrix from '../matrix';
+
+// import buildContext from './view/context';
+// import buildRender from './view/render';
+
+// const context = buildContext(node, options);
+// const render  = buildRender(context, options);
+
+// handler.on('click', ({ x, y, e }) => {
+//   const matrix = render.matrix(state).reverse();
+//
+//   const [xreal, yreal] = Matrix.apply([ x, y ], matrix);
+//
+//   handler.emit('world-click', { x: xreal, y: yreal });
+// });
+//
+// handler.on('drag', ({ x, y, e }) => {
+//   const matrix = render.matrix(state).reverse();
+//
+//   const [xreal, yreal] = Matrix.apply([ x, y ], matrix);
+//
+//   handler.emit('world-drag', { x: xreal, y: yreal });
+// });
+//
+// handler.on('path', ({ x, y, e }) => {
+//   const matrix = render.matrix(state).reverse();
+//
+//   const [xreal, yreal] = Matrix.apply([ x, y ], matrix);
+//
+//   handler.emit('world-path', { x: xreal, y: yreal });
+// });
+
 import circle from './primitives/circle';
 import line from './primitives/line';
 import rectangle from './primitives/rectangle';
