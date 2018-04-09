@@ -1,11 +1,11 @@
 import "./index.html";
 
-import initChart from './jarvis-chart';
+import Chart from './jarvis-chart';
 import values from './values';
 
 const node = document.getElementById('chart');
 
-const api = initChart(node, {
+const api = Chart(node, {
   render: 'svg',
   values: values,
   redrawContinuously: false,

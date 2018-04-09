@@ -1,4 +1,4 @@
-import Matrix from '../../../matrix'
+import Matrix from '../../matrix'
 
 /**
  * Since we need to keep track of what is the current matrix, we need

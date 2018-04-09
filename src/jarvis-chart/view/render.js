@@ -1,15 +1,15 @@
-import circle from '../primitives/circle';
-import line from '../primitives/line';
-import rectangle from '../primitives/rectangle';
-import text from '../primitives/text';
-import group from '../primitives/group';
+import circle from './primitives/circle';
+import line from './primitives/line';
+import rectangle from './primitives/rectangle';
+import text from './primitives/text';
+import group from './primitives/group';
 
-import dataset from '../components/dataset';
-import grid from '../components/grid';
+import dataset from './components/dataset';
+import grid from './components/grid';
 
-import Matrix from '../../../matrix';
+import Matrix from '../../matrix';
 
-const matrixForView = (data) =>
+const matrixForWorld = (data) =>
   Matrix.join(
     Matrix.translate(data.translate.x, data.translate.y - 250),
     Matrix.scale(data.zoom, data.zoom),
@@ -18,12 +18,12 @@ const matrixForView = (data) =>
   );
 
 const buildRender = (context, options) => {
-  return (data) => {
+  const render = (data) => {
     context.clear();
 
     const { values, prices } = options;
 
-    group({ matrix: matrixForView(data) }, options, context, () => {
+    group({ matrix: matrixForWorld(data) }, options, context, () => {
 
       dataset({ values }, options, context);
       grid({ values, prices, }, options, context);
@@ -35,6 +35,10 @@ const buildRender = (context, options) => {
 
     context.flush();
   };
+
+  render.matrix = (data) => matrixForWorld(data);
+
+  return render;
 };
 
 export default buildRender;

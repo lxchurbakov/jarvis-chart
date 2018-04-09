@@ -41,10 +41,20 @@ export default (node, options) => {
   div.addEventListener('mouseup', (e) => {
     eventEmitter.emit('mouseup', e);
     mousedown = false;
+    lastpos = false;
   });
 
   div.addEventListener('mousemove', (e) => {
     eventEmitter.emit('mousemove', e);
+
+    {
+      const rect = e.target.getBoundingClientRect();
+
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      eventEmitter.emit('path', { x, y, e });
+    }
 
     if (mousedown) {
       if (lastpos) {
