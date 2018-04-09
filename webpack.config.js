@@ -5,6 +5,10 @@ module.exports = (env) => {
 
     mode: 'development',
 
+    devServer: {
+      disableHostCheck: true,
+    },
+
     output: {
       filename: "bundle.js",
       path: __dirname + "/dist"

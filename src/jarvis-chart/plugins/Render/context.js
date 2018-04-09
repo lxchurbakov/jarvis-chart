@@ -35,6 +35,8 @@ const buildSvgContext = (node, options) => {
     pop:  ()       => context.push('</g>'),
   });
 
+  context.type = 'svg';
+
   return context;
 };
 
@@ -71,6 +73,8 @@ const buildCanvasContext = (node, options) => {
     },
     pop: () => context.restore(),
   });
+
+  context.type = 'canvas';
 
   return context;
 };

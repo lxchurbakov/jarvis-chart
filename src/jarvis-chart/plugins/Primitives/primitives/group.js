@@ -1,5 +1,5 @@
-export default ({ matrix }, options, context, cb) => {
-  switch (options.render) {
+export default (context, { matrix }, cb) => {
+  switch (context.type) {
     case 'canvas':
     case 'svg':
       if (matrix) {

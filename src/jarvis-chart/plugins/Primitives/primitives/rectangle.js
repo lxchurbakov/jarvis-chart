@@ -1,5 +1,5 @@
-export default ({ x, y, width, height, color, matrix }, options, context) => {
-  switch (options.render) {
+export default (context, { x, y, width, height, color, matrix }) => {
+  switch (context.type) {
     case 'svg':
       context.push(`
         <rect x='${x}' y='${y}' width='${width}' height='${height}' style='fill: ${color}' transform='${matrix ? matrix.toCss() : ''}' />

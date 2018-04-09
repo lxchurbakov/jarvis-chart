@@ -1,4 +1,4 @@
-export default ({ cx, cy, radius, color, matrix, crop = true }, options, context) => {
+export default (context, { cx, cy, radius, color, matrix, crop = true }) => {
   /* Auto Crop Element when invisible */
   /* TODO does not work, screen coords are not calculated correctly */
   // if (
@@ -7,7 +7,7 @@ export default ({ cx, cy, radius, color, matrix, crop = true }, options, context
   //   !context.matrix.crop(cx + radius, cy + radius)
   // ) return;
 
-  switch (options.render) {
+  switch (context.type) {
     case 'svg':
       context.push(`
         <circle cx='${cx}' cy='${cy}' r='${radius}' fill='${color}' transform='${matrix ? matrix.toCss() : ''}' />

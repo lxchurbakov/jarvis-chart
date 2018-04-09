@@ -1,63 +1,56 @@
-import initChart from './init';
+import Pluggable from 'extendme';
+
+import Handler from './plugins/Handler';
+import Render from './plugins/Render';
+import State from './plugins/State';
+import Primitives from './plugins/Primitives';
+
+import AdvancedEvents from './plugins/AdvancedEvents';
+
+import ChartModes from './plugins/ChartModes';
+import ChartWindow from './plugins/ChartWindow';
+
+import Circle from './plugins/Circle';
+import ChartValues from './plugins/ChartValues';
+import ChartContent from './plugins/ChartContent';
+
+import ViewMode from './plugins/ViewMode';
+
+import Elements from './plugins/Elements';
+import Brush from './plugins/Brush';
+import Fibonacci from './plugins/Fibonacci';
 
 export default (node, options) => {
-  const chart = initChart(node, options);
+  const p = new Pluggable();
 
-  chart.on('wheel', ({ delta }) => {
-    if (chart.state().mode === 'view')
-      chart.update((state) => ({ ...state, zoom: { x: state.zoom.x - delta / 1000, y: state.zoom.y - delta / 1000} }))
-  });
+  /* Basic plugins */
+  p.plugin(Handler, options);
+  p.plugin(Render, options);
+  p.plugin(State, options);
 
-  chart.on('drag', ({ x, y }) => {
-    if (chart.state().mode === 'view')
-      chart.update((state) =>
-        ({ ...state, translate: { x: state.translate.x + x / state.zoom.x, y: state.translate.y - y / state.zoom.y } }))
-  });
+  p.plugin(AdvancedEvents, options);
 
-  chart.on('world-click', ({ x, y }) => {
-    if (chart.state().mode === 'points') {
-      chart.update((state) =>
-        ({ ...state, elements: state.elements.concat([{ x, y, type: 'point' }])}))
-    }
-  });
+  /* Primitive figures plugins */
+  p.plugin(Primitives, options);
 
-  chart.on('world-mousedown', ({ x, y }) => {
-    if (chart.state().mode === 'brush') {
-      chart.update((state) =>
-        ({
-          ...state,
-          brush: [{ x, y }]
-        })
-      )
-    }
-  });
+  p.plugin(ChartValues, options);
 
-  chart.on('world-mouseup', ({ x, y }) => {
-    if (chart.state().mode === 'brush') {
-      chart.update((state) =>
-        ({
-          ...state,
-          elements: state.elements.concat({ type: 'brush', points: state.brush }),
-          brush: null
-        })
-      )
-    }
-  });
+  /* Chart Window (translation, zoom) plugin */
+  p.plugin(ChartWindow, options);
+  p.plugin(ChartModes, options);
 
-  chart.on('world-path', ({ x, y }) => {
-    if (chart.state().mode === 'brush') {
-      chart.update((state) =>
-        ({
-          ...state,
-          brush: state.brush.concat([{ x, y }])
-        })
-      )
-    }
-  });
+  /* Content */
+  p.plugin(ChartContent, options);
 
-  chart.setMode = (mode) => chart.update((state) => ({ ...state, mode }));
-  chart.setAutoZoom = (autoZoomY) => chart.update((state) => ({ ...state, autoZoomY }));
-  chart.setShowIndicator = (showIndicator) => chart.update((state) => ({ ...state, showIndicator }));
+  p.plugin(ViewMode, options);
 
-  return chart;
+  p.plugin(Elements, options);
+  p.plugin(Brush, options);
+  p.plugin(Fibonacci, options);
+
+  /* Emit mount action */
+
+  p.emitSync('mount', { node });
+
+  return p.emitSync('api', {});
 };

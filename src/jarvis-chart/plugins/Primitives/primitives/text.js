@@ -1,12 +1,12 @@
 const textAlignToTextAnchor = (textAlign) => ({ 'left': 'start', 'center': 'middle', 'right': 'end' })[textAlign];
 
-export default ({ x, y, font = "13px arial", text, matrix, textAlign = 'center', color = 'black', crop = true }, options, context) => {
-  if (
-    crop &&
-    !context.matrix.crop(x, y)
-  ) return;
+export default (context, { x, y, font = "13px arial", text, matrix, textAlign = 'center', color = 'black', crop = true }) => {
+  // if (
+  //   crop &&
+  //   !context.matrix.crop(x, y)
+  // ) return;
 
-  switch (options.render) {
+  switch (context.type) {
     case 'svg':
       context.push(`
         <text x='${x}' y='${y}' text-anchor='${textAlignToTextAnchor(textAlign)}' fill='${color}' style='font: ${font}' transform='${matrix ? matrix.toCss() : ''}' >

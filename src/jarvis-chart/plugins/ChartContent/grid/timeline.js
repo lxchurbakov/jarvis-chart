@@ -1,9 +1,3 @@
-import circle from '../../primitives/circle';
-import line from '../../primitives/line';
-import rectangle from '../../primitives/rectangle';
-import text from '../../primitives/text';
-import group from '../../primitives/group';
-
 import Matrix from '../../../lib/matrix';
 
 const OFFSET = 10;
@@ -21,10 +15,10 @@ const matrixForTimepoint = (matrix, index) =>
     Matrix.translate(index * OFFSET + 3.5, 0)
   );
 
-export default ({ values, matrix, showIndicator }, options, context) => {
+export default (p, context, { values, matrix, showIndicator }) => {
 
-  group({ matrix: matrixForTimeline(context.matrix.get(), context.matrix.screen.dimensions().height - 40) }, options, context, () => {
-    line({ x0: -20000, y0: 0, x1: 20000, y1: 0, color: '#ccc' }, options, context);
+  p.render.primitives.group(context, { matrix: matrixForTimeline(context.matrix.get(), context.matrix.screen.dimensions().height - 40) }, () => {
+    p.render.primitives.line(context, { x0: -20000, y0: 0, x1: 20000, y1: 0, color: '#ccc' });
 
     /* Do not draw elements that are outside the screen */
     const [  screenFirst ] = context.matrix.screen([ 0, 0 ]);
@@ -45,10 +39,10 @@ export default ({ values, matrix, showIndicator }, options, context) => {
           /* Draw only visible elements */
           if (index < offset || index > offset + count) return;
 
-          group({ matrix: matrixForTimepoint(context.matrix.get(), index) }, options, context, () => {
-            const v = (max - min) / 10;
+          p.render.primitives.group(context, { matrix: matrixForTimepoint(context.matrix.get(), index) }, () => {
+            const v = (max - min) / 4;
 
-            rectangle({ x: 0, y: - v, width: 7, height: v, color: '#15E6C155' }, options, context);
+            p.render.primitives.rectangle(context, { x: 0, y: - v, width: 7, height: v, color: '#15E6C155' });
             // circle({ cx: 0, cy: 0, radius: 3, color: '#15E6C1', crop: false }, options, context);
             // text({ x: 0, y: 20, text: time, color: '#ccc', crop: false }, options, con/text);
             // line({ x0: 0, y0: -2000, x1: 0, y1: 2000, color: '#ddd' }, options, context);
@@ -63,10 +57,10 @@ export default ({ values, matrix, showIndicator }, options, context) => {
         /* Draw only every nth element */
         if (index % nth > 0) return;
 
-        group({ matrix: matrixForTimepoint(context.matrix.get(), index) }, options, context, () => {
-          circle({ cx: 0, cy: 0, radius: 3, color: '#15E6C1', crop: false }, options, context);
-          text({ x: 0, y: 20, text: time, color: '#ccc', crop: false }, options, context);
-          line({ x0: 0, y0: -2000, x1: 0, y1: 2000, color: '#ddd' }, options, context);
+        p.render.primitives.group(context, { matrix: matrixForTimepoint(context.matrix.get(), index) }, () => {
+          p.render.primitives.circle(context, { cx: 0, cy: 0, radius: 3, color: '#15E6C1', crop: false });
+          p.render.primitives.text(context, { x: 0, y: 20, text: time, color: '#ccc', crop: false });
+          p.render.primitives.line(context, { x0: 0, y0: -2000, x1: 0, y1: 2000, color: '#ddd' });
         });
       });
   });

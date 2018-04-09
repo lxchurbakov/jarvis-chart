@@ -5,36 +5,52 @@ import values from './values';
 
 const node = document.getElementById('chart');
 
-function getParameterByName(name, url) {
-  if (!url) url = window.location.href;
+/* Just copy pasted from internet, ignore it */
+const getParameterByName = (name, url) => {
+  if (!url)
+    url = window.location.href;
+
   name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-      results = regex.exec(url);
+
+  const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+  const results = regex.exec(url);
+
   if (!results) return null;
   if (!results[2]) return '';
+
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+/* Retrieve render from url */
+const render = getParameterByName('render') || 'canvas';
+
 const chart = Chart(node, {
-  render: getParameterByName('render') || 'canvas',
+  render: render,
   values: values,
-  redrawContinuously: false,
-  prices: new Array(1000).fill(0).map((v, i) => (i - 500) * 10),
+  /* Do not request animation frame */
+  // redrawContinuously: false,
+  /* Do not process clicks less then 100ms long */
   clickThreshold: 100
 });
 
-console.log('Chart initialized, API:', chart);
+console.log(chart);
+
+/* Attach events to UI */
 
 document.getElementById('mode-view').addEventListener('click', () => {
-  chart.setMode('view');
+  chart.mode.set('view');
 });
 
 document.getElementById('mode-points').addEventListener('click', () => {
-  chart.setMode('points');
+  chart.mode.set('points');
 });
 
 document.getElementById('mode-brush').addEventListener('click', () => {
-  chart.setMode('brush');
+  chart.mode.set('brush');
+});
+
+document.getElementById('mode-fibonacci').addEventListener('click', () => {
+  chart.mode.set('fibonacci');
 });
 
 document.getElementById('auto-zoom').addEventListener('click', (e) => {
