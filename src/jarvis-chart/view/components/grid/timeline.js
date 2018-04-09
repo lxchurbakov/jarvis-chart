@@ -8,9 +8,9 @@ import Matrix from '../../../../matrix';
 
 const OFFSET = 10;
 
-const matrixForTimeline = (matrix) =>
+const matrixForTimeline = (matrix, position) =>
   Matrix.join(
-    Matrix.translate(0, 450),
+    Matrix.translate(0, position),
     Matrix.resetTranslate(matrix, false, true),
     Matrix.resetScale(matrix, false, true),
   );
@@ -23,8 +23,8 @@ const matrixForTimepoint = (matrix, index) =>
 
 export default ({ values, matrix }, options, context) => {
 
-  group({ matrix: matrixForTimeline(context.matrix.get()) }, options, context, () => {
-    line({ x0: -2000, y0: 0, x1: 2000, y1: 0, color: '#ccc' }, options, context);
+  group({ matrix: matrixForTimeline(context.matrix.get(), context.matrix.screen.dimensions().height - 40) }, options, context, () => {
+    line({ x0: -20000, y0: 0, x1: 20000, y1: 0, color: '#ccc' }, options, context);
 
     /* Do not draw elements that are outside the screen */
     const [  screenFirst ] = context.matrix.screen([ 0, 0 ]);
@@ -49,6 +49,7 @@ export default ({ values, matrix }, options, context) => {
         group({ matrix: matrixForTimepoint(context.matrix.get(), index) }, options, context, () => {
           circle({ cx: 0, cy: 0, radius: 3, color: '#15E6C1', crop: false }, options, context);
           text({ x: 0, y: 20, text: time, color: '#ccc', crop: false }, options, context);
+          line({ x0: 0, y0: -2000, x1: 0, y1: 2000, color: '#ddd' }, options, context);
         });
       });
   });

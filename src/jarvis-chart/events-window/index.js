@@ -14,19 +14,28 @@ export default (node, options) => {
   let inside = false;
   let mousedown = false;
   let lastpos = null;
+  let lasttime = null;
 
   div.addEventListener('wheel', (e) => {
     eventEmitter.emit('wheel', { delta: e.deltaY, e });
   });
 
   div.addEventListener('click', (e) => {
-    eventEmitter.emit('click', e);
+    if ((new Date()) - lasttime > options.clickThreshold) return;
+
+    const rect = e.target.getBoundingClientRect();
+
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    eventEmitter.emit('click', { x, y, e });
   });
 
   div.addEventListener('mousedown', (e) => {
     eventEmitter.emit('mousedown', e);
     mousedown = true;
     lastpos = { x: e.clientX, y: e.clientY };
+    lasttime = new Date();
   });
 
   div.addEventListener('mouseup', (e) => {

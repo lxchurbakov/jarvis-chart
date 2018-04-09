@@ -38,6 +38,94 @@ class Matrix {
 
     return `matrix(${a}, ${b}, ${c}, ${d}, ${tx}, ${ty})`;
   }
+
+  /* Получить детерминант этой матрицы */
+  determinator () {
+    const [
+      [ a,  b, _0],
+      [ c,  d, _1],
+      [tx, ty, _2]
+    ] = this.matrix;
+
+    return a * d  - c * b;
+  }
+
+  /* Получить матрицу миноров из этой матрицы */
+  minors () {
+    const [
+      [ a,  b, _0],
+      [ c,  d, _1],
+      [tx, ty, _2]
+    ] = this.matrix;
+
+    const result = Matrix.identity();
+
+    result.matrix = [
+      [  d,   c,   c * ty - d * tx],
+      [  b,   a,   a * ty - b * tx],
+      [  0,   0,   a *  d - c *  b]
+    ];
+
+    return result;
+  }
+
+  /* Получить матрицу алгебраических дополнений из этой */
+  additions () {
+    const [
+      [ a,  b, _0],
+      [ c,  d, _1],
+      [tx, ty, _2]
+    ] = this.matrix;
+
+    const result = Matrix.identity();
+
+    result.matrix = [
+      [ a,  -b, _0],
+      [ -c,  d, -_1],
+      [tx, -ty, _2]
+    ];
+
+    return result;
+  }
+
+  /* Получить транспонированную матрицу из этой */
+  transpose () {
+    const [
+      [ a,  b, _0],
+      [ c,  d, _1],
+      [tx, ty, _2]
+    ] = this.matrix;
+
+    const result = Matrix.identity();
+
+    result.matrix = [
+      [ a,  c, tx],
+      [ b,  d, ty],
+      [_0, _1, _2]
+    ];
+
+    return result;
+  }
+
+  reverse () {
+    const k = 1 / this.determinator();
+
+    const result = this.minors().additions().transpose();
+
+    const [
+      [ a,  b, _0],
+      [ c,  d, _1],
+      [tx, ty, _2]
+    ] = result.matrix;
+
+    result.matrix = [
+      [ a * k,  b * k, _0 * k],
+      [ c * k,  d * k, _1 * k],
+      [tx * k, ty * k, _2 * k]
+    ];
+
+    return result;
+  }
 }
 
 Matrix.identity  = (x, y) => new Matrix(1, 0, 0, 1, 0, 0);

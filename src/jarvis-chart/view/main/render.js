@@ -21,23 +21,16 @@ const buildRender = (context, options) => {
   return (data) => {
     context.clear();
 
-    /* Calculate crop Area */
-    // const matrix = ;
-
-    // const [x0, y0] = Matrix.apply([ 0,  0], matrix);
-    // const [x1, y1] = Matrix.apply([10, 10], matrix);
-
-    // const start = x0;
-    // const width = x1 - x0;
-
-    // const offset = (-start) / width - 1;
-    // const count  = (900 / width) + 1;
-
     const { values, prices } = options;
 
     group({ matrix: matrixForView(data) }, options, context, () => {
+
       dataset({ values }, options, context);
       grid({ values, prices, }, options, context);
+
+      data.elements.forEach((element) => {
+        circle({ cx: element.x, cy: element.y, radius: 20, color: 'red' }, options, context);
+      });
     });
 
     context.flush();
