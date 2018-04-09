@@ -19,8 +19,18 @@ const candle = ({ x, y, min, max, open, close }, options, context) => {
   rectangle({ x, y: marginBottom + paddingBottom + y, width: 7, height: bodyHeight, color }, options, context);
 };
 
-export default ({ values, matrix, offset, count }, options, context) => {
+export default ({ values, matrix }, options, context) => {
   group({ matrix }, options, context, () => {
+    /* Do not draw elements that are outside the screen */
+    const [ screenFirst,  _1 ] = context.matrix.screen([ 0, 0 ]);
+    const [ screenSecond, _0 ] = context.matrix.screen([ 10, 0 ]);
+
+    const screenStart = -screenFirst;
+    const screenWidth = screenSecond - screenFirst;
+
+    const offset = Math.floor(Math.max(screenStart / screenWidth - 1, 0));
+    const count  = Math.ceil(context.matrix.screen.dimensions().width / screenWidth) + 2;
+
     values.forEach(({ min, max, open, close }, index) => {
       if (index < offset || index > offset + count) return;
 

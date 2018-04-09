@@ -1,9 +1,10 @@
 import priceline from './priceline';
 import timeline from './timeline';
+import group from '../../primitives/group';
 
-export default ({ values, prices, matrix, offset, count}, options, context) => {
-  const nth = Math.floor(count / 10);
-  
-  timeline({ values, matrix, offset, count, nth }, options, context);
-  priceline({ prices, matrix }, options, context);
+export default ({ values, prices, matrix }, options, context) => {
+  group({ matrix }, options, context, () => {
+    timeline({ values }, options, context);
+    priceline({ prices }, options, context);
+  });
 };

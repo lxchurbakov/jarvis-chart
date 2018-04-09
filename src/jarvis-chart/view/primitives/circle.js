@@ -1,4 +1,11 @@
-export default ({ cx, cy, radius, color, matrix }, options, context) => {
+export default ({ cx, cy, radius, color, matrix, crop = true }, options, context) => {
+  /* Auto Crop Element when unseen */
+  if (
+    crop &&
+    !context.matrix.crop(cx - radius, cy - radius) &&
+    !context.matrix.crop(cx + radius, cy + radius)
+  ) return;
+
   switch (options.render) {
     case 'svg':
       context.push(`
@@ -8,9 +15,7 @@ export default ({ cx, cy, radius, color, matrix }, options, context) => {
       break;
     case 'canvas':
       if (matrix) {
-        const { a, b, c, d, tx, ty } = matrix.getValues();
-        context.save();
-        context.transform(a, b, c, d, tx, ty);
+        context.matrix.push(matrix);
       }
 
       context.beginPath();
@@ -19,7 +24,7 @@ export default ({ cx, cy, radius, color, matrix }, options, context) => {
       context.fill();
 
       if (matrix) {
-        context.restore();
+        context.matrix.push(matrix);
       }
 
       break;

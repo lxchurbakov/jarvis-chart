@@ -9,7 +9,7 @@ export default (options) => {
   let transforms = [];
 
   const push = (matrix) => {
-    transforms.push({ matrix, acc: null });
+    transforms.push({ matrix, acc: null, crop: null });
 
     options.push(matrix);
   };
@@ -30,21 +30,48 @@ export default (options) => {
 
     const last = transforms[transforms.length - 1];
 
-    if (last.acc)
-      return last.acc;
-
-    transforms.forEach((transform, index) => {
-      if (index === 0) {
-        transform.acc = transform.matrix;
-      } else {
-        if (!transform.acc) {
-          transform.acc = Matrix.multiply(transforms[index - 1].acc, transform.matrix);
+    if (!last.acc) {
+      transforms.forEach((transform, index) => {
+        if (index === 0) {
+          transform.acc = transform.matrix;
+        } else {
+          if (!transform.acc) {
+            transform.acc = Matrix.multiply(transforms[index - 1].acc, transform.matrix);
+          }
         }
-      }
-    });
+      });
+    }
 
     return last.acc;
   };
 
-  return { push, pop, get };
+  /**
+   * Map point to the screen coords
+   */
+  const screen = (point) => Matrix.apply(point, get());
+
+  screen.dimensions = () => ({ width: options.width, height: options.height });
+
+  /**
+   * Check point for visibility
+   */
+  const crop = (x, y) => {
+    const point = [x, y];
+
+    const [ x1, y1 ] = screen(point);
+
+    return crop.raw(x1, y1);
+  };
+
+  /**
+   * Raw check for point in screen coords
+   */
+  crop.raw = (x, y) => (
+    x >= 0 &&
+    x <= options.width &&
+    y >= 0 &&
+    y <= options.height
+  );
+
+  return { push, pop, get, crop, screen };
 };

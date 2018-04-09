@@ -30,6 +30,7 @@ const buildSvgContext = (node, options) => {
 
   /* Attach matrix API */
   context.matrix = Transform({
+    width, height,
     push: (matrix) => context.push(`<g transform='${matrix.toCss()}'>`),
     pop:  ()       => context.push('</g>'),
   });
@@ -61,6 +62,7 @@ const buildCanvasContext = (node, options) => {
 
   /* Attach matrix API */
   context.matrix = Transform({
+    width, height,
     push: (matrix) => {
       const { a, b, c, d, tx, ty } = matrix.getValues();
 
