@@ -1,10 +1,10 @@
-import circle from '../primitives/circle';
-import line from '../primitives/line';
-import rectangle from '../primitives/rectangle';
-import text from '../primitives/text';
-import group from '../primitives/group';
+import circle from '../../primitives/circle';
+import line from '../../primitives/line';
+import rectangle from '../../primitives/rectangle';
+import text from '../../primitives/text';
+import group from '../../primitives/group';
 
-import Matrix from '../../../matrix';
+import Matrix from '../../../../matrix';
 
 const transformMatrixForTimeline = (matrix) =>
   Matrix.join(

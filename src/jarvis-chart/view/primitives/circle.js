@@ -2,7 +2,7 @@ export default ({ cx, cy, radius, color, matrix }, options, context) => {
   switch (options.render) {
     case 'svg':
       context.push(`
-        <circle cx='${cx}' cy='${cy}' r='${radius}' fill='${color}' matrix='${matrix ? matrix.toCss() : ''}' />
+        <circle cx='${cx}' cy='${cy}' r='${radius}' fill='${color}' transform='${matrix ? matrix.toCss() : ''}' />
       `);
 
       break;

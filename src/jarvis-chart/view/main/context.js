@@ -38,6 +38,10 @@ const buildCanvasContext = (node, options) => {
   context.clear = () => context.clearRect(0, 0, width, height);
   context.flush = () => { /* nope */ };
 
+  context.pushTransform = (a, b, c, d, tx, ty) => {
+
+  };
+
   return context;
 };
 

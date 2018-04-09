@@ -1,4 +1,4 @@
-import createRender from './view';
+import createRender from './view/init';
 import createEventsWindow from './events-window';
 
 export default (node, options) => {

@@ -1,5 +1,5 @@
-import buildContext from './context';
-import buildRender from './render';
+import buildContext from './main/context';
+import buildRender from './main/render';
 
 /**
  *

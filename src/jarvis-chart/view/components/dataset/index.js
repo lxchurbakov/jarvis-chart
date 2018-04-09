@@ -1,10 +1,10 @@
-import circle from '../primitives/circle';
-import line from '../primitives/line';
-import rectangle from '../primitives/rectangle';
-import text from '../primitives/text';
-import group from '../primitives/group';
+import circle from '../../primitives/circle';
+import line from '../../primitives/line';
+import rectangle from '../../primitives/rectangle';
+import text from '../../primitives/text';
+import group from '../../primitives/group';
 
-import Matrix from '../../../matrix';
+import Matrix from '../../../../matrix';
 
 const candle = ({ x, y, min, max, open, close, matrix }, options, context) => {
   const marginBottom = min;
@@ -21,21 +21,11 @@ const candle = ({ x, y, min, max, open, close, matrix }, options, context) => {
   });
 };
 
-export default ({ values, matrix }, options, context) => {
-  // Crop visible
-  const [zeroAt, _1] = Matrix.apply([0, 0], matrix);
-  const [firstAt, _2] = Matrix.apply([10, 0], matrix);
-
-  const start = zeroAt;
-  const width = firstAt - zeroAt;
-
-  const offset = (-start) / width;
-  const last   = (900 / width) + offset;
-
+export default ({ values, matrix, offset, count }, options, context) => {
   group({ matrix }, options, context, () => {
     values.forEach(({ min, max, open, close }, index) => {
-      if (index < offset || index > last)
-        return;
+      if (index < offset || index > offset + count) return;
+
       candle({ x: index * 10, y: 0, min, max, open, close }, options, context);
     });
   });
