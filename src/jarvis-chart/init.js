@@ -1,72 +1,79 @@
-import buildContext from './view/context';
-import buildRender from './view/render';
+// import buildContext from './view/context';
+// import buildRender from './view/render';
 
-import createEventsWindow from './events-window';
+// const context = buildContext(node, options);
+// const render  = buildRender(context, options);
 
-import Matrix from '../matrix';
+// handler.on('click', ({ x, y, e }) => {
+//   const matrix = render.matrix(state).reverse();
+//
+//   const [xreal, yreal] = Matrix.apply([ x, y ], matrix);
+//
+//   handler.emit('world-click', { x: xreal, y: yreal });
+// });
+//
+// handler.on('drag', ({ x, y, e }) => {
+//   const matrix = render.matrix(state).reverse();
+//
+//   const [xreal, yreal] = Matrix.apply([ x, y ], matrix);
+//
+//   handler.emit('world-drag', { x: xreal, y: yreal });
+// });
+//
+// handler.on('path', ({ x, y, e }) => {
+//   const matrix = render.matrix(state).reverse();
+//
+//   const [xreal, yreal] = Matrix.apply([ x, y ], matrix);
+//
+//   handler.emit('world-path', { x: xreal, y: yreal });
+// });
+
+// import Matrix from '../matrix';
+
+import Handler from './handler';
+import Render from './render';
+
+import view from './view';
 
 /**
  * Jarvis Chart v1.0.0
  */
 export default (node, options) => {
-  const eventEmitter = createEventsWindow(node, options);
+  
+  /* Attach handler and render */
+  const handler = Handler(node, options);
+  const render  = Render(view, node, options);
 
-  const context = buildContext(node, options);
-  const render  = buildRender(context, options);
-
+  /* Create Graph state */
   let state = {
     translate: { x: 0, y: 0 },
     zoom: 1,
     elements: []
   };
 
-  const frame = () => {
-    render(state);
-
-    if (options.redrawContinuously)
-      requestAnimationFrame(frame);
-  };
-
-  eventEmitter.on('click', ({ x, y, e }) => {
-    const matrix = render.matrix(state).reverse();
-
-    const [xreal, yreal] = Matrix.apply([ x, y ], matrix);
-
-    eventEmitter.emit('world-click', { x: xreal, y: yreal });
-  });
-
-  eventEmitter.on('drag', ({ x, y, e }) => {
-    const matrix = render.matrix(state).reverse();
-
-    const [xreal, yreal] = Matrix.apply([ x, y ], matrix);
-
-    eventEmitter.emit('world-drag', { x: xreal, y: yreal });
-  });
-
-  eventEmitter.on('path', ({ x, y, e }) => {
-    const matrix = render.matrix(state).reverse();
-
-    const [xreal, yreal] = Matrix.apply([ x, y ], matrix);
-
-    eventEmitter.emit('world-path', { x: xreal, y: yreal });
-  });
-
-  frame();
-
   /* Chart API */
 
-  /* Attach listener */
+  const on = (event, listener) => handler.on(event, listener);
 
-  const on = (event, listener) => eventEmitter.on(event, listener);
+  const draw = () => {
+    render.draw(state);
 
-  /* Update state */
-
-  const update = (updater) => {
-    // console.log(state.translate.x);
-    state = updater(state);
-    // console.log(state.translate.x);
-    frame();
+    if (options.redrawContinuously)
+      requestAnimationFrame(draw);
   };
 
-  return { frame, on, update, render, state: () => state };
+  const update = (updater) => {
+    state = updater(state);
+    draw();
+  };
+
+  /* Forward some events to render */
+
+  handler.on('click', (data) => render.emit('click', data));
+
+  /* Initial render */
+
+  draw();
+
+  return { on, update, state: () => state };
 };
