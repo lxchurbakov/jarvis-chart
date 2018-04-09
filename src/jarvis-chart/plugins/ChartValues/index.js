@@ -18,8 +18,6 @@ ChartValues.plugin = {
   name: 'chart-values',
   version: '1.0.0',
   dependencies: {
-    // 'render': '1.0.0',
-    // 'handler': '1.0.0',
     'state': '1.0.0'
   }
 };

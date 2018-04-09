@@ -83,6 +83,11 @@ const ChartWindow = (p, options) => {
   });
 
   p.chartWindow = {
+    getMatrix: () => lastMatrix,
+    setAutoZoom: (autoZoom) => p.state.update((state) => {
+      state.chartWindow.autoZoom = autoZoom;
+      return state;
+    }),
     translate: {
       get: () => p.state.get().chartWindow.translate,
       set: (t) => p.state.update((state) => {
@@ -99,6 +104,8 @@ const ChartWindow = (p, options) => {
     },
     toWorld: (a) => Matrix.apply(a, lastMatrix.reverse())
   };
+
+  p.on('api', (api) => ({ ...api, chartWindow: p.chartWindow }))
 };
 
 ChartWindow.plugin = {

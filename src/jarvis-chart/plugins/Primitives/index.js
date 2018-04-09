@@ -3,6 +3,7 @@ import line from './primitives/line';
 import rectangle from './primitives/rectangle';
 import text from './primitives/text';
 import group from './primitives/group';
+import ellipse from './primitives/ellipse';
 
 /**
  * Primitives plugin
@@ -15,7 +16,7 @@ import group from './primitives/group';
 const Primitives = (p) => {
   /* Extends render API */
   p.on('render/collect-primitives', () => {
-    p.render.primitives = { circle, line, rectangle, text, group };
+    p.render.primitives = { circle, line, rectangle, text, group, ellipse };
   });
 };
 

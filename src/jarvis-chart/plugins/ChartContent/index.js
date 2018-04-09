@@ -7,7 +7,7 @@ const ChartContent = (p, options) => {
     const values = p.values.get();
 
     dataset(p, context, { values });
-    grid(p, context, { values, showIndicator: true });
+    grid(p, context, { values, showIndicator: false });
 
     return { context, state };
   });

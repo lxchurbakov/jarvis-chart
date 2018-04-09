@@ -18,7 +18,7 @@ import ViewMode from './plugins/ViewMode';
 
 import Elements from './plugins/Elements';
 import Brush from './plugins/Brush';
-import Fibonacci from './plugins/Fibonacci';
+import Ellipse from './plugins/Ellipse';
 
 export default (node, options) => {
   const p = new Pluggable();
@@ -46,7 +46,7 @@ export default (node, options) => {
 
   p.plugin(Elements, options);
   p.plugin(Brush, options);
-  p.plugin(Fibonacci, options);
+  p.plugin(Ellipse, options);
 
   /* Emit mount action */
 

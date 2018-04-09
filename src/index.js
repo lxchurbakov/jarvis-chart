@@ -41,22 +41,22 @@ document.getElementById('mode-view').addEventListener('click', () => {
   chart.mode.set('view');
 });
 
-document.getElementById('mode-points').addEventListener('click', () => {
-  chart.mode.set('points');
-});
+// document.getElementById('mode-points').addEventListener('click', () => {
+//   chart.mode.set('points');
+// });
 
 document.getElementById('mode-brush').addEventListener('click', () => {
   chart.mode.set('brush');
 });
 
-document.getElementById('mode-fibonacci').addEventListener('click', () => {
-  chart.mode.set('fibonacci');
+document.getElementById('mode-ellipse').addEventListener('click', () => {
+  chart.mode.set('ellipse');
 });
 
 document.getElementById('auto-zoom').addEventListener('click', (e) => {
-  chart.setAutoZoom(e.target.checked);
+  chart.chartWindow.setAutoZoom(e.target.checked);
 });
 
-document.getElementById('show-indicator').addEventListener('click', (e) => {
-  chart.setShowIndicator(e.target.checked);
-});
+// document.getElementById('show-indicator').addEventListener('click', (e) => {
+//   chart.setShowIndicator(e.target.checked);
+// });
