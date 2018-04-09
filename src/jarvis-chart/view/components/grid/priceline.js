@@ -27,10 +27,11 @@ export default ({ prices, matrix }, options, context) => {
   const last   = (500 / height) + offset;
 
   group({ matrix: globalMatrix }, options, context, () => {
+
     line({ x0: 0, y0: -2000, x1: 0, y1: 2000, color: '#ccc' }, options, context);
     prices.forEach((price, index) => {
       if ((price / 10) < offset || (price / 10) > last) return;
-      group({ matrix: Matrix.multiply(Matrix.resetScale(globalMatrix), Matrix.translate(0, price)) }, options, context, () => {
+      group({ matrix: Matrix.multiply(Matrix.resetScale(context.matrix.get()), Matrix.translate(0, price)) }, options, context, () => {
         text({ x: 20, y: 0, text: price, color: '#4A4A4A', textAlign: 'left' }, options, context);
       });
     });

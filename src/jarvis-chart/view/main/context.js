@@ -1,3 +1,8 @@
+import Transform from './transform';
+
+/**
+ * Svg Render Context
+ */
 const buildSvgContext = (node, options) => {
   const width  = node.offsetWidth;
   const height = node.offsetHeight;
@@ -8,20 +13,33 @@ const buildSvgContext = (node, options) => {
   svg.setAttributeNS(null, "width", width);
   svg.setAttributeNS(null, "height", height);
 
-  node.appendChild(svg);
+  options.width = width;
+  options.height = height;
 
-  const context = svg;
+  node.appendChild(svg);
 
   let content;
 
-  return {
-    clear: () => content = '',
-    flush: () => context.innerHTML = content,
+  const element = svg;
+  const context = {};
 
-    push: (figure) => content += figure,
-  };
+  context.clear = () => content = '';
+  context.flush = () => element.innerHTML = content;
+
+  context.push = (figure) => content += figure;
+
+  /* Attach matrix API */
+  context.matrix = Transform({
+    push: (matrix) => context.push(`<g transform='${matrix.toCss()}'>`),
+    pop:  ()       => context.push('</g>'),
+  });
+
+  return context;
 };
 
+/**
+ * Canvas Render Context
+ */
 const buildCanvasContext = (node, options) => {
   const width  = node.offsetWidth;
   const height = node.offsetHeight;
@@ -31,6 +49,9 @@ const buildCanvasContext = (node, options) => {
   canvas.width = width;
   canvas.height = height;
 
+  options.width = width;
+  options.height = height;
+
   node.appendChild(canvas);
 
   const context = canvas.getContext('2d');
@@ -38,13 +59,23 @@ const buildCanvasContext = (node, options) => {
   context.clear = () => context.clearRect(0, 0, width, height);
   context.flush = () => { /* nope */ };
 
-  context.pushTransform = (a, b, c, d, tx, ty) => {
+  /* Attach matrix API */
+  context.matrix = Transform({
+    push: (matrix) => {
+      const { a, b, c, d, tx, ty } = matrix.getValues();
 
-  };
+      context.save();
+      context.transform(a, b, c, d, tx, ty);
+    },
+    pop: () => context.restore(),
+  });
 
   return context;
 };
 
+/**
+ * Facade for context
+ */
 const buildContext = (node, options) => {
   switch (options.render) {
     case 'svg':

@@ -6,7 +6,7 @@ import group from '../../primitives/group';
 
 import Matrix from '../../../../matrix';
 
-const candle = ({ x, y, min, max, open, close, matrix }, options, context) => {
+const candle = ({ x, y, min, max, open, close }, options, context) => {
   const marginBottom = min;
   const lineHeight = max - min;
   const bodyHeight = Math.abs(open - close);
@@ -15,10 +15,8 @@ const candle = ({ x, y, min, max, open, close, matrix }, options, context) => {
   const direction = open > close ? 'down' : 'up';
   const color = direction === 'up' ? '#15E6C1' : '#FA2C50';
 
-  group({ matrix }, options, context, () => {
-    line({ x0: 3.5 + x, y0: marginBottom + y, x1: 3.5 + x, y1: marginBottom + lineHeight + y, color }, options, context);
-    rectangle({ x, y: marginBottom + paddingBottom + y, width: 7, height: bodyHeight, color }, options, context);
-  });
+  line({ x0: 3.5 + x, y0: marginBottom + y, x1: 3.5 + x, y1: marginBottom + lineHeight + y, color }, options, context);
+  rectangle({ x, y: marginBottom + paddingBottom + y, width: 7, height: bodyHeight, color }, options, context);
 };
 
 export default ({ values, matrix, offset, count }, options, context) => {

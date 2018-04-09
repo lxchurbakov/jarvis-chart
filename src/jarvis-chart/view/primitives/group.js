@@ -1,30 +1,15 @@
 export default ({ matrix }, options, context, cb) => {
   switch (options.render) {
+    case 'canvas':
     case 'svg':
       if (matrix) {
-        context.push(`
-          <g transform='${matrix.toCss()}'>
-        `);
+        context.matrix.push(matrix);
       }
 
       cb(matrix);
 
       if (matrix) {
-        context.push('</g>');
-      }
-
-      break;
-    case 'canvas':
-      if (matrix) {
-        const { a, b, c, d, tx, ty } = matrix.getValues();
-        context.save();
-        context.transform(a, b, c, d, tx, ty);
-      }
-
-      cb(matrix);
-
-      if (matrix) {
-        context.restore();
+        context.matrix.pop();
       }
 
       break;
