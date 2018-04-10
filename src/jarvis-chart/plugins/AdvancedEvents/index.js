@@ -7,6 +7,20 @@ const getCoords = (e) => {
   return { x, y };
 };
 
+/**
+ * AdvancedEvents плагин
+ *
+ * Добавляет "продвинутые" ивенты на шину событий (p.handler), такие как pathstart, pathend, zoom, drag
+ * Также пробрасывает "обычные" на p.handler ивенты: click, mousedown, mouseup, mousemove
+ *
+ * Чтобы подписаться на ивенты используйте p.handler.on('click', () => console.log('click')). См Handler плагин
+ *
+ * Использует сокеты: handler/attack
+ * Использует API: p.handler
+ * Создаёт сокеты: нет
+ * Создаёт API: нет
+ *
+ */
 const AdvancedEvents = (p, options) => {
 
   let inside    = false;
@@ -14,7 +28,6 @@ const AdvancedEvents = (p, options) => {
   let lastpos   = null;
   let lasttime  = null;
 
-  /* Attach listeners to handler layer */
   p.on('handler/attach', () => {
     p.handler.attach('wheel', (e) => {
       e.preventDefault();
@@ -75,7 +88,6 @@ const AdvancedEvents = (p, options) => {
         lastpos = { x, y };
       }
     });
-
   });
 };
 

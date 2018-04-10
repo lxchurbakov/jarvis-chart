@@ -10,7 +10,6 @@ import AdvancedEvents from './plugins/AdvancedEvents';
 import ChartModes from './plugins/ChartModes';
 import ChartWindow from './plugins/ChartWindow';
 
-import Circle from './plugins/Circle';
 import ChartValues from './plugins/ChartValues';
 import ChartContent from './plugins/ChartContent';
 

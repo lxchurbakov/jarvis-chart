@@ -1,6 +1,17 @@
 import dataset from './dataset';
 import grid from './grid';
 
+/**
+ * ChartContent плагин
+ *
+ * Добавляется в chart-window и рисует сетку и значения (собственно сам чарт)
+ *
+ * Использует сокеты: chart-window/inside
+ * Создаёт сокеты: нет
+ * Использует API: p.render (неявно)
+ * Создаёт API: нет
+ *
+ */
 const ChartContent = (p, options) => {
   p.on('chart-window/inside', ({ context, state }) => {
 

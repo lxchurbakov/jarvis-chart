@@ -1,41 +1,48 @@
+const drawBrush = (p, context, brush) => {
+  brush.forEach((curr, index) => {
+    if (index > 0) {
+      const prev = brush[index - 1];
+      p.render.primitives.line(context, { x0: prev.x, y0: prev.y, x1: curr.x, y1: curr.y, color: 'red' });
+    }
+  });
+};
+
 /**
- * Brush plugin
+ * Brush плагин
+ *
+ * Создаёт инструмент "произвольная кисть" или просто "кисть":
+ *   Добавляет режим работы "brush" (см ChartModes плагин)
+ *   Добавляет brush поле в состояние (см State плагин)
+ *   Добавляет элемент brush (см Elements плагин)
+ *   Добавляет обработчики path* события для режима brush и редактирует в них элементы/поле brush (см ChartModes плагин)
+ *
+ * Использует сокеты: state/default, chart-window/inside, chart-modes/brush/path*
+ * Создаёт сокеты: нет
+ * Использует API: p.elements, p.render
+ * Создаёт API: нет
  *
  */
 const Brush = (p) => {
-
-  /* Register brush element */
-  p.elements.register('brush', (context, meta) => {
-    meta.forEach((curr, index) => {
-      if (index > 0) {
-        const prev = meta[index - 1];
-
-        p.render.primitives.line(context, { x0: prev.x, y0: prev.y, x1: curr.x, y1: curr.y, color: 'red' });
-      }
-    });
+  /* Создаём элемент кисть */
+  p.elements.register('brush', (context, brush) => {
+    drawBrush(p, context, brush);
   });
 
-  /* Add the brush we currently draw to the state */
-  p.on('state/default', (state) => ({ ...state, brush: [] }));
+  /* Создаём поле brush в стейте для хранения кисти, которую мы сейчас редактируем */
+  p.on('state/default', (state) => ({ ...state, brush: null }));
 
-  /* Render the brush we curently draw */
+  /* Выводим кисть, которую мы сейчас редактируем  */
   p.on('chart-window/inside', ({ context, state }) => {
-
     const { brush } = state;
 
     if (brush) {
-      brush.forEach((curr, index) => {
-        if (index > 0) {
-          const prev = brush[index - 1];
-          p.render.primitives.line(context, { x0: prev.x, y0: prev.y, x1: curr.x, y1: curr.y, color: 'red' });
-        }
-      });
+      drawBrush(p, context, brush);
     }
 
     return { context, state };
   });
 
-  /* Process events */
+  /* Обрабатываем события для режима brush */
 
   p.on('chart-modes/brush/pathstart', ({ x, y, e }) => {
     p.state.update((state) => {
