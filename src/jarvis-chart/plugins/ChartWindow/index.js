@@ -1,5 +1,4 @@
 import Matrix from '../../lib/matrix';
-
 import calcMatrix from './calc-matrix';
 
 const ChartWindow = (p, options) => {
