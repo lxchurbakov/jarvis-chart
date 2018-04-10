@@ -1,52 +1,5 @@
-import Matrix from '../../lib/matrix'
-
-const calcNormalMatrix = (state, options) =>
-  Matrix.join(
-    Matrix.translate(state.chartWindow.translate.x - options.width / 2, state.chartWindow.translate.y - options.height / 2),
-    Matrix.scale(state.chartWindow.zoom.x, state.chartWindow.zoom.y),
-    Matrix.translate(-state.chartWindow.translate.x + options.width / 2, -state.chartWindow.translate.y + options.height / 2),
-
-    Matrix.translate(state.chartWindow.translate.x, state.chartWindow.translate.y),
-
-    Matrix.translate(0, -options.height),
-    Matrix.scale(1, -1),
-  );
-
-const calcAutoMatrix = (state, options) => {
-  const normalMatrix = calcNormalMatrix(state, options);
-
-  const [  screenFirst ] = Matrix.apply([  0, 0 ], normalMatrix);
-  const [ screenSecond ] = Matrix.apply([ 10, 0 ], normalMatrix);
-
-  const screenStart = -screenFirst;
-  const screenWidth = screenSecond - screenFirst;
-
-  const offset = Math.floor(screenStart / screenWidth);
-  const count  = Math.ceil(options.width / screenWidth);
-
-  const min = state.values.slice(Math.max(0, offset), offset + count).reduce((acc, value) => Math.min(acc, value.min), Infinity);
-  const max = state.values.slice(Math.max(0, offset), offset + count).reduce((acc, value) => Math.max(acc, value.max), -Infinity);
-
-  return Matrix.join(
-    // Scale relative to screen center by X and at 0 by Y (since we translate on -min)
-    Matrix.translate(-options.width / 2, -0),
-    Matrix.translate(state.chartWindow.translate.x, -0),
-    Matrix.scale(state.chartWindow.zoom.x, options.height / (max - min)),
-    Matrix.translate(options.width / 2, 0),
-    Matrix.translate(-state.chartWindow.translate.x, 0),
-
-    // Move where we want
-    Matrix.translate(state.chartWindow.translate.x, -(min * options.height / (max - min))),
-
-    // Transform coordinate system
-    Matrix.translate(0, -options.height),
-    Matrix.scale(1, -1),
-  );
-};
-
-const calcMatrix = (state, options) => state.chartWindow.autoZoom
-  ? calcAutoMatrix(state, options)
-  : calcNormalMatrix(state, options);
+import Matrix from '../../lib/matrix';
+import calcMatrix from './calc-matrix';
 
 const ChartWindow = (p, options) => {
 
@@ -61,20 +14,26 @@ const ChartWindow = (p, options) => {
     return { ...state, chartWindow: defaultChartWindowState };
   });
 
-  let lastId;
-  let lastMatrix;
+  let matrix;
+
+  /* Update matrix only when state got updated (or when default state) */
+
+  const recalcMatrix = (state) => {
+    matrix = calcMatrix(state, options);
+  };
+
+  p.on('state/update', (state) => {
+    recalcMatrix(state);
+  });
+
+  p.on('state/default', (state) => {
+    recalcMatrix(state);
+    return state;
+  }, -1000);
 
   /* Render chart window and allow stuff inside to render */
+
   p.on('render/draw', ({ context, state }) => {
-
-    /* Do not recalculate the matrix if nothing has changed */
-    const matrix = (!lastId || lastId !== state.$id)
-      ? calcMatrix(state, options)
-      : lastMatrix;
-
-    lastMatrix = matrix;
-    lastId = state.$id;
-
     p.render.primitives.group(context, { matrix }, () => {
       p.emitSync('chart-window/inside', { context, state });
     });
@@ -83,7 +42,7 @@ const ChartWindow = (p, options) => {
   });
 
   p.chartWindow = {
-    getMatrix: () => lastMatrix,
+    getMatrix: () => matrix,
     setAutoZoom: (autoZoom) => p.state.update((state) => {
       state.chartWindow.autoZoom = autoZoom;
       return state;
@@ -102,7 +61,7 @@ const ChartWindow = (p, options) => {
         return state;
       }),
     },
-    toWorld: (a) => Matrix.apply(a, lastMatrix.reverse())
+    toWorld: (a) => Matrix.apply(a, matrix.reverse())
   };
 
   p.on('api', (api) => ({ ...api, chartWindow: p.chartWindow }))

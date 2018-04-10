@@ -43,9 +43,6 @@ export default (p, context, { values, matrix, showIndicator }) => {
             const v = (max - min) / 4;
 
             p.render.primitives.rectangle(context, { x: 0, y: - v, width: 7, height: v, color: '#15E6C155' });
-            // circle({ cx: 0, cy: 0, radius: 3, color: '#15E6C1', crop: false }, options, context);
-            // text({ x: 0, y: 20, text: time, color: '#ccc', crop: false }, options, con/text);
-            // line({ x0: 0, y0: -2000, x1: 0, y1: 2000, color: '#ddd' }, options, context);
           });
         });
     }
