@@ -15,6 +15,7 @@ const State = (p) => {
     p.state = {
       update: (updater) => {
         state = updater(state);
+        p.emitSync('state/update', state);
         p.render.draw(state);
       },
       get: () => state,

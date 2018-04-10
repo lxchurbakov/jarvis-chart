@@ -14,16 +14,13 @@ import Context from './context';
  */
 const Render = (p, options) => {
 
-  /* Add the $id to state to differ changed state from not changed */
-  p.on('state/default', (state) => ({ ...state, $id: 0 }))
-
   /* Attach to the main node on mount */
   p.on('mount', ({ node }) => {
 
     /* Create context */
     const context = Context(node, options);
 
-    let _state = null;
+    let state = null;
     let requested = false;
 
     /* Declare Draw API - this is a mock for draw calls */
@@ -31,17 +28,15 @@ const Render = (p, options) => {
       _draw: () => {
         context.clear();
 
-        p.emitSync('render/draw', { context, state: _state })
+        p.emitSync('render/draw', { context, state })
 
         context.flush();
 
         requestAnimationFrame(p.render._draw);
         requested = true;
       },
-      draw: (state) => {
-        _state = state;
-
-        _state.$id++;
+      draw: (_state) => {
+        state = _state;
 
         if (!requested)
           p.render._draw();
