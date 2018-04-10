@@ -32,6 +32,10 @@
       .button:active {
         top: 2px;
       }
+      .eta {
+        color: #c8348a;
+        font-size: 13px;
+      }
     </style>
   </head>
   <body>
@@ -42,7 +46,6 @@
 
     <div class="flexblock">
       <div class="button" id="mode-view">Режим просмотра</div>
-      <!-- <div class="button" id="mode-points">Режим добавления точек</div> -->
       <div class="button" id="mode-brush">Режим кисти</div>
       <div class="button" id="mode-ellipse">Режим Эллипса</div>
     </div>
@@ -51,13 +54,25 @@
       <input type="checkbox" id="auto-zoom"/> <label for="auto-zoom">Автоматический вертикальный зум</label>
     </div>
 
-    <!-- <div class="flexblock">
-      <input type="checkbox" id="show-indicator"/> <label for="auto-zoom">Подобие индикатора снизу (я не уверен:))</label>
-    </div> -->
-
     <div class="flexblock" style="display: block">
       <a href="?render=canvas">Canvas Версия</a>
       <a href="?render=svg">SVG Версия</a>
+    </div>
+
+    <div class="flexblock" style="display: block">
+      <h3>Чеклист:</h3>
+      <ul>
+        <li>Переместить из модулуса несколько индикаторов <span class="eta">вторник</span></li>
+        <li>Завернуть в реакт <span class="eta">вторник</span></li>
+        <li>Переехать на тайпскрипт <span class="eta">среда</span></li>
+        <li>Пофиксить порядок вывода <span class="eta">среда</span></li>
+        <li>Сделать элементы редактируемыми (перетаскиаемыми и удаляемыми) <span class="eta">среда</span></li>
+        <li>Добавить режимы вывода (bars, colored bars, renko и т.д.) <span class="eta">среда</span></li>
+        <li>Добавить настройки для инструментов и индикаторов (для одного для начала) <span class="eta">четверг</span></li>
+        <li>Добавить элементы (вектор, отрезок, горизонтальная линия, свободная линия, квадрат, круг, треугольник, спираль фибоначи, круг фибоначи, текст) и ластик <span class="eta">четверг</span></li>
+        <li>Переместить индикаторы из модулуса (ещё нужно скоупнуть) <span class="eta">пятница или суббота</span></li>
+        <li>Добавить настройки для чарта <span class="eta">неизвестно</span></li>
+      </ul>
     </div>
 
     <script src="bundle.js"></script>
