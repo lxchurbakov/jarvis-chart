@@ -8,8 +8,8 @@ const calcNormalMatrix = (state, options) =>
 
     Matrix.translate(state.chartWindow.translate.x, state.chartWindow.translate.y),
 
-    Matrix.translate(0, -options.height),
     Matrix.scale(1, -1),
+    Matrix.translate(0, options.height),
   );
 
 const calcAutoMatrix = (state, options) => {

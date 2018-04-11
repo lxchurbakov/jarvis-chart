@@ -24,7 +24,7 @@ const Ellipse = (p) => {
   });
 
   /* Add the brush we currently draw to the state */
-  p.on('state/default', (state) => ({ ...state, ellipse: [] }));
+  p.on('state/default', (state) => ({ ...state, ellipse: null }));
 
   /* Render the brush we curently draw */
   p.on('chart-window/inside', ({ context }) => {

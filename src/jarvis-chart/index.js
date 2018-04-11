@@ -18,6 +18,7 @@ import ViewMode from './plugins/ViewMode';
 import Elements from './plugins/Elements';
 import Brush from './plugins/Brush';
 import Ellipse from './plugins/Ellipse';
+import Fibonacci from './plugins/Fibonacci';
 
 import Indicators from './plugins/Indicators';
 
@@ -52,6 +53,7 @@ export default (node, options) => {
   p.plugin(Elements, options);
   p.plugin(Brush, options);
   p.plugin(Ellipse, options);
+  p.plugin(Fibonacci, options);
 
   p.plugin(Indicators, options);
 

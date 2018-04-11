@@ -53,6 +53,10 @@ document.getElementById('mode-ellipse').addEventListener('click', () => {
   chart.mode.set('ellipse');
 });
 
+document.getElementById('mode-fibonacci').addEventListener('click', () => {
+  chart.mode.set('fibonacci');
+});
+
 document.getElementById('auto-zoom').addEventListener('click', (e) => {
   chart.chartWindow.setAutoZoom(e.target.checked);
 });
