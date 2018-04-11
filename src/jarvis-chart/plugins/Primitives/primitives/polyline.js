@@ -1,11 +1,5 @@
-export default (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix }) => {
+export default (context, { points, width, opacity = 1, color, matrix }) => {
   switch (context.type) {
-    case 'svg':
-      context.push(`
-        <line x1='${x0}' y1='${y0}' x2='${x1}' y2='${y1}' style='stroke: ${color}; strokeWidth: ${width}' transform='${matrix ? matrix.toCss() : ''}' stroke-opacity='${opacity}' />
-      `);
-
-      break;
     case 'canvas':
       if (matrix) {
         const { a, b, c, d, tx, ty } = matrix.getValues();
@@ -14,8 +8,17 @@ export default (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix }) 
       }
 
       context.beginPath();
-      context.moveTo(x0, y0);
-      context.lineTo(x1, y1);
+
+      points.forEach((point, index) => {
+        const { x, y } = point;
+
+        if (index === 0) {
+          context.moveTo(x, y);
+        } else {
+          context.lineTo(x, y);
+        }
+      });
+
       context.lineWidth = width === 1 ? 0.6 : width;
       context.globalAlpha = opacity;
       context.strokeStyle = color;
@@ -34,6 +37,6 @@ export default (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix }) 
 
       break;
     default:
-      throw `Line is not implemented for ${context.type}`;
+      throw `Polyline is not implemented for ${context.type}`;
   }
 };

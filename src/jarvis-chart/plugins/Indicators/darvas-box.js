@@ -3,16 +3,17 @@ import { getScreenBounds } from './helpers';
 export default {
 
   inside: (p, context, { tl, bl }) => {
-    const { offset, count } = getScreenBounds;
+    const { offset, count } = getScreenBounds(context);
 
     const values = p.values.get();
 
     const topLine = values.slice();
     const bottomLine = values.slice();
 
-    // some meta
     let parameters = { topLine: tl, bottomLine: bl };
 
+    /* Sorry I just copy pasted it from modulus */
+    
     for (let i = values.length - 1; i >=0; --i) {
       const value = values[i];
       let { min, max } = value;
@@ -33,35 +34,11 @@ export default {
       bottomLine[i] = currentParameters.bottomLine;
     }
 
-    topLine.forEach((value, index) => {
-      if (index < 1) return;
-      if (index < offset || index > offset + count) return;
+    const topPoints = topLine.slice(offset, offset + count + 1).map((value, index) => ({ x: 10 * (index + offset), y: value }));
+    const bottomPoints = bottomLine.slice(offset, offset + count + 1).map((value, index) => ({ x: 10 * (index + offset), y: value }));
 
-      const prev = topLine[index - 1];
-
-      const x0 = 10 * (index - 1);
-      const y0 = prev;
-
-      const x1 = 10 * (index);
-      const y1 = value;
-
-      p.render.primitives.line(context, { x0, y0, x1, y1, color: '#7437e8', width: 1 });
-    });
-
-    bottomLine.forEach((value, index) => {
-      if (index < 1) return;
-      if (index < offset || index > offset + count) return;
-
-      const prev = bottomLine[index - 1];
-
-      const x0 = 10 * (index - 1);
-      const y0 = prev;
-
-      const x1 = 10 * (index);
-      const y1 = value;
-
-      p.render.primitives.line(context, { x0, y0, x1, y1, color: 'black', width: 1 });
-    });
+    p.render.primitives.polyline(context, { points: topPoints, color: '#7437e8', width: 1 });
+    p.render.primitives.polyline(context, { points: bottomPoints, color: 'black', width: 1 });
   },
 
 };

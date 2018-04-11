@@ -34,6 +34,6 @@ export default (context, { x, y, font = "13px arial", text, matrix, textAlign = 
 
       break;
     default:
-      throw `Text is not implemented for ${options.render}`;
+      throw `Text is not implemented for ${context.type}`;
   }
 };

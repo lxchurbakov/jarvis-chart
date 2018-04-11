@@ -11,19 +11,16 @@ import cci from './cci';
 /**
  * Indicators плагин
  *
+ * Внимание! Эта версия - демонстрационное решение, здесь поддерживается только 1 индиктор из ограниченного набора
+ *
  */
 const Indicators = (p) => {
+
   let indicatorConfigs = {};
 
-  /* Indicators API */
   p.indicators = {
-    register: (type, config) => {
-      // console.log('register', type, config)
-      indicatorConfigs[type] = config;
-    },
-    set: (type, meta) => {
-      p.state.update((state) => ({ ...state, indicator: { type, meta }}));
-    },
+    register: (type, config) => indicatorConfigs[type] = config,
+    set: (type, meta) => p.state.update((state) => ({ ...state, indicator: { type, meta }})),
   };
 
   p.on('state/default', (state) => ({ ...state, indicator: null }));
@@ -57,7 +54,6 @@ const Indicators = (p) => {
   });
 
   p.on('mount', (data) => {
-    // p.emitSync('indicators/register');
 
     p.indicators.register('ma', ma);
     p.indicators.register('darvas-box', darvasBox);

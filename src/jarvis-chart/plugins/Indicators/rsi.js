@@ -1,36 +1,30 @@
 import Matrix from '../../lib/matrix';
 
-import { getScreenBounds } from './helpers';
+import { getScreenBounds, getUD, movingAverage } from './helpers';
 
 export default {
 
   inside: (p, context, { distance }) => {
-    const { offset, count } = getScreenBounds;
+    const { offset, count } = getScreenBounds(context);
 
     const values = p.values.get();
 
-    const ud = values.map((value, index) => {
-      if (index > 0) {
-        const prev = values[index - 1];
-        const u = Math.max(0, value.close - prev.close)
-        const d = Math.max(0, prev.close - value.close)
+    /* Retrieve U and D from values */
 
-        return { u, d };
-      } else {
-        return { u: 0, d: 0 };
-      }
-    });
+    const ud = values.map((value, index) => index > 0 ? getUD(value, values[index - 1]) : ({ u: 0, d: 0 }));
+    const u = ud.map(({ u }) => u);
+    const d = ud.map(({ d }) => d);
 
-    const rs = ud.map((value, index, array) => {
-      const sliceInstance = ud.slice(Math.max(0, index - distance), Math.min(ud.length - 1, index + distance));
+    const uma = movingAverage(u, distance);
+    const dma = movingAverage(d, distance);
 
-      const u = sliceInstance.reduce((acc, value) => acc + value.u, 0) / sliceInstance.length;
-      const d = sliceInstance.reduce((acc, value) => acc + value.d, 0) / sliceInstance.length;
+    /* Get rs for every element */
 
-      return u / d;
-    });
+    const rs = uma.map((_uma, index) => _uma / dma[index]);
 
     const rsi = rs.map(rs => 100 - (100 / (1 + rs)));
+
+    /* Calculate matrix to get back to screen coords */
 
     const currentMatrix = context.matrix.get();
 
@@ -44,21 +38,9 @@ export default {
     p.render.primitives.group(context, { matrix: dropMatrix }, () => {
       p.render.primitives.line(context, { x0: 0, y0: 100, x1: 50000, y1: 100, color: 'red', width: 1 });
 
-      rsi.forEach((value, index) => {
-        if (index < 1) return;
-        if (index < offset || index > offset + count) return;
+      const points = rsi.slice(offset, offset + count + 1).map((value, index) => ({ x: 10 * (index + offset), y: value }));
 
-        const prev = rsi[index - 1];
-
-        const x0 = 10 * (index - 1);
-        const y0 = prev;
-
-        const x1 = 10 * (index);
-        const y1 = value;
-
-        p.render.primitives.line(context, { x0, y0, x1, y1, color: '#7437e8', width: 1 });
-      });
+      p.render.primitives.polyline(context, { points, color: '#7437e8', width: 1 })
     });
   },
-
 };

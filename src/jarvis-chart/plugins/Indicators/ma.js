@@ -1,32 +1,15 @@
-import { getScreenBounds } from './helpers';
+import { getScreenBounds, movingAverage } from './helpers';
 
 export default {
-
   inside: (p, context, { distance }) => {
-    const { offset, count } = getScreenBounds;
+    const { offset, count } = getScreenBounds(context);
 
     const values = p.values.get();
+    const valuesClose = values.map(value => value.close);
+    const valuesCloseMA = movingAverage(valuesClose, distance);
 
-    const movingAverage = values.map((value, index, array) => {
-      const sliceInstance = values.slice(Math.max(0, index - distance), Math.min(values.length - 1, index + distance));
+    const points = valuesCloseMA.slice(offset, offset + count + 1).map((value, index) => ({ x: 10 * (index + offset), y: value }));
 
-      return sliceInstance.reduce((acc, value) => acc + value.close, 0) / sliceInstance.length;
-    });
-
-    movingAverage.forEach((value, index) => {
-      if (index < 1) return;
-      if (index < offset || index > offset + count) return;
-
-      const prev = movingAverage[index - 1];
-
-      const x0 = 10 * (index - 1);
-      const y0 = prev;
-
-      const x1 = 10 * (index);
-      const y1 = value;
-
-      p.render.primitives.line(context, { x0, y0, x1, y1, color: '#7437e8', width: 1 });
-    });
+    p.render.primitives.polyline(context, { points, color: '#7437e8', width: 1 });
   },
-
 };

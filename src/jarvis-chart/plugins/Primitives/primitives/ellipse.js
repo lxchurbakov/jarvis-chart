@@ -31,6 +31,6 @@ export default (context, { cx, cy, radiusx, radiusy, color, opacity = 1, matrix,
 
       break;
     default:
-      throw `Circle is not implemented for ${options.render}`;
+      throw `Circle is not implemented for ${context.type}`;
   }
 };

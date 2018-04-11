@@ -25,6 +25,6 @@ export default (context, { x, y, width, height, opacity = 1, color, matrix }) =>
 
       break;
     default:
-      throw `Rectangle is not implemented for ${options.render}`;
+      throw `Rectangle is not implemented for ${context.type}`;
   }
 };
