@@ -16,11 +16,11 @@ const drawFibonacci = (p, context, { x0, y0, x1, y1 }) => {
   );
 
   p.render.primitives.group(context, { matrix: dropMatrix }, () => {
-    p.render.primitives.circle(context, { cx: x0screen, cy: y0screen, radius, color: '#ddd' });
-    p.render.primitives.circle(context, { cx: x0screen, cy: y0screen, radius: radius * 0.618, color: '#ccc' });
-    p.render.primitives.circle(context, { cx: x0screen, cy: y0screen, radius: radius * 0.5, color: '#bbb' });
-    p.render.primitives.circle(context, { cx: x0screen, cy: y0screen, radius: radius * 0.382, color: '#aaa' });
-    p.render.primitives.line(context, { x0: x0screen, y0: y0screen, x1: x1screen, y1: y1screen, color: 'red' });
+    p.render.primitives.circle(context, { cx: x0screen, cy: y0screen, radius, color: '#aaa', opacity: 0.3 });
+    p.render.primitives.circle(context, { cx: x0screen, cy: y0screen, radius: radius * 0.618, color: '#aaa', opacity: 0.3 });
+    p.render.primitives.circle(context, { cx: x0screen, cy: y0screen, radius: radius * 0.5, color: '#aaa', opacity: 0.3 });
+    p.render.primitives.circle(context, { cx: x0screen, cy: y0screen, radius: radius * 0.382, color: '#aaa', opacity: 0.3 });
+    p.render.primitives.line(context, { x0: x0screen, y0: y0screen, x1: x1screen, y1: y1screen, color: 'red', opacity: 0.3 });
   });
 };
 

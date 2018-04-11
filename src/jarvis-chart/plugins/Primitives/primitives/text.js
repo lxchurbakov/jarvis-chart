@@ -1,6 +1,6 @@
 const textAlignToTextAnchor = (textAlign) => ({ 'left': 'start', 'center': 'middle', 'right': 'end' })[textAlign];
 
-export default (context, { x, y, font = "13px arial", text, matrix, textAlign = 'center', color = 'black', crop = true }) => {
+export default (context, { x, y, font = "13px arial", text, matrix, textAlign = 'center', color = 'black', opacity = 1, crop = true }) => {
   // if (
   //   crop &&
   //   !context.matrix.crop(x, y)
@@ -9,7 +9,7 @@ export default (context, { x, y, font = "13px arial", text, matrix, textAlign = 
   switch (context.type) {
     case 'svg':
       context.push(`
-        <text x='${x}' y='${y}' text-anchor='${textAlignToTextAnchor(textAlign)}' fill='${color}' style='font: ${font}' transform='${matrix ? matrix.toCss() : ''}' >
+        <text x='${x}' y='${y}' text-anchor='${textAlignToTextAnchor(textAlign)}' fill='${color}' style='font: ${font}' transform='${matrix ? matrix.toCss() : ''}' fill-opacity='${opacity}' >
           ${text}
         </text>
       `);
@@ -24,6 +24,7 @@ export default (context, { x, y, font = "13px arial", text, matrix, textAlign = 
 
       context.font = font;
       context.textAlign = textAlign;
+      context.globalAlpha = opacity;
       context.fillStyle = color;
       context.fillText(text, x, y);
 

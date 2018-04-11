@@ -1,4 +1,4 @@
-export default (context, { cx, cy, radiusx, radiusy, color, matrix, crop = true }) => {
+export default (context, { cx, cy, radiusx, radiusy, color, opacity = 1, matrix, crop = true }) => {
   /* Auto Crop Element when invisible */
   /* TODO does not work, screen coords are not calculated correctly */
   // if (
@@ -10,7 +10,7 @@ export default (context, { cx, cy, radiusx, radiusy, color, matrix, crop = true 
   switch (context.type) {
     case 'svg':
       context.push(`
-        <ellipse cx='${cx}' cy='${cy}' rx='${radiusx}' ry='${radiusy}' fill='${color}' transform='${matrix ? matrix.toCss() : ''}' />
+        <ellipse cx='${cx}' cy='${cy}' rx='${radiusx}' ry='${radiusy}' fill='${color}' transform='${matrix ? matrix.toCss() : ''}' fill-opaicty='${opacity}'/>
       `);
 
       break;
@@ -21,6 +21,7 @@ export default (context, { cx, cy, radiusx, radiusy, color, matrix, crop = true 
 
       context.beginPath();
       context.ellipse(cx, cy, radiusx, radiusy, 0, 0, 2 * Math.PI);
+      context.globalAlpha = opacity;
       context.fillStyle = color;
       context.fill();
 

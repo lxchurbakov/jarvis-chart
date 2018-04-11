@@ -1,8 +1,8 @@
-export default (context, { x0, y0, x1, y1, width, color, matrix }) => {
+export default (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix }) => {
   switch (context.type) {
     case 'svg':
       context.push(`
-        <line x1='${x0}' y1='${y0}' x2='${x1}' y2='${y1}' style='stroke: ${color}; strokeWidth: ${width}' transform='${matrix ? matrix.toCss() : ''}' />
+        <line x1='${x0}' y1='${y0}' x2='${x1}' y2='${y1}' style='stroke: ${color}; strokeWidth: ${width}' transform='${matrix ? matrix.toCss() : ''}' stroke-opacity='${opacity}' />
       `);
 
       break;
@@ -17,6 +17,7 @@ export default (context, { x0, y0, x1, y1, width, color, matrix }) => {
       context.moveTo(x0, y0);
       context.lineTo(x1, y1);
       context.lineWidth = width === 1 ? 0.6 : width;
+      context.globalAlpha = opacity;
       context.strokeStyle = color;
       context.stroke();
 
