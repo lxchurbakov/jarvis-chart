@@ -19,23 +19,21 @@ export default (p, context, { values, matrix, showIndicator }, cb) => {
 
   let count, offset, nth;
 
-  p.render.primitives.group(context, { matrix: matrixForTimeline(context.matrix.get(), context.matrix.screen.dimensions().height - 40) }, () => {
+  p.render.primitives.group(context, { matrix: matrixForTimeline(context.api.matrix.get(), context.api.screen.height() - 40) }, () => {
     p.render.primitives.line(context, { x0: -20000, y0: 0, x1: 20000, y1: 0, color: '#ccc' });
 
     /* Do not draw elements that are outside the screen */
-    const [  screenFirst ] = context.matrix.screen([ 0, 0 ]);
-    const [ screenSecond ] = context.matrix.screen([ OFFSET, 0 ]);
+    const [  screenFirst ] = context.api.screen.inside([ 0, 0 ]);
+    const [ screenSecond ] = context.api.screen.inside([ OFFSET, 0 ]);
 
     const screenStart = -screenFirst;
     const screenWidth = screenSecond - screenFirst;
 
     offset = Math.floor(Math.max((screenStart / screenWidth) - 1, 0));
-    count  = Math.ceil(context.matrix.screen.dimensions().width / screenWidth) + 2;
+    count  = Math.ceil(context.api.screen.width() / screenWidth) + 2;
 
     /* Draw only ten timepoints per screen */
     nth    = Math.floor(count / 10);
-
-
 
     values
       .forEach(({ time }, index) => {
@@ -44,7 +42,7 @@ export default (p, context, { values, matrix, showIndicator }, cb) => {
         /* Draw only every nth element */
         if (index % nth > 0) return;
 
-        p.render.primitives.group(context, { matrix: matrixForTimepoint(context.matrix.get(), index) }, () => {
+        p.render.primitives.group(context, { matrix: matrixForTimepoint(context.api.matrix.get(), index) }, () => {
           // p.render.primitives.circle(context, { cx: 0, cy: 0, radius: 3, color: '#15E6C1', crop: false });
           // p.render.primitives.text(context, { x: 0, y: 20, text: time, color: '#ccc', crop: false });
           p.render.primitives.line(context, { x0: 0, y0: -2000, x1: 0, y1: 2000, color: '#ddd' });
@@ -54,14 +52,14 @@ export default (p, context, { values, matrix, showIndicator }, cb) => {
   });
   cb();
 
-  p.render.primitives.group(context, { matrix: matrixForTimeline(context.matrix.get(), context.matrix.screen.dimensions().height - 40) }, () => {
+  p.render.primitives.group(context, { matrix: matrixForTimeline(context.api.matrix.get(), context.api.screen.height() - 40) }, () => {
     // if (showIndicator) {
       values
         .forEach(({ max, min, time, volume }, index) => {
           /* Draw only visible elements */
           if (index < offset || index > offset + count) return;
 
-          p.render.primitives.group(context, { matrix: matrixForTimepoint(context.matrix.get(), index) }, () => {
+          p.render.primitives.group(context, { matrix: matrixForTimepoint(context.api.matrix.get(), index) }, () => {
             const v = volume / 4;
 
             p.render.primitives.rectangle(context, { x: 0, y: - v, width: 7, height: v, color: '#15E6C155' });
@@ -76,7 +74,7 @@ export default (p, context, { values, matrix, showIndicator }, cb) => {
         /* Draw only every nth element */
         if (index % nth > 0) return;
 
-        p.render.primitives.group(context, { matrix: matrixForTimepoint(context.matrix.get(), index) }, () => {
+        p.render.primitives.group(context, { matrix: matrixForTimepoint(context.api.matrix.get(), index) }, () => {
           p.render.primitives.circle(context, { cx: 0, cy: 0, radius: 3, color: '#15E6C1', crop: false });
           p.render.primitives.text(context, { x: 0, y: 20, text: time, color: '#ccc', crop: false });
           // p.render.primitives.line(context, { x0: 0, y0: -2000, x1: 0, y1: 2000, color: '#ddd' });

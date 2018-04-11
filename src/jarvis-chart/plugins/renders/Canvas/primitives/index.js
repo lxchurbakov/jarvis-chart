@@ -1,3 +1,5 @@
+import Matrix from 'lib/matrix';
+
 const circle = (context, { cx, cy, radius, color, matrix, opacity = 1, crop = true }) => {
   /* Auto Crop Element when invisible */
   /* TODO does not work, screen coords are not calculated correctly */
@@ -8,7 +10,7 @@ const circle = (context, { cx, cy, radius, color, matrix, opacity = 1, crop = tr
   // ) return;
 
   if (matrix) {
-    context.matrix.push(matrix);
+    context.api.matrix.push(matrix);
   }
 
   context.beginPath();
@@ -18,7 +20,7 @@ const circle = (context, { cx, cy, radius, color, matrix, opacity = 1, crop = tr
   context.fill();
 
   if (matrix) {
-    context.matrix.push(matrix);
+    context.api.matrix.pop();
   }
 };
 
@@ -33,65 +35,61 @@ const ellipse = (context, { cx, cy, radiusx, radiusy, color, opacity = 1, matrix
   // ) return;
 
   if (matrix) {
-    context.matrix.push(matrix);
+    context.api.matrix.push(matrix);
   }
 
   context.beginPath();
   context.ellipse(cx, cy, radiusx, radiusy, 0, 0, 2 * Math.PI);
-  context.globalAlpha = opacity;
-  context.fillStyle = color;
+  context.api.draw.globalAlpha.set(opacity);
+  context.api.draw.fillStyle.set(color);
+  // context.globalAlpha = opacity;
+  // context.fillStyle = color;
   context.fill();
 
   if (matrix) {
-    context.matrix.push(matrix);
+    context.api.matrix.pop();
   }
 };
 
 /* */
 const group = (context, { matrix }, cb) => {
   if (matrix) {
-    context.matrix.push(matrix);
+    context.api.matrix.push(matrix);
   }
 
   cb(matrix);
 
   if (matrix) {
-    context.matrix.pop();
+    context.api.matrix.pop();
   }
 };
 
 const line = (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix }) => {
   if (matrix) {
-    const { a, b, c, d, tx, ty } = matrix.getValues();
-    context.save();
-    context.transform(a, b, c, d, tx, ty);
+    context.api.matrix.push(matrix);
   }
 
   context.beginPath();
   context.moveTo(x0, y0);
   context.lineTo(x1, y1);
+
   context.lineWidth = width === 1 ? 0.6 : width;
   context.globalAlpha = opacity;
   context.strokeStyle = color;
 
   /* Descale line */
-  context.save();
-  context.setTransform(1, 0, 0, 1, 0, 0);
-
+  context.api.matrix.replace(Matrix.identity());
   context.stroke();
-
-  context.restore();
+  context.api.matrix.pop();
 
   if (matrix) {
-    context.restore();
+    context.api.matrix.pop();
   }
 };
 
 const polyline = (context, { points, width, opacity = 1, color, matrix }) => {
   if (matrix) {
-    const { a, b, c, d, tx, ty } = matrix.getValues();
-    context.save();
-    context.transform(a, b, c, d, tx, ty);
+    context.api.matrix.push(matrix);
   }
 
   context.beginPath();
@@ -111,23 +109,20 @@ const polyline = (context, { points, width, opacity = 1, color, matrix }) => {
   context.strokeStyle = color;
 
   /* Descale line */
-  context.save();
-  context.setTransform(1, 0, 0, 1, 0, 0);
+  context.api.matrix.replace(Matrix.identity());
 
   context.stroke();
 
-  context.restore();
+  context.api.matrix.pop();
 
   if (matrix) {
-    context.restore();
+    context.api.matrix.pop();
   }
 };
 
 const rectangle = (context, { x, y, width, height, opacity = 1, color, matrix }) => {
   if (matrix) {
-    const { a, b, c, d, tx, ty } = matrix.getValues();
-    context.save();
-    context.transform(a, b, c, d, tx, ty);
+    context.api.matrix.push(matrix);
   }
 
   context.beginPath();
@@ -137,7 +132,7 @@ const rectangle = (context, { x, y, width, height, opacity = 1, color, matrix })
   context.fill();
 
   if (matrix) {
-    context.restore();
+    context.api.matrix.pop();
   }
 };
 
@@ -148,9 +143,7 @@ const text = (context, { x, y, font = "13px arial", text, matrix, textAlign = 'c
   // ) return;
 
   if (matrix) {
-    const { a, b, c, d, tx, ty } = matrix.getValues();
-    context.save();
-    context.transform(a, b, c, d, tx, ty);
+    context.api.matrix.push(matrix);
   }
 
   context.font = font;
@@ -160,7 +153,7 @@ const text = (context, { x, y, font = "13px arial", text, matrix, textAlign = 'c
   context.fillText(text, x, y);
 
   if (matrix) {
-    context.restore();
+    context.api.matrix.pop();
   }
 };
 

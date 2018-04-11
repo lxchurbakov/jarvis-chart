@@ -61,21 +61,14 @@ const DebugInfo = (p) => {
 
     const time = performance.now();
 
-    // console.log({ time, lastTime })
-
     fps = ((fps * 50 + 1 / ((time - lastTime) / 1000)) / 51).toFixed(1);
+
     lastTime = time;
-    // console.log(context.matrix.get(), 'start', Matrix.resetScale(context.matrix.get()));
-    // p.render.primitives.group(context, { matrix: Matrix.resetScale(context.matrix.get()) }, () => {
-      // console.log(context.matrix.get(), Matrix.resetTranslate(context.matrix.get()));
-      // p.render.primitives.group(context, { matrix: Matrix.resetTranslate(context.matrix.get()) }, () => {
-        // console.log(context.matrix.get());
-        p.render.primitives.text(context, { x: 5, y: 5 + 13, textAlign: 'left', text: 'DebugInfo:', color: '#555', font: '100 13px Open Sans' })
-        p.render.primitives.text(context, { x: 5, y: 2 * (5 + 13), textAlign: 'left', text: 'FPS: ' + fps, color: fpsColor(fps), font: '800 13px Open Sans' })
-        p.render.primitives.text(context, { x: 5, y: 3 * (5 + 13), textAlign: 'left', text: 'Browser: ' + browser.name + ' ' + browser.version, color: '#555', font: '800 13px Open Sans' })
-        p.render.primitives.text(context, { x: 5, y: 4 * (5 + 13), textAlign: 'left', text: 'JS PERF RATE: ' + jsPerfMark, color: '#555', font: '800 13px Open Sans' })
-      // });
-    // });
+
+    p.render.primitives.text(context, { x: 5, y: 5 + 13, textAlign: 'left', text: 'DebugInfo:', color: '#555', font: '100 13px Open Sans' })
+    p.render.primitives.text(context, { x: 5, y: 2 * (5 + 13), textAlign: 'left', text: 'FPS: ' + fps, color: fpsColor(fps), font: '800 13px Open Sans' })
+    p.render.primitives.text(context, { x: 5, y: 3 * (5 + 13), textAlign: 'left', text: 'Browser: ' + browser.name + ' ' + browser.version, color: '#555', font: '800 13px Open Sans' })
+    p.render.primitives.text(context, { x: 5, y: 4 * (5 + 13), textAlign: 'left', text: 'JS PERF RATE: ' + jsPerfMark, color: '#555', font: '800 13px Open Sans' })
   });
 };
 

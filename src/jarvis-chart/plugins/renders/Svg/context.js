@@ -1,4 +1,4 @@
-import Transform from '../transform';
+import Transform from 'lib/transform';
 
 /**
  * Svg Render Context
@@ -29,10 +29,16 @@ export default (node, options) => {
   context.push = (figure) => content += figure;
 
   /* Attach matrix API */
-  context.matrix = Transform({
-    width, height,
-    push: (matrix) => context.push(`<g transform='${matrix.toCss()}'>`),
-    pop:  ()       => context.push('</g>'),
+  context.api = Transform({
+    width,
+    height,
+    matrix: {
+      push: (matrix) => context.push(`<g transform='${matrix.toCss()}'>`),
+      pop:  ()       => context.push('</g>'),
+      replace: (matrix) => {
+        context.api.matrix.push(context.api.matrix.get().reverse());
+      },
+    },
   });
 
   context.type = 'svg';

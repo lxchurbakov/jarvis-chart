@@ -15,14 +15,14 @@ const candle = (p, context, { x, y, min, max, open, close }) => {
 
 export default (p, context, { values }) => {
   /* Do not draw elements that are outside the screen */
-  const [  screenFirst ] = context.matrix.screen([ 0, 0 ]);
-  const [ screenSecond ] = context.matrix.screen([ 10, 0 ]);
+  const [  screenFirst ] = context.api.screen.inside([ 0, 0 ]);
+  const [ screenSecond ] = context.api.screen.inside([ 10, 0 ]);
 
   const screenStart = -screenFirst;
   const screenWidth = screenSecond - screenFirst;
 
   const offset = Math.floor(Math.max(screenStart / screenWidth - 1, 0));
-  const count  = Math.ceil(context.matrix.screen.dimensions().width / screenWidth) + 2;
+  const count  = Math.ceil(context.api.screen.width() / screenWidth) + 2;
 
   values.forEach(({ min, max, open, close }, index) => {
     if (index < offset || index > offset + count) return;

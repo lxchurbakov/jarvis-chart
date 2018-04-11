@@ -1,4 +1,4 @@
-import Transform from '../transform';
+import Transform from 'lib/transform';
 
 export default (node, options) => {
   const width  = node.offsetWidth;
@@ -27,19 +27,30 @@ export default (node, options) => {
     context.clearRect(0, 0, width, height);
     realContext.clearRect(0, 0, width, height);
   };
-  context.flush = () => { /* nope */ };
+
+  // context.flush = () => { /* nope */ };
   context.flush = () => realContext.drawImage(buffer, 0, 0);
 
   /* Attach matrix API */
-  context.matrix = Transform({
-    width, height,
-    push: (matrix) => {
-      const { a, b, c, d, tx, ty } = matrix.getValues();
 
-      context.save();
-      context.transform(a, b, c, d, tx, ty);
+  context.api = Transform({
+    matrix: {
+      push: (matrix) => {
+        const { a, b, c, d, tx, ty } = matrix.getValues();
+
+        context.save();
+        context.transform(a, b, c, d, tx, ty);
+      },
+      replace: (matrix) => {
+        const { a, b, c, d, tx, ty } = matrix.getValues();
+
+        context.save();
+        context.setTransform(a, b, c, d, tx, ty);
+      },
+      pop: () => context.restore(),
     },
-    pop: () => context.restore(),
+    width,
+    height,
   });
 
   context.type = 'canvas';

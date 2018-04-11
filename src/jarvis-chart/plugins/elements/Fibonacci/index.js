@@ -3,7 +3,7 @@ import Matrix from 'lib/matrix';
 const distance = (x0, y0, x1, y1) => Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
 
 const drawFibonacci = (p, context, { x0, y0, x1, y1 }) => {
-  const worldMatrix = context.matrix.get();
+  const worldMatrix = context.api.matrix.get();
 
   const [ x0screen, y0screen ] = Matrix.apply([x0, y0], worldMatrix);
   const [ x1screen, y1screen ] = Matrix.apply([x1, y1], worldMatrix);

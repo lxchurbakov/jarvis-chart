@@ -22,11 +22,11 @@ export default {
     const stochasticPoints = stochastic.slice(offset, offset + count).map((value, index) => ({ x: 10 * (index + offset), y: value }));
     const stochasticMAPoints = stochasticMA.slice(offset, offset + count).map((value, index) => ({ x: 10 * (index + offset), y: value }));
 
-    const currentMatrix = context.matrix.get();
+    const currentMatrix = context.api.matrix.get();
 
     const dropMatrix = Matrix.join(
       Matrix.scale(1, -1),
-      Matrix.translate(0, context.matrix.screen.dimensions().height),
+      Matrix.translate(0, context.api.screen.height()),
       Matrix.resetTranslate(currentMatrix, false, true),
       Matrix.resetScale(currentMatrix, false, true),
     );

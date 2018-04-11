@@ -26,11 +26,11 @@ export default {
 
     /* Calculate matrix to get back to screen coords */
 
-    const currentMatrix = context.matrix.get();
+    const currentMatrix = context.api.matrix.get();
 
     const dropMatrix = Matrix.join(
       Matrix.scale(1, -1),
-      Matrix.translate(0, context.matrix.screen.dimensions().height),
+      Matrix.translate(0, context.api.screen.height()),
       Matrix.resetTranslate(currentMatrix, false, true),
       Matrix.resetScale(currentMatrix, false, true),
     );

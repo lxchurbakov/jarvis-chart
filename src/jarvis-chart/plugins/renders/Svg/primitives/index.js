@@ -26,19 +26,19 @@ const ellipse = (context, { cx, cy, radiusx, radiusy, color, opacity = 1, matrix
 
 const group = (context, { matrix }, cb) => {
   if (matrix) {
-    context.matrix.push(matrix);
+    context.api.matrix.push(matrix);
   }
 
   cb(matrix);
 
   if (matrix) {
-    context.matrix.pop();
+    context.api.matrix.pop();
   }
 };
 
 const line = (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix }) => {
   context.push(`
-    <line x1='${x0}' y1='${y0}' x2='${x1}' y2='${y1}' style='stroke: ${color}; strokeWidth: ${width}' transform='${matrix ? matrix.toCss() : ''}' stroke-opacity='${opacity}' />
+    <line x1='${x0}' y1='${y0}' x2='${x1}' y2='${y1}'  vector-effect='non-scaling-stroke' style='stroke: ${color}; strokeWidth: ${width}' transform='${matrix ? matrix.toCss() : ''}' stroke-opacity='${opacity}' />
   `);
 };
 

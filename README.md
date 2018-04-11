@@ -10,6 +10,8 @@
 - [x] Commodity Channel Index http://enc.fxeuroclub.com/112/
 - [ ] Parabolic SAR https://www.fxteam.ru/forex-library/technical-analyse/parabolic-sar/
 - [ ] Volume profile https://www.tradingview.com/wiki/Volume_Profile
+- [ ] MACD
+- [ ] MACD Histogram
 
 ### Остальные
 
@@ -82,8 +84,7 @@
 - [ ] Elder Ray
 - [ ] Fractal Chaos Oscillator
 - [ ] Klinger Volume Oscillator
-- [ ] MACD
-- [ ] MACD Histogram
+
 - [ ] Momentum Oscillator
 - [ ] Pretty Good Oscillator
 - [ ] Price Oscillator
