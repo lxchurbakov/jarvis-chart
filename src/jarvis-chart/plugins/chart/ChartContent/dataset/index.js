@@ -1,4 +1,4 @@
-import Matrix from '../../../../lib/matrix';
+import Matrix from 'lib/matrix';
 
 const candle = (p, context, { x, y, min, max, open, close }) => {
   const marginBottom = min;

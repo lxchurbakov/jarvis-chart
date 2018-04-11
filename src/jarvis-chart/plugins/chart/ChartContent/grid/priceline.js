@@ -1,4 +1,4 @@
-import Matrix from '../../../../lib/matrix';
+import Matrix from 'lib/matrix';
 
 const matrixForTimeline = (matrix, position) =>
   Matrix.join(

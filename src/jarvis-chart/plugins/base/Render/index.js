@@ -1,5 +1,3 @@
-import Context from './context';
-
 /**
  * Render плагин
  *
@@ -12,13 +10,23 @@ import Context from './context';
  * Использует API: нет
  * Создаёт API: render
  *
+ * render/init/${render} - сокет, получающий рендер. Должен вернуть объект типа { Context, primitives }
  * render/draw - сокет, выполняющийся в момента рендеринга сцены
  * render/collect-primitives - сокет, выполняющийся в
  *
  */
 const Render = (p, options) => {
   p.on('mount', ({ node }) => {
-    const context = Context(node, options);
+
+    /* Получаем render */
+    const render = p.emitSync(`render/init/${options.render}`);
+
+    if (!render)
+      throw `Рендер типа ${options.render} не зарегистрирован`;
+
+    /* Создаём контекст */
+
+    const context = render.Context(node, options);
 
     let requested = false;
 
@@ -34,15 +42,17 @@ const Render = (p, options) => {
     };
 
     p.render = {
+      /*
+        Этот метод вызывается каждый раз, когда нужно перерисоваться
+        но на данный момент мы поддерживаем только continuous режим и рисуемся по animationFrame для любого рендера
+        TODO
+      */
       draw: () => {
         if (!requested)
           draw();
-      }
+      },
+      primitives: render.primitives,
     };
-
-    /* TODO нормальный API для примитивов */
-
-    p.emitSync('render/collect-primitives');
 
     return { node };
   });

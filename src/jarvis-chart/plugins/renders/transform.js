@@ -1,4 +1,4 @@
-import Matrix from '../../../lib/matrix'
+import Matrix from 'lib/matrix.js'
 
 /**
  * Since we need to keep track of what is the current matrix, we need

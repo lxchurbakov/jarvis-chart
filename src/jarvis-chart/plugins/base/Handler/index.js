@@ -1,4 +1,4 @@
-import EventEmitter from '../../../lib/event-emitter';
+import EventEmitter from 'lib/event-emitter';
 
 /**
  * Handler плагин

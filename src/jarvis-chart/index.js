@@ -4,7 +4,6 @@ import Handler from './plugins/base/Handler';
 import Render from './plugins/base/Render';
 import State from './plugins/base/State';
 import AdvancedEvents from './plugins/base/AdvancedEvents';
-import Primitives from './plugins/base/Primitives';
 
 import ChartModes from './plugins/chart/ChartModes';
 import ChartWindow from './plugins/chart/ChartWindow';
@@ -21,6 +20,9 @@ import Fibonacci from './plugins/elements/Fibonacci';
 
 import DebugInfo from './plugins/other/DebugInfo';
 
+import RenderCanvas from './plugins/renders/Canvas';
+import RenderSvg from './plugins/renders/Svg';
+
 export default (node, options) => {
   const p = new Pluggable();
 
@@ -30,9 +32,6 @@ export default (node, options) => {
   p.plugin(State, options);
 
   p.plugin(AdvancedEvents, options);
-
-  /* Primitive figures plugins */
-  p.plugin(Primitives, options);
 
   p.plugin(ChartValues, options);
 
@@ -52,9 +51,10 @@ export default (node, options) => {
 
   p.plugin(Indicators, options);
 
-  // p.plugin(Bollinger, options);
-
   p.plugin(DebugInfo, options);
+
+  p.plugin(RenderCanvas, options);
+  p.plugin(RenderSvg, options);
 
   /* Emit mount action */
 
