@@ -1,28 +1,25 @@
 import Pluggable from 'extendme';
 
-import Handler from './plugins/Handler';
-import Render from './plugins/Render';
-import State from './plugins/State';
-import Primitives from './plugins/Primitives';
+import Handler from './plugins/base/Handler';
+import Render from './plugins/base/Render';
+import State from './plugins/base/State';
+import AdvancedEvents from './plugins/base/AdvancedEvents';
+import Primitives from './plugins/base/Primitives';
 
-import AdvancedEvents from './plugins/AdvancedEvents';
+import ChartModes from './plugins/chart/ChartModes';
+import ChartWindow from './plugins/chart/ChartWindow';
+import ChartContent from './plugins/chart/ChartContent';
+import ChartValues from './plugins/chart/ChartValues';
+import Elements from './plugins/chart/Elements';
+import Indicators from './plugins/chart/Indicators';
 
-import ChartModes from './plugins/ChartModes';
-import ChartWindow from './plugins/ChartWindow';
+import ViewMode from './plugins/modes/ViewMode';
 
-import ChartValues from './plugins/ChartValues';
-import ChartContent from './plugins/ChartContent';
+import Brush from './plugins/elements/Brush';
+import Ellipse from './plugins/elements/Ellipse';
+import Fibonacci from './plugins/elements/Fibonacci';
 
-import ViewMode from './plugins/ViewMode';
-
-import Elements from './plugins/Elements';
-import Brush from './plugins/Brush';
-import Ellipse from './plugins/Ellipse';
-import Fibonacci from './plugins/Fibonacci';
-
-import Indicators from './plugins/Indicators';
-
-import DebugInfo from './plugins/DebugInfo';
+import DebugInfo from './plugins/other/DebugInfo';
 
 export default (node, options) => {
   const p = new Pluggable();

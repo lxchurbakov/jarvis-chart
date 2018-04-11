@@ -1,4 +1,4 @@
-import Matrix from '../../../lib/matrix';
+import Matrix from '../../../../lib/matrix';
 
 const matrixForTimeline = (matrix, position) =>
   Matrix.join(
@@ -47,7 +47,7 @@ export default (p, context, {}, cb) => {
   cb();
 
   p.render.primitives.group(context, { matrix: matrixForTimeline(context.matrix.get(), context.matrix.screen.dimensions().width - 50) }, () => {
-    
+
     p.render.primitives.rectangle(context, { x:0, y: -2000, width: 50, height: 4000, color: 'white' });
     p.render.primitives.line(context, { x0: 0, y0: -2000, x1: 0, y1: 2000, color: '#ccc' });
 
