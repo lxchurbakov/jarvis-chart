@@ -1,8 +1,8 @@
-export default (context, { x, y, width, height, color, matrix }) => {
+export default (context, { x, y, width, height, opacity = 1, color, matrix }) => {
   switch (context.type) {
     case 'svg':
       context.push(`
-        <rect x='${x}' y='${y}' width='${width}' height='${height}' style='fill: ${color}' transform='${matrix ? matrix.toCss() : ''}' />
+        <rect x='${x}' y='${y}' width='${width}' height='${height}' style='fill: ${color}' transform='${matrix ? matrix.toCss() : ''}' fill-opacity='${opacity}' />
       `);
 
       break;
@@ -15,6 +15,7 @@ export default (context, { x, y, width, height, color, matrix }) => {
 
       context.beginPath();
       context.rect(x, y, width, height);
+      context.globalAlpha = opacity;
       context.fillStyle = color;
       context.fill();
 
@@ -24,6 +25,6 @@ export default (context, { x, y, width, height, color, matrix }) => {
 
       break;
     default:
-      throw `Rectangle is not implemented for ${options.render}`;
+      throw `Rectangle is not implemented for ${context.type}`;
   }
 };

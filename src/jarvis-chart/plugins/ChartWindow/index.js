@@ -1,9 +1,23 @@
 import Matrix from '../../lib/matrix';
 import calcMatrix from './calc-matrix';
 
+/**
+ * ChartWindow плагин
+ *
+ * Создаёт "окно" чарта, через которое его можно таскать
+ *
+ * Использует сокеты: state/default, state/update, render/draw, api
+ * Создаёт сокеты: chart-window/inside
+ * Использует API: p.render
+ * Создаёт API: p.chartWindow
+ *
+ * chart-window/inside - сокет, предназначенный для вывода всего внутри графика
+ *
+ */
 const ChartWindow = (p, options) => {
 
-  /* Add Chart Window parameters to state */
+  /* Добавляем параметры "окна" графика в стейт  */
+
   p.on('state/default', (state) => {
     const defaultChartWindowState = {
       translate: { x: 0, y: 0 },
@@ -14,57 +28,69 @@ const ChartWindow = (p, options) => {
     return { ...state, chartWindow: defaultChartWindowState };
   });
 
+  /* Создаём матрицу преобразований и кэшируем её */
+
+  const recalcMatrix = (state) => matrix = calcMatrix(state, options)
+
   let matrix;
-
-  /* Update matrix only when state got updated (or when default state) */
-
-  const recalcMatrix = (state) => {
-    matrix = calcMatrix(state, options);
-  };
+  let lastState;
 
   p.on('state/update', (state) => {
-    recalcMatrix(state);
+    /* Обновляем матрицу только если изменилось состояние chartWindow */
+    if (lastState !== state && lastState.chartWindow !== state.chartWindow) {
+      recalcMatrix(state);
+      lastState = state;
+    }
   });
 
   p.on('state/default', (state) => {
+    lastState = state;
     recalcMatrix(state);
     return state;
   }, -1000);
 
-  /* Render chart window and allow stuff inside to render */
+  /* Выводим примитивы для трансформации "окна" графика */
 
-  p.on('render/draw', ({ context, state }) => {
+  p.on('render/draw', ({ context }) => {
     p.render.primitives.group(context, { matrix }, () => {
-      p.emitSync('chart-window/inside', { context, state });
+      p.emitSync('chart-window/inside', { context });
     });
 
-    return { context, state };
+    return { context };
   });
+
+  /* Регистрируем внешний API */
 
   p.chartWindow = {
     getMatrix: () => matrix,
     setAutoZoom: (autoZoom) => p.state.update((state) => {
-      state.chartWindow.autoZoom = autoZoom;
-      return state;
+      return {
+        ...state,
+        chartWindow: { ...state.chartWindow, autoZoom },
+      };
     }),
     translate: {
       get: () => p.state.get().chartWindow.translate,
-      set: (t) => p.state.update((state) => {
-        state.chartWindow.translate = t;
-        return state;
+      set: (translate) => p.state.update((state) => {
+        return {
+          ...state,
+          chartWindow: { ...state.chartWindow, translate },
+        };
       }),
     },
     zoom: {
       get: () => p.state.get().chartWindow.zoom,
-      set: (z) => p.state.update((state) => {
-        state.chartWindow.zoom = z;
-        return state;
+      set: (zoom) => p.state.update((state) => {
+        return {
+          ...state,
+          chartWindow: { ...state.chartWindow, zoom },
+        };
       }),
     },
-    toWorld: (a) => Matrix.apply(a, matrix.reverse())
+    toWorld: (a) => Matrix.apply(a, matrix.reverse()),
   };
 
-  p.on('api', (api) => ({ ...api, chartWindow: p.chartWindow }))
+  p.on('api', (api) => ({ ...api, chartWindow: p.chartWindow }));
 };
 
 ChartWindow.plugin = {

@@ -14,6 +14,6 @@ export default (context, { matrix }, cb) => {
 
       break;
     default:
-      throw `Group is not implemented for ${options.render}`;
+      throw `Group is not implemented for ${context.type}`;
   }
 };

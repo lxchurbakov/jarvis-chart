@@ -14,14 +14,16 @@
 const ChartModes = (p) => {
 
   /* Добавляем параметр "режим" в состояние чарта */
+
   p.on('state/default', (state) => {
     return { ...state, mode: p.emitSync('chart-modes/default', null) };
   });
 
   /* Дублируем события с именем режима */
+
   p.on('handler/attach', () => {
     const emitModeEvent = (event, data) => {
-      const mode = p.state.get().mode;
+      const mode = p.mode.get();
 
       p.emitSync(`chart-modes/${mode}/${event}`, data);
     };
@@ -35,13 +37,15 @@ const ChartModes = (p) => {
   });
 
   /* Создаём API */
+
   p.mode = {
     set: (mode) => p.state.update((state) => ({ ...state, mode })),
     get: ()     => p.state.get().mode,
   };
 
-  /* Добавляем метод во внешний API (для работы с чартом извне) */
-  p.on('api', (api) => ({ ...api, mode: p.mode }))
+  /* Добавляем методы во внешний API  */
+
+  p.on('api', (api) => ({ ...api, mode: p.mode }));
 };
 
 ChartModes.plugin = {

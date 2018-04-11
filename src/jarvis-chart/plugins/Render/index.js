@@ -1,47 +1,46 @@
 import Context from './context';
 
 /**
- * Render plugin
+ * Render плагин
  *
- * Creates a Context node (depending on render method)
+ * Создаёт контекст вывода и API рендера
  *
- * TODO add redrawContinuously option support
+ * TODO добавить поддержку опции для конфигурирования requestAnimationFrame
  *
- * Sockets Used: state/default, mount
- * Sockets Provided: render/draw, render/collect-primitives
- * API Provided: render
+ * Использует сокеты: state/default, mount
+ * Создаёт сокеты: render/draw, render/collect-primitives
+ * Использует API: нет
+ * Создаёт API: render
+ *
+ * render/draw - сокет, выполняющийся в момента рендеринга сцены
+ * render/collect-primitives - сокет, выполняющийся в
  *
  */
 const Render = (p, options) => {
-
-  /* Attach to the main node on mount */
   p.on('mount', ({ node }) => {
-
-    /* Create context */
     const context = Context(node, options);
 
-    let state = null;
     let requested = false;
 
-    /* Declare Draw API - this is a mock for draw calls */
+    const draw = () => {
+      context.clear();
+
+      p.emitSync('render/draw', { context })
+
+      context.flush();
+
+      requestAnimationFrame(draw);
+      requested = true;
+    };
+
     p.render = {
-      _draw: () => {
-        context.clear();
-
-        p.emitSync('render/draw', { context, state })
-
-        context.flush();
-
-        requestAnimationFrame(p.render._draw);
-        requested = true;
-      },
-      draw: (_state) => {
-        state = _state;
-
+      draw: () => {
         if (!requested)
-          p.render._draw();
+          draw();
       }
     };
+
+    /* TODO нормальный API для примитивов */
 
     p.emitSync('render/collect-primitives');
 

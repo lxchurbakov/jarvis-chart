@@ -1,7 +1,7 @@
 const VALUES_SAMPLE_COUNT = 1000;
 
 /* Shortcut for the value */
-const value = (min, max, open, close, time) => ({ min, max, open, close, time });
+const value = (min, max, open, close, time, volume) => ({ min, max, open, close, time, volume });
 
 /* Just a string time helper */
 const toTwo = (v) => (new Array(2 - v.length).fill('0').join('')) + v;
@@ -26,7 +26,9 @@ for (let i = 0; i < VALUES_SAMPLE_COUNT; ++i) {
 
   const time = getTime(i);
 
-  values.push(value(min, max, open, close, time));
+  const volume = (max - min) * (Math.random() + 1)
+
+  values.push(value(min, max, open, close, time, volume));
 }
 
 export default values;

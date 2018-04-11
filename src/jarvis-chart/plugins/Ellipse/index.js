@@ -4,28 +4,31 @@ const drawEllipse = (p, context, { start, radiusx, radiusy }) => {
   p.render.primitives.ellipse(context, { cx: start.xreal, cy: start.yreal, radiusx, radiusy, color: '#ccc' });
 };
 
-
 /**
- * Fibonacci plugin
+ * Ellipse плагин
+ *
+ * Добавляет Инструмент Эллипс
  *
  */
 const Ellipse = (p) => {
 
   /* Register brush element */
-  p.elements.register('ellipse', (context, meta) => {
-    const { start, radiusx, radiusy } = meta;
+  p.on('elements/register', () => {
+    p.elements.register('ellipse', (context, meta) => {
+      const { start, radiusx, radiusy } = meta;
 
-    if (start && radiusx && radiusy) {
-      drawEllipse(p, context, { start, radiusx, radiusy });
-    }
+      if (start && radiusx && radiusy) {
+        drawEllipse(p, context, { start, radiusx, radiusy });
+      }
+    });
   });
 
   /* Add the brush we currently draw to the state */
-  p.on('state/default', (state) => ({ ...state, ellipse: [] }));
+  p.on('state/default', (state) => ({ ...state, ellipse: null }));
 
   /* Render the brush we curently draw */
-  p.on('chart-window/inside', ({ context, state }) => {
-    const { ellipse } = state;
+  p.on('chart-window/inside', ({ context }) => {
+    const { ellipse } = p.state.get();
 
     if (ellipse) {
       const { start, radiusx, radiusy } = ellipse;
@@ -35,32 +38,26 @@ const Ellipse = (p) => {
       }
     }
 
-    return { context, state };
+    return { context };
   });
 
   /* Process events */
 
   p.on('chart-modes/ellipse/pathstart', ({ x, y, e }) => {
     const [ xreal, yreal ] = p.chartWindow.toWorld([x, y]);
+    const ellipse = {
+      start: { x, y, xreal, yreal },
+      radiusx: null,
+      radiusy: null,
+    };
 
-    p.state.update((state) => {
-      state.ellipse = {
-        start: { x, y, xreal, yreal },
-        radiusx: null,
-        radiusy: null,
-      };
-
-      return state;
-    });
+    p.state.update((state) => ({ ...state, ellipse }));
   });
 
   p.on('chart-modes/ellipse/pathend', ({ x, y, e }) => {
     p.elements.push('ellipse', p.state.get().ellipse);
 
-    p.state.update((state) => {
-      state.ellipse = null;
-      return state;
-    });
+    p.state.update((state) => ({ ...state, ellipse: null }));
   });
 
   p.on('chart-modes/ellipse/path', ({ x, y, e }) => {
@@ -73,11 +70,7 @@ const Ellipse = (p) => {
     const radiusx = Math.abs(radius / p.chartWindow.getMatrix().getValues().a);
     const radiusy = Math.abs(radius / p.chartWindow.getMatrix().getValues().d);
 
-    p.state.update((state) => {
-      state.ellipse.radiusx = radiusx;
-      state.ellipse.radiusy = radiusy;
-      return state;
-    });
+    p.state.update((state) => ({ ...state, ellipse: { ...state.ellipse, radiusx, radiusy }}));
   });
 };
 

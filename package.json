@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Jarvis Chart",
   "scripts": {
-    "build-for-gh-pages": "npx webpack && mv dist docs",
+    "build-for-gh-pages": "npx webpack && rm -rf docs && mv dist docs",
     "build": "npx webpack",
     "dev": "npx webpack-dev-server"
   },

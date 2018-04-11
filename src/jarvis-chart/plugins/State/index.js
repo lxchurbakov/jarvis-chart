@@ -1,11 +1,14 @@
 /**
- * State Plugin
+ * State плагин
  *
- * Creates a Store for the application State
+ * Создаёт хранилище для данных чарта
  *
- * Sockets Used: mount, api
- * Sockets Provided: 'state/default'
- * API Provided: state
+ * Использует сокеты: mount, api
+ * Создаёт сокеты: state/default
+ * Использует API: нет
+ * Создаёт API: p.state
+ *
+ * state/default - для определения дефолтного состояния
  *
  */
 const State = (p) => {
