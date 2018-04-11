@@ -19,7 +19,14 @@ export default (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix }) 
       context.lineWidth = width === 1 ? 0.6 : width;
       context.globalAlpha = opacity;
       context.strokeStyle = color;
+
+      /* Descale line */
+      context.save();
+      context.setTransform(1, 0, 0, 1, 0, 0);
+
       context.stroke();
+
+      context.restore();
 
       if (matrix) {
         context.restore();

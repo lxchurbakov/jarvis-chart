@@ -22,8 +22,6 @@ import Fibonacci from './plugins/Fibonacci';
 
 import Indicators from './plugins/Indicators';
 
-import Bollinger from './plugins/Bollinger';
-
 import DebugInfo from './plugins/DebugInfo';
 
 export default (node, options) => {
@@ -57,7 +55,7 @@ export default (node, options) => {
 
   p.plugin(Indicators, options);
 
-  p.plugin(Bollinger, options);
+  // p.plugin(Bollinger, options);
 
   p.plugin(DebugInfo, options);
 
