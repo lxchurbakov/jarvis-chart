@@ -57,6 +57,11 @@ document.getElementById('auto-zoom').addEventListener('click', (e) => {
   chart.chartWindow.setAutoZoom(e.target.checked);
 });
 
+document.getElementById('bollinger-distance').addEventListener('input', (e) => {
+  chart.setBollingerDistance(parseInt(e.target.value));
+  chart.state.update(v => v);
+});
+
 // document.getElementById('show-indicator').addEventListener('click', (e) => {
 //   chart.setShowIndicator(e.target.checked);
 // });

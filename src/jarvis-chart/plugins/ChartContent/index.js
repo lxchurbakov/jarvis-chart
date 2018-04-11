@@ -13,14 +13,17 @@ import grid from './grid';
  *
  */
 const ChartContent = (p, options) => {
-  p.on('chart-window/inside', ({ context, state }) => {
+  p.on('chart-window/inside', ({ context }) => {
 
+    /* Получаем значения */
+    
     const values = p.values.get();
 
-    dataset(p, context, { values });
-    grid(p, context, { values, showIndicator: false });
+    grid(p, context, { values, showIndicator: false }, () => {
+      dataset(p, context, { values });
+    });
 
-    return { context, state };
+    return { context };
   });
 };
 

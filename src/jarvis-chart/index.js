@@ -19,6 +19,12 @@ import Elements from './plugins/Elements';
 import Brush from './plugins/Brush';
 import Ellipse from './plugins/Ellipse';
 
+import Indicators from './plugins/Indicators';
+
+import Bollinger from './plugins/Bollinger';
+
+import DebugInfo from './plugins/DebugInfo';
+
 export default (node, options) => {
   const p = new Pluggable();
 
@@ -46,6 +52,12 @@ export default (node, options) => {
   p.plugin(Elements, options);
   p.plugin(Brush, options);
   p.plugin(Ellipse, options);
+
+  p.plugin(Indicators, options);
+
+  p.plugin(Bollinger, options);
+
+  p.plugin(DebugInfo, options);
 
   /* Emit mount action */
 

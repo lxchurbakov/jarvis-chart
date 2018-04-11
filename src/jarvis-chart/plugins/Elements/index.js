@@ -1,24 +1,15 @@
 /* */
 const Elements = (p) => {
-  /* Elements handlers */
-  let elementsHandlers = {};
 
-  /* Elements API */
-  p.elements = {
-    register: (type, handler) => elementsHandlers[type] = handler,
-    push: (type, meta) => p.state.update((state) => {
-      state.elements.push({ type, meta });
-      return state;
-    })
-  };
+  /* Добавляем массив элементов к состоянию */
 
-  /* Add elements array to the state */
   p.on('state/default', (state) => ({ ...state, elements: [] }));
 
-  /* Render all elements from the state inside the chart window */
-  p.on('chart-window/inside', ({ context, state }) => {
+  /* Выводим все элементы */
 
-    const { elements } = state;
+  p.on('chart-window/inside', ({ context }) => {
+
+    const { elements } = p.state.get();
 
     elements.forEach((element) => {
       const { type, meta } = element;
@@ -26,7 +17,23 @@ const Elements = (p) => {
       elementsHandlers[type](context, meta);
     });
 
-    return { context, state };
+    return { context };
+  });
+
+  /* Elements handlers */
+
+  let elementsHandlers = {};
+
+  /* Создаём API для элементов */
+
+  p.elements = {
+    register: (type, handler) => elementsHandlers[type] = handler,
+    push: (type, meta) => p.state.update((state) => ({ ...state, elements: state.elements.concat([{ type, meta }])})),
+  };
+
+  p.on('mount', (data) => {
+    p.emitSync('elements/register');
+    return data;
   });
 };
 

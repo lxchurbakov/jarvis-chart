@@ -1,3 +1,4 @@
+/* TODO optimize do not retrieve rect every time */
 const getCoords = (e) => {
   const rect = e.target.getBoundingClientRect();
 
@@ -23,6 +24,7 @@ const getCoords = (e) => {
  */
 const AdvancedEvents = (p, options) => {
 
+  /* Текущее состояние устройства ввода */
   let inside    = false;
   let mousedown = false;
   let lastpos   = null;

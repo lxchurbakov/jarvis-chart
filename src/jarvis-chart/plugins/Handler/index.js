@@ -1,13 +1,17 @@
 import EventEmitter from '../../lib/event-emitter';
 
 /**
- * Handler Plugin
+ * Handler плагин
  *
- * Attaches handler node to the parent node and captures events.
+ * В момент создания чарта создаёт элемент, вешает его поверх чарта и слушает все происходящие события
  *
- * Sockets Used: mount
- * Sockets Provided: handler/attach
- * API Provided: handler
+ * Использует сокеты: mount
+ * Создаёт сокеты: handler/attach
+ * Использует API: нет
+ * Создаёт API: p.handler
+ *
+ * handler/attach - сокет, который должен вызывать присоединение слушателей к элементу handler
+ *
  */
 const Handler = (p) => {
   /* Attach to the main node on mount */

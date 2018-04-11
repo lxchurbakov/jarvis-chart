@@ -23,49 +23,47 @@ const drawBrush = (p, context, brush) => {
  *
  */
 const Brush = (p) => {
+
   /* Создаём элемент кисть */
-  p.elements.register('brush', (context, brush) => {
-    drawBrush(p, context, brush);
+
+  p.on('elements/register', () => {
+    p.elements.register('brush', (context, brush) => {
+      drawBrush(p, context, brush);
+    });
   });
 
   /* Создаём поле brush в стейте для хранения кисти, которую мы сейчас редактируем */
+
   p.on('state/default', (state) => ({ ...state, brush: null }));
 
   /* Выводим кисть, которую мы сейчас редактируем  */
+  
   p.on('chart-window/inside', ({ context, state }) => {
-    const { brush } = state;
+    const brush = p.state.get().brush;
 
     if (brush) {
       drawBrush(p, context, brush);
     }
 
-    return { context, state };
+    return { context };
   });
 
   /* Обрабатываем события для режима brush */
 
   p.on('chart-modes/brush/pathstart', ({ x, y, e }) => {
-    p.state.update((state) => {
-      state.brush = [];
-      return state;
-    });
+    p.state.update((state) => ({ ...state, brush: [] }));
   });
 
   p.on('chart-modes/brush/pathend', ({ x, y, e }) => {
     p.elements.push('brush', p.state.get().brush);
-    p.state.update((state) => {
-      state.brush = null;
-      return state;
-    });
+    p.state.update((state) => ({ ...state, brush: null }));
   });
 
   p.on('chart-modes/brush/path', ({ x, y, e }) => {
     const [ xreal, yreal ] = p.chartWindow.toWorld([x, y]);
+    const newPoint = { x: xreal, y: yreal };
 
-    p.state.update((state) => {
-      state.brush.push({ x: xreal, y: yreal });
-      return state;
-    });
+    p.state.update((state) => ({ ...state, brush: state.brush.concat([ newPoint ]) }));
   });
 };
 

@@ -6,15 +6,20 @@ import group from './primitives/group';
 import ellipse from './primitives/ellipse';
 
 /**
- * Primitives plugin
+ * Primitives плагин
  *
- * Attaches primitives to render API
+ * TODO нормальный API для примитивов
+ * TODO подумать насчёт переезжа на реакт
  *
- * Sockets Used: render/collect-primitives
+ * Создаёт необходимые для рисования примитивы
+ *
+ * Использует сокеты: render/collect-primitives
+ * Создаёт сокеты: нет
+ * Использует API: p.render
+ * Создаёт API: нет
  *
  */
 const Primitives = (p) => {
-  /* Extends render API */
   p.on('render/collect-primitives', () => {
     p.render.primitives = { circle, line, rectangle, text, group, ellipse };
   });

@@ -1,9 +1,22 @@
+/**
+ * ViewMode плагин
+ *
+ * Добавляет режим просмотра
+ *
+ * Использует сокеты: chart-modes/default, chart-modes/view/drag, chart-modes/view/zoom
+ * Создаёт сокеты: нет
+ * Использует API: p.chartWindow
+ * Создаёт API: нет
+ *
+ */
 const ViewMode = (p) => {
 
-  /* Set default mode to view */
+  /* Пусть изначальный режим будет просмотр */
+
   p.on('chart-modes/default', (mode) => 'view');
 
-  /* Handle drag when view mode */
+  /* Обработчики */
+  
   p.on('chart-modes/view/drag', ({ x, y, e }) => {
     const { x: tx, y: ty } = p.chartWindow.translate.get();
     const { x: zx, y: zy } = p.chartWindow.zoom.get();
