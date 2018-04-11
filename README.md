@@ -1,13 +1,17 @@
 # Индикаторы
 
-- moving average
-- volume
-- stochastique
+### Заявленые как обязательные
+
+- Simple Moving Average
+- Volume
+- Stochastic Oscillator
 - bollinger bands
-- rsi - https://www.investopedia.com/terms/r/rsi.asp
-- CCI http://enc.fxeuroclub.com/112/
-* parabolicSAR https://www.fxteam.ru/forex-library/technical-analyse/parabolic-sar/
-* volume profile https://www.tradingview.com/wiki/Volume_Profile
+- Relative Strength Index - https://www.investopedia.com/terms/r/rsi.asp
+- Commodity Channel Index http://enc.fxeuroclub.com/112/
+* Parabolic SAR https://www.fxteam.ru/forex-library/technical-analyse/parabolic-sar/
+* Volume profile https://www.tradingview.com/wiki/Volume_Profile
+
+### Остальные
 
 - Darvas Box
 * Fractal Chaos Bands
@@ -19,20 +23,18 @@
 * Stoller Average Range Channel
 
 * Colored Volume
+* Volume Rate of Change
 * High Minus Low
-* Highest High Value
-* Lowest Low Value
+- Highest High Value
+- Lowest Low Value
 * Median Price
 * Price Rate of Change
 * Standard Deviation
 * Typical Price
-* Volume
-* Volume Rate of Change
 * Weighted Close
 
 * Accumulative Swing Index
 * Chaikin Money Flow
-* Commodity Channel Index
 * Comparative Relative Strength
 * Elder Force Index
 * Elder Thermometer
@@ -50,7 +52,7 @@
 * QStick
 * RAVI
 * Random Walk Index
-* Relative Strength Index
+
 * Stochastic Momentum Index
 * Swing Index
 * Trade Volume Index
@@ -83,13 +85,11 @@
 * MACD
 * MACD Histogram
 * Momentum Oscillator
-* Parabolic SAR
 * Pretty Good Oscillator
 * Price Oscillator
 * Prime Number Oscillator
 * Rainbow Oscillator
 * Schaff Trend Cycle
-* Stochastic Oscillator
 * TRIX
 * True Range
 * Ultimate Oscillator
