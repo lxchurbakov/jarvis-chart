@@ -5,33 +5,45 @@ export default (node, options) => {
   const height = node.offsetHeight;
 
   const canvas = document.createElement('canvas');
-  const buffer = document.createElement('canvas');
 
   canvas.width = width;
   canvas.height = height;
-
-  buffer.width = width;
-  buffer.height = height;
 
   options.width = width;
   options.height = height;
 
   node.appendChild(canvas);
 
-  const realContext = canvas.getContext('2d');
-  const context = buffer.getContext('2d');
-  // const context = canvas.getContext('2d');
-  // const buffer  = document.createElement('canvas').getContext('2d');
+  let context;
 
-  context.clear = () => {
-    context.clearRect(0, 0, width, height);
-    realContext.clearRect(0, 0, width, height);
-  };
+  /* Since we can support double buffering */
 
-  // context.flush = () => { /* nope */ };
-  context.flush = () => realContext.drawImage(buffer, 0, 0);
+  if (options.doubleBuffer) {
+    const buffer = document.createElement('canvas');
 
-  /* Attach matrix API */
+    buffer.width = width;
+    buffer.height = height;
+
+    const realContext = canvas.getContext('2d');
+    context = buffer.getContext('2d');
+
+    context.clear = () => {
+      context.clearRect(0, 0, width, height);
+      realContext.clearRect(0, 0, width, height);
+    };
+
+    context.flush = () => realContext.drawImage(buffer, 0, 0);
+  } else {
+    context = canvas.getContext('2d');
+
+    context.clear = () => {
+      context.clearRect(0, 0, width, height);
+    };
+
+    context.flush = () => { /* nope */ };
+  }
+
+  /* Attach Transform API */
 
   context.api = Transform({
     matrix: {

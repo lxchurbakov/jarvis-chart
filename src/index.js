@@ -23,14 +23,11 @@ const getParameterByName = (name, url) => {
 
 /* Retrieve render from url */
 const render = getParameterByName('render') || 'canvas';
+const doubleBuffer = (getParameterByName('double-buffer') || 'on') === 'on';
+const clickThreshold = 100;
 
 const chart = Chart(node, {
-  render: render,
-  values: values,
-  /* Do not request animation frame */
-  // redrawContinuously: false,
-  /* Do not process clicks less then 100ms long */
-  clickThreshold: 100
+  render, values, doubleBuffer, clickThreshold
 });
 
 console.log(chart);

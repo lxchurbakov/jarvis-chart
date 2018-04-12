@@ -51,7 +51,7 @@ for (let i = 0; i < 100; ++i) {
 
 const jsPerfMark = (1 / (result / 101)).toFixed(2);
 
-const DebugInfo = (p) => {
+const DebugInfo = (p, options) => {
   let fps = 0;
   let lastTime = 0;
 
@@ -69,6 +69,7 @@ const DebugInfo = (p) => {
     p.render.primitives.text(context, { x: 5, y: 2 * (5 + 13), textAlign: 'left', text: 'FPS: ' + fps, color: fpsColor(fps), font: '800 13px Open Sans' })
     p.render.primitives.text(context, { x: 5, y: 3 * (5 + 13), textAlign: 'left', text: 'Browser: ' + browser.name + ' ' + browser.version, color: '#555', font: '800 13px Open Sans' })
     p.render.primitives.text(context, { x: 5, y: 4 * (5 + 13), textAlign: 'left', text: 'JS PERF RATE: ' + jsPerfMark, color: '#555', font: '800 13px Open Sans' })
+    p.render.primitives.text(context, { x: 5, y: 5 * (5 + 13), textAlign: 'left', text: 'Double Buffer: ' + (options.doubleBuffer ? 'on' : 'off'), color: '#555', font: '800 13px Open Sans' })
   });
 };
 
