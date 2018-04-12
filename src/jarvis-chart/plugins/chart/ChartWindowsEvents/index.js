@@ -21,12 +21,16 @@ const ChartWindowsEvents = (p, options) => {
         dragId = wId;
         dragStart = yRelative;
         p.cursor.set('move');
+      } else {
+        p.handler.emit('chart-windows-events/pathstart', { x, y, e });
       }
     });
 
-    p.handler.on('pathend', ({ x, y, e }) => {
+    p.handler.on('pathend', ({ e }) => {
       if (dragId !== null)
         p.cursor.set('auto');
+      else
+        p.handler.emit('chart-windows-events/pathend', { e });
       dragId = null;
     });
 
@@ -55,6 +59,8 @@ const ChartWindowsEvents = (p, options) => {
 
           return { ...state, chartWindows: chartWindows.slice() };
         });
+      } else {
+        p.handler.emit('chart-windows-events/path', { x, y, e });
       }
     });
 

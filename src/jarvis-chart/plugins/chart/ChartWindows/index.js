@@ -60,27 +60,19 @@ const ChartWindows = (p, options) => {
     all: ()   => p.state.get().chartWindows,
     get: (id) => p.state.get().chartWindows.filter((w) => w.id === id).pop(),
     create: () => {
-      console.log('creat')
-
       const windows = p.chartWindows.all();
       const len     = windows.length;
-
-
 
       const weight    = 1 / (len + 1);
       const everymiss = len > 0 ? (weight / len) : 0;
 
       const w = p.emitSync('chart-windows/create', { id: id++, weight });
 
-      console.log(w)
-
       /* Исправляем размеры на случай превышения размера экрана */
 
       const correctedWindows = windows.map(w => ({ ...w, weight: w.weight * (len / (len + 1)) }));
 
       p.state.update((state) => ({ ...state, chartWindows: correctedWindows.concat([ w ]) }));
-
-      console.log(p)
 
       return id - 1;
     },
