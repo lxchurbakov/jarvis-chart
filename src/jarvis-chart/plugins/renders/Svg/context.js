@@ -41,6 +41,8 @@ export default (node, options) => {
     },
   });
 
+  console.warn('CLIP для SVG канвы не реализован')
+
   context.type = 'svg';
 
   return context;
