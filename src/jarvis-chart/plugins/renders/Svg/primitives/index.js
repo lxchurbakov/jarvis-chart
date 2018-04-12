@@ -42,13 +42,25 @@ const line = (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix }) =>
   `);
 };
 
+const polyline = (context, { points, width, opacity = 1, color, matrix }) => {
+  context.push(`
+    <polyline
+      points='${points.reduce((acc, point) => `${acc} ${point.x},${point.y}`, '')}'
+      vector-effect='non-scaling-stroke'
+      fill='none'
+      stroke='${color}'
+      stroke-width='${width}'
+      stroke-opacity='${opacity}'
+      transform='${matrix ? matrix.toCss() : ''}'
+    />
+  `);
+};
 
 const rectangle = (context, { x, y, width, height, opacity = 1, color, matrix }) => {
   context.push(`
     <rect x='${x}' y='${y}' width='${width}' height='${height}' style='fill: ${color}' transform='${matrix ? matrix.toCss() : ''}' fill-opacity='${opacity}' />
   `);
 };
-
 
 const textAlignToTextAnchor = (textAlign) => ({ 'left': 'start', 'center': 'middle', 'right': 'end' })[textAlign];
 
@@ -64,4 +76,4 @@ const text = (context, { x, y, font = "13px arial", text, matrix, textAlign = 'c
   `);
 };
 
-export default { circle, ellipse, group, line, rectangle, text };
+export default { circle, ellipse, group, line, rectangle, text, polyline };
