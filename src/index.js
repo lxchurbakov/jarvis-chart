@@ -15,6 +15,8 @@ console.warnOnce = (() => {
   };
 })();
 
+console.todo = (text) => console.log(`TODO: %c${text}`, 'color: blue');
+
 const node = document.getElementById('chart');
 
 /* Just copy pasted from internet, ignore it */
