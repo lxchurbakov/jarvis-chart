@@ -55,11 +55,3 @@ Candles.plugin = {
 };
 
 export default Candles;
-
-
-
-
-//
-//
-// export default
-// };
