@@ -1,4 +1,4 @@
-import { getWindowBorderTouch, bound } from './helpers';
+import { getWindowBorderTouch, getWindowTouch, resizeWindows } from './helpers';
 
 /**
  * ChartWindowsEvents плагин
@@ -9,6 +9,8 @@ const ChartWindowsEvents = (p, options) => {
 
   let dragId    = null;
   let dragStart = null;
+
+  let pathWindowId = null;
 
   p.on('handler/attach', () => {
     p.handler.on('pathstart', ({ x, y, e }) => {
@@ -22,61 +24,56 @@ const ChartWindowsEvents = (p, options) => {
         dragStart = yRelative;
         p.cursor.set('move');
       } else {
-        p.handler.emit('chart-windows-events/pathstart', { x, y, e });
+        const id = getWindowTouch(windows, yRelative);
+        p.handler.emit('chart-windows-events/pathstart', { x, y, e, id });
+        pathWindowId = id;
+      }
+    });
+
+    p.handler.on('path', ({ x, y, e }) => {
+      const yRelative = y / options.height;
+      const windows = p.chartWindows.all();
+
+      if (dragId !== null) {
+        const diff = dragStart - yRelative;
+
+        p.state.update((state) => ({ ...state, chartWindows: resizeWindows(state.chartWindows, dragId, diff) }));
+        p.chartWindows.fix();
+
+        dragStart = yRelative;
+      } else if (pathWindowId !== null) {
+        const id = getWindowTouch(windows, yRelative);
+
+        if (id !== pathWindowId) {
+          p.handler.emit('chart-windows-events/pathend', { e });
+          pathWindowId = null;
+        } else {
+          p.handler.emit('chart-windows-events/path', { x, y, e, id });
+        }
       }
     });
 
     p.handler.on('pathend', ({ e }) => {
-      if (dragId !== null)
-        p.cursor.set('auto');
-      else
-        p.handler.emit('chart-windows-events/pathend', { e });
-      dragId = null;
-    });
-
-    p.handler.on('path', ({ x, y, e }) => {
       if (dragId !== null) {
-        const yRelative = y / options.height;
-        const diff = dragStart - yRelative;
-
-        dragStart = yRelative;
-
-        p.state.update((state) => {
-          const { chartWindows } = state;
-
-          /* Изменяем размеры окна, которое ресайзится */
-          chartWindows.forEach((w, i) => {
-            if (w.id === dragId) {
-              w.weight = bound(w.weight - diff, 0, 1);
-              state.chartWindows[i + 1].weight = bound(state.chartWindows[i + 1].weight + diff, 0, 1);
-            }
-          });
-
-          /* Исправляем размеры чтобы не выходить за пределы экрана */
-
-          const sumw = chartWindows.reduce((acc, w) => acc + w.weight, 0);
-          chartWindows.forEach(w => w.weight /= sumw);
-
-          return { ...state, chartWindows: chartWindows.slice() };
-        });
-      } else {
-        p.handler.emit('chart-windows-events/path', { x, y, e });
+        p.cursor.set('auto');
+      } else if (pathWindowId) {
+        p.handler.emit('chart-windows-events/pathend', { e });
+        pathWindowId = null;
       }
+      dragId = null;
     });
 
     /* Поменяем курсор над таскаемой линией */
 
     p.handler.on('mousemove', ({ x, y, e }) => {
       const { chartWindows } = p.state.get();
-      const yRelative = y / options.height;
 
-      const wId = getWindowBorderTouch(chartWindows, yRelative);
+      const wId = getWindowBorderTouch(chartWindows, y / options.height);
 
       if (wId !== null) {
         p.cursor.set('move');
-      } else {
-        if (dragId === null)
-          p.cursor.set('auto');
+      } else if (dragId === null) {
+        p.cursor.set('auto');
       }
     });
   });

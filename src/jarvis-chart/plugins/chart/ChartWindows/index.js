@@ -1,8 +1,8 @@
 import Matrix from 'lib/matrix';
 
+
 const matrixForWindow = (width, height, top) => {
   return Matrix.join(
-    // Matrix.scale(width, height),
     Matrix.scale(1, -1),
     Matrix.translate(0, height),
     Matrix.translate(0, top),
@@ -36,7 +36,7 @@ const ChartWindows = (p, options) => {
         }
 
         context.api.screen.clip(0, 0, width, height);
-        p.emitSync(`chart-windows/inside`, { id: w.id, context });
+          p.emitSync(`chart-windows/inside`, { id: w.id, context });
         context.api.screen.reclip();
       });
 
@@ -59,6 +59,14 @@ const ChartWindows = (p, options) => {
   p.chartWindows = {
     all: ()   => p.state.get().chartWindows,
     get: (id) => p.state.get().chartWindows.filter((w) => w.id === id).pop(),
+    fix: () => {
+      p.state.update((state) => {
+        const { chartWindows } = state;
+        const sumw = chartWindows.reduce((acc, w) => acc + w.weight, 0);
+
+        return { ...state, chartWindows: chartWindows.map((cw) => ({ ...cw, weight: cw.weight / sumw }))  };
+      });
+    },
     create: () => {
       const windows = p.chartWindows.all();
       const len     = windows.length;
@@ -70,9 +78,11 @@ const ChartWindows = (p, options) => {
 
       /* Исправляем размеры на случай превышения размера экрана */
 
-      const correctedWindows = windows.map(w => ({ ...w, weight: w.weight * (len / (len + 1)) }));
+      // const correctedWindows = windows.map(w => ({ ...w, weight: w.weight * (len / (len + 1)) }));
 
-      p.state.update((state) => ({ ...state, chartWindows: correctedWindows.concat([ w ]) }));
+      p.state.update((state) => ({ ...state, chartWindows: state.chartWindows.concat([ w ]) }));
+
+      p.chartWindows.fix();
 
       return id - 1;
     },

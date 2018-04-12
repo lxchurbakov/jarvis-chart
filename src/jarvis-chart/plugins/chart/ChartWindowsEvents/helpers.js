@@ -19,11 +19,23 @@ export const getWindowTouch = (windows, yRelative) => {
   let result = null;
 
   windows.forEach((w, i) => {
-    if (i < windows.length - 1)
-      if (yRelative > top && yRelative < (w.weight + top))
-        result = w.id;
+    if (yRelative > top && yRelative < (w.weight + top))
+      result = w.id;
     top += w.weight;
   });
 
   return result;
+};
+
+export const resizeWindows = (windows, id, diff) => {
+  windows.forEach((w, index) => {
+    if (w.id === id) {
+      w.weight = bound(w.weight - diff, 0, 1);
+      const nw = windows[index + 1];
+
+      nw.weight = bound(nw.weight + diff, 0, 1);
+    }
+  });
+
+  return windows.slice();
 };
