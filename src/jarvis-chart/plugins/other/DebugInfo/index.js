@@ -75,6 +75,7 @@ const DebugInfo = (p, options) => {
     const doubleBuffer = (options.render === 'canvas' ? (options.doubleBuffer ? 'on' : 'off') : 'no support for this render');
     p.render.primitives.text(context, { x: 5, y: 6 * (5 + 13), textAlign: 'left', text: 'Double Buffer: ' + doubleBuffer, color: '#555', font: '300 13px Open Sans' });
 
+    return { context };
   });
 };
 
@@ -83,7 +84,6 @@ DebugInfo.plugin = {
   version: '1.0.0',
   dependencies: {
     'render': '1.0.0',
-    'chart-window': '1.0.0'
   }
 };
 

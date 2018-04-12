@@ -30,6 +30,8 @@ const AdvancedEvents = (p, options) => {
   let lastpos   = null;
   let lasttime  = null;
 
+  let pathStarted = false;
+
   p.on('handler/attach', () => {
     p.handler.attach('wheel', (e) => {
       e.preventDefault();
@@ -52,6 +54,8 @@ const AdvancedEvents = (p, options) => {
       p.handler.emit('mousedown', { x, y, e });
       p.handler.emit('pathstart', { x, y, e });
 
+      pathStarted = true;
+
       mousedown = true;
       lastpos = { x, y };
       lasttime = new Date();
@@ -59,10 +63,13 @@ const AdvancedEvents = (p, options) => {
 
     p.handler.attach('mouseup', (e) => {
       const { x, y } = getCoords(e);
-      p.handler.emit('mouseup', { x, y, e });
-      p.handler.emit('pathend', { x, y, e });
       mousedown = false;
       lastpos = false;
+      p.handler.emit('mouseup', { x, y, e });
+      if (pathStarted) {
+        p.handler.emit('pathend', { x, y, e });
+        pathStarted = false;
+      }
     });
 
     p.handler.attach('mouseover', (e) => {
@@ -83,7 +90,7 @@ const AdvancedEvents = (p, options) => {
         const { x, y } = getCoords(e);
 
         if (lastpos) {
-          p.handler.emit('path', { x, y, e });
+          if (pathStarted) p.handler.emit('path', { x, y, e });
           p.handler.emit('drag', { x: x - lastpos.x, y: y - lastpos.y, e });
         }
 
