@@ -1,34 +1,42 @@
 import Pluggable from 'extendme';
 
+/* Base плагины */
+
 import Handler from './plugins/base/Handler';
 import Render from './plugins/base/Render';
 import State from './plugins/base/State';
 import AdvancedEvents from './plugins/base/AdvancedEvents';
 import Cursor from './plugins/base/Cursor';
 
+/* Chart плагины */
+
 import ChartValues from './plugins/chart/ChartValues';
 import ChartWindows from './plugins/chart/ChartWindows';
 import ChartWindowsEvents from './plugins/chart/ChartWindowsEvents';
 import ChartGrid from './plugins/chart/ChartGrid';
-import Indicators from './plugins/chart/Indicators';
+// import Indicators from './plugins/chart/Indicators';
 
-import Candles from './plugins/indicators/Candles';
+/* Различные индикаторы */
 
-// import ChartWindow from './plugins/chart/ChartWindow';
-// import ChartModes from './plugins/chart/ChartModes';
-// import ChartContent from './plugins/chart/ChartContent';
-// import Elements from './plugins/chart/Elements';
+console.warn('Необходимо реализовать индикаторы')
+// import Candles from './plugins/indicators/Candles';
+
+/* Режимы */
 
 import ViewMode from './plugins/modes/ViewMode';
 
-// import Brush from './plugins/elements/Brush';
-// import Ellipse from './plugins/elements/Ellipse';
-// import Fibonacci from './plugins/elements/Fibonacci';
+/* Элементы */
 
-import Debug from './plugins/other/Debug';
+console.warn('Необходимо реализовать элементы')
+
+/* Рендеры */
 
 import RenderCanvas from './plugins/renders/Canvas';
 import RenderSvg from './plugins/renders/Svg';
+
+/* Всякое */
+
+import Debug from './plugins/other/Debug';
 
 export default (node, options) => {
   const p = new Pluggable();
@@ -45,9 +53,9 @@ export default (node, options) => {
   p.plugin(ChartWindows, options);
   p.plugin(ChartWindowsEvents, options);
   p.plugin(ChartGrid, options);
-  p.plugin(Indicators, options);
+  // p.plugin(Indicators, options);
 
-  p.plugin(Candles, options);
+  // p.plugin(Candles, options);
   // p.plugin(ChartModes, options);
 
   /* Chart Window (translation, zoom) plugin */

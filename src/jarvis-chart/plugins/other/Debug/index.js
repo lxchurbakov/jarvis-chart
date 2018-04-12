@@ -87,7 +87,7 @@ const DebugInfo = (p, options) => {
 
     const height = w.weight * context.api.screen.height();
     const width = context.api.screen.width();
-    const color = `hsla(${(parseInt(w.id, 36) + 300) % 256}, 100%, 50%, 0.7)`;
+    const color = `hsla(${(parseInt(w.id, 36) * 137) % 256}, 100%, 50%, 0.7)`;
 
     const currentMatrix = context.api.matrix.get();
 
