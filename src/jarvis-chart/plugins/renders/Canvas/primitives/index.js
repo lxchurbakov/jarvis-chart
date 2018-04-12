@@ -1,14 +1,6 @@
 import Matrix from 'lib/matrix';
 
 const circle = (context, { cx, cy, radius, color, matrix, opacity = 1, crop = true }) => {
-  /* Auto Crop Element when invisible */
-  /* TODO does not work, screen coords are not calculated correctly */
-  // if (
-  //   crop &&
-  //   !context.matrix.crop(cx - radius, cy - radius) &&
-  //   !context.matrix.crop(cx + radius, cy + radius)
-  // ) return;
-
   if (matrix) {
     context.api.matrix.push(matrix);
   }
@@ -24,26 +16,15 @@ const circle = (context, { cx, cy, radius, color, matrix, opacity = 1, crop = tr
   }
 };
 
-
 const ellipse = (context, { cx, cy, radiusx, radiusy, color, opacity = 1, matrix, crop = true }) => {
-  /* Auto Crop Element when invisible */
-  /* TODO does not work, screen coords are not calculated correctly */
-  // if (
-  //   crop &&
-  //   !context.matrix.crop(cx - radius, cy - radius) &&
-  //   !context.matrix.crop(cx + radius, cy + radius)
-  // ) return;
-
   if (matrix) {
     context.api.matrix.push(matrix);
   }
 
   context.beginPath();
   context.ellipse(cx, cy, radiusx, radiusy, 0, 0, 2 * Math.PI);
-  context.api.draw.globalAlpha.set(opacity);
-  context.api.draw.fillStyle.set(color);
-  // context.globalAlpha = opacity;
-  // context.fillStyle = color;
+  context.globalAlpha = opacity;
+  context.fillStyle = color;
   context.fill();
 
   if (matrix) {
@@ -79,6 +60,7 @@ const line = (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix }) =>
 
   /* Descale line */
   context.api.matrix.replace(Matrix.identity());
+  
   context.stroke();
   context.api.matrix.pop();
 
@@ -136,14 +118,17 @@ const rectangle = (context, { x, y, width, height, opacity = 1, color, matrix })
   }
 };
 
-const text = (context, { x, y, font = "13px arial", text, matrix, textAlign = 'center', color = 'black', opacity = 1, crop = true }) => {
-  // if (
-  //   crop &&
-  //   !context.matrix.crop(x, y)
-  // ) return;
-
+const text = (context, { x, y, font = "13px arial", text, matrix, textAlign = 'center', color = 'black', opacity = 1, crop = true, drop = false }) => {
   if (matrix) {
     context.api.matrix.push(matrix);
+  }
+
+  if (drop) {
+    context.api.matrix.replace(Matrix.identity());
+
+    window.env === 'development' && (
+      (x || y) && console.warnOnce('Использование drop свойства текста и параметров x или y может привести к неправильному позиционированию')
+    )
   }
 
   context.font = font;
@@ -152,9 +137,15 @@ const text = (context, { x, y, font = "13px arial", text, matrix, textAlign = 'c
   context.fillStyle = color;
   context.fillText(text, x, y);
 
+  if (drop) {
+    context.api.matrix.pop();
+  }
+
   if (matrix) {
     context.api.matrix.pop();
   }
 };
+
+console.warn('CROP для инструментов canvas\'а не реализован')
 
 export default { circle, ellipse, group, line, polyline, rectangle, text };
