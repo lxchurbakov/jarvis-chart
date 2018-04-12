@@ -65,11 +65,16 @@ const DebugInfo = (p, options) => {
 
     lastTime = time;
 
-    p.render.primitives.text(context, { x: 5, y: 5 + 13, textAlign: 'left', text: 'DebugInfo:', color: '#555', font: '100 13px Open Sans' })
-    p.render.primitives.text(context, { x: 5, y: 2 * (5 + 13), textAlign: 'left', text: 'FPS: ' + fps, color: fpsColor(fps), font: '800 13px Open Sans' })
-    p.render.primitives.text(context, { x: 5, y: 3 * (5 + 13), textAlign: 'left', text: 'Browser: ' + browser.name + ' ' + browser.version, color: '#555', font: '800 13px Open Sans' })
-    p.render.primitives.text(context, { x: 5, y: 4 * (5 + 13), textAlign: 'left', text: 'JS PERF RATE: ' + jsPerfMark, color: '#555', font: '800 13px Open Sans' })
-    p.render.primitives.text(context, { x: 5, y: 5 * (5 + 13), textAlign: 'left', text: 'Double Buffer: ' + (options.doubleBuffer ? 'on' : 'off'), color: '#555', font: '800 13px Open Sans' })
+    p.render.primitives.text(context, { x: 5, y: 5 + 13, textAlign: 'left', text: 'DebugInfo:', color: '#555', font: '100 13px Open Sans' });
+    p.render.primitives.text(context, { x: 5, y: 2 * (5 + 13), textAlign: 'left', text: 'FPS: ' + fps, color: fpsColor(fps), font: '800 13px Open Sans' });
+    p.render.primitives.text(context, { x: 5, y: 3 * (5 + 13), textAlign: 'left', text: 'Browser: ' + browser.name + ' ' + browser.version, color: '#555', font: '800 13px Open Sans' });
+    p.render.primitives.text(context, { x: 5, y: 4 * (5 + 13), textAlign: 'left', text: 'JS PERF RATE: ' + jsPerfMark, color: '#555', font: '800 13px Open Sans' });
+
+    p.render.primitives.text(context, { x: 5, y: 5 * (5 + 13), textAlign: 'left', text: 'Render: ' + options.render, color: '#555', font: '300 13px Open Sans' });
+
+    const doubleBuffer = (options.render === 'canvas' ? (options.doubleBuffer ? 'on' : 'off') : 'no support for this render');
+    p.render.primitives.text(context, { x: 5, y: 6 * (5 + 13), textAlign: 'left', text: 'Double Buffer: ' + doubleBuffer, color: '#555', font: '300 13px Open Sans' });
+
   });
 };
 
