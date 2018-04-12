@@ -66,8 +66,9 @@ const AdvancedEvents = (p, options) => {
       mousedown = false;
       lastpos = false;
       p.handler.emit('mouseup', { x, y, e });
+      
       if (pathStarted) {
-        p.handler.emit('pathend', { x, y, e });
+        p.handler.emit('pathend', { e });
         pathStarted = false;
       }
     });
@@ -79,8 +80,14 @@ const AdvancedEvents = (p, options) => {
 
     p.handler.attach('mouseout', (e) => {
       p.handler.emit('mouseout', e);
+
       mousedown = false;
       inside = false;
+
+      if (pathStarted) {
+        p.handler.emit('pathend', { e });
+        pathStarted = false;
+      }
     });
 
     p.handler.attach('mousemove', (e) => {
