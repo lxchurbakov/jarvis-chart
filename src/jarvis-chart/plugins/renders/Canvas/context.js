@@ -63,6 +63,15 @@ export default (node, options) => {
     },
     width,
     height,
+    screen: {
+      clip: (x, y, width, height) => {
+        context.save();
+        context.beginPath();
+        context.rect(x, y, width, height);
+        context.clip();
+      },
+      reclip: () => context.restore(),
+    },
   });
 
   context.type = 'canvas';

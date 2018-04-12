@@ -26,6 +26,10 @@ const State = (p) => {
 
     state = p.emitSync('state/default', {});
 
+    /* Для инициализации значений за стейтом */
+
+    p.emitSync('state/ready');
+
     p.render.draw(state);
 
     return { node };

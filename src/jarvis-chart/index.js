@@ -6,19 +6,24 @@ import State from './plugins/base/State';
 import AdvancedEvents from './plugins/base/AdvancedEvents';
 import Cursor from './plugins/base/Cursor';
 
-import ChartModes from './plugins/chart/ChartModes';
-import ChartWindow from './plugins/chart/ChartWindow';
-import ChartWindows from './plugins/chart/ChartWindows';
-import ChartContent from './plugins/chart/ChartContent';
 import ChartValues from './plugins/chart/ChartValues';
-import Elements from './plugins/chart/Elements';
+import ChartWindows from './plugins/chart/ChartWindows';
+import ChartWindowsEvents from './plugins/chart/ChartWindowsEvents';
+import ChartGrid from './plugins/chart/ChartGrid';
 import Indicators from './plugins/chart/Indicators';
+
+import Candles from './plugins/indicators/Candles';
+
+// import ChartWindow from './plugins/chart/ChartWindow';
+// import ChartModes from './plugins/chart/ChartModes';
+// import ChartContent from './plugins/chart/ChartContent';
+// import Elements from './plugins/chart/Elements';
 
 import ViewMode from './plugins/modes/ViewMode';
 
-import Brush from './plugins/elements/Brush';
-import Ellipse from './plugins/elements/Ellipse';
-import Fibonacci from './plugins/elements/Fibonacci';
+// import Brush from './plugins/elements/Brush';
+// import Ellipse from './plugins/elements/Ellipse';
+// import Fibonacci from './plugins/elements/Fibonacci';
 
 import Debug from './plugins/other/Debug';
 
@@ -38,6 +43,11 @@ export default (node, options) => {
 
   p.plugin(ChartValues, options);
   p.plugin(ChartWindows, options);
+  p.plugin(ChartWindowsEvents, options);
+  p.plugin(ChartGrid, options);
+  p.plugin(Indicators, options);
+
+  p.plugin(Candles, options);
   // p.plugin(ChartModes, options);
 
   /* Chart Window (translation, zoom) plugin */
