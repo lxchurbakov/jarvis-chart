@@ -1,5 +1,4 @@
 import Matrix from 'lib/matrix';
-// import calcMatrix from './calc-matrix';
 
 const matrixForWindow = (width, height, top) => {
   return Matrix.join(
@@ -10,101 +9,94 @@ const matrixForWindow = (width, height, top) => {
   );
 };
 
-const ChartWindows = (p, options) => {
-  p.on('state/default', (state) => {
-    const defaultChartWindows = {
-      position: {
-        translateX: 0,
-        zoomX: 1,
-      },
-      windows: [
-        {
-          id: 'main',
-          indicators: [],
-          elements: [],
-          weight: 0.6,
-          translateY: 0,
-          zoomY: 1,
-          autoZoom: false,
-        },
-        {
-          id: 'second',
-          indicators: [],
-          elements: [],
-          weight: 0.1,
-          translateY: 0,
-          zoomY: 1,
-          autoZoom: false,
-        },
-        {
-          id: 'third',
-          indicators: [],
-          elements: [],
-          weight: 0.3,
-          translateY: 0,
-          zoomY: 1,
-          autoZoom: false,
-        },
-      ],
-    };
+const getWindowBorderTouch = (windows, yRelative, threshold = 0.01) => {
+  let top = 0;
+  let result = null;
 
-    return {
-      ...state,
-      chartWindows: defaultChartWindows
-    };
+  windows.forEach((w, i) => {
+    if (i < windows.length - 1)
+      if (Math.abs(yRelative - (w.weight + top)) < threshold)
+        result = w.id;
+    top += w.weight;
   });
 
+  return result;
+};
 
+const getWindowTouch = (windows, yRelative) => {
+  let top = 0;
+  let result = null;
+
+  windows.forEach((w, i) => {
+    if (i < windows.length - 1)
+      if (yRelative > top && yRelative < (w.weight + top))
+        result = w.id;
+    top += w.weight;
+  });
+
+  return result;
+};
+
+const ChartWindows = (p, options) => {
+  /* Collect default chart windows */
+
+  p.on('state/default', (state) => ({ ...state, chartWindows: p.emitSync('chart-windows/default', [{ id: 'main', weight: 0.5 }, { id: 'not-main', weight: 0.5 }]) }));
+
+  /* Process dragging and forward some events to chart windows */
 
   p.on('handler/attach', () => {
-    let dragId = null;
+    let dragId    = null;
     let dragStart = null;
 
-    // p.handler.on('click', ({ x, y, e }) => {
-    //   console.log('click')
-    // });
-
     p.handler.on('pathstart', ({ x, y, e }) => {
-      const topRelative = y / options.height;
-
       const { chartWindows } = p.state.get();
-      const { windows } = chartWindows;
+      const yRelative = y / options.height;
 
-      let top = 0;
+      const wId = getWindowBorderTouch(chartWindows, yRelative);
 
-      windows.forEach((w, i) => {
-        if (i < windows.length - 1)
-          if (Math.abs(topRelative -( w.weight + top)) < 0.01) {
-            dragId = w.id;
-            dragStart = topRelative;
-          }
+      if (wId) {
+        dragId = wId;
+        dragStart = yRelative;
+        p.cursor.set('move');
+      }
+    });
 
-        top += w.weight;
-      });
+    p.handler.on('mousemove', ({ x, y, e }) => {
+      const { chartWindows } = p.state.get();
+      const yRelative = y / options.height;
+
+      const wId = getWindowBorderTouch(chartWindows, yRelative);
+
+      if (wId) {
+        p.cursor.set('move');
+      } else {
+        if (!dragId)
+          p.cursor.set('auto');
+      }
     });
 
     p.handler.on('pathend', ({ x, y, e }) => {
+      if (dragId)
+        p.cursor.set('auto');
       dragId = null;
     });
 
     p.handler.on('path', ({ x, y, e }) => {
       if (dragId) {
-        const topRelative = y / options.height;
-        const diff = dragStart - topRelative;
-        dragStart = topRelative;
+        const yRelative = y / options.height;
+        const diff = dragStart - yRelative;
+
+        dragStart = yRelative;
+
         p.state.update((state) => ({
           ...state,
-          chartWindows: {
-            ...state.chartWindows,
-            windows: state.chartWindows.windows.map((w, i) => {
-              if (w.id === dragId) {
-                w.weight -= diff;
-                // if (i)
-                state.chartWindows.windows[i + 1].weight += diff;
-              }
-              return w;
-            })
-          }
+          chartWindows: state.chartWindows.map((w, i) => {
+            if (w.id === dragId) {
+              w.weight -= diff;
+              state.chartWindows[i + 1].weight += diff;
+            }
+            return w;
+          })
         }));
       }
     });
@@ -112,28 +104,20 @@ const ChartWindows = (p, options) => {
 
   p.on('render/draw', ({ context }) => {
     const { chartWindows } = p.state.get();
-    const { windows } = chartWindows;
 
     let top = 0;
 
-    windows.forEach((w, i) => {
+    chartWindows.forEach((w, i) => {
       const height = w.weight * context.api.screen.height();
       const width = context.api.screen.width();
       const color = `hsla(${parseInt(w.id, 36) % 256}, 100%, 50%, 1)`;
 
       p.render.primitives.group(context, { matrix: matrixForWindow(width, height, top) }, () => {
-        context.api.matrix.replace(Matrix.identity());
-        p.render.primitives.text(context, { x: width - 5, textAlign: 'right', y: top + 13 + 5, font: '300 13px Open Sans', text: `Window #${w.id} (${(100 * w.weight).toFixed(2)}%)`, opacity: 0.8 });
-        context.api.matrix.pop();
+        /* Draw the line we can drag */
+        if (i < chartWindows.length - 1)
+          p.render.primitives.line(context, { x0: 0, y0: 0, x1: 1, y1: 0, color: '#333', width: 1, opacity: 0.5 });
 
-        p.render.primitives.rectangle(context, { x: 0, y: 0, width: 1, height: 1, color, opacity: 0.2 });
-
-        if (i === 0)
-          p.render.primitives.line(context, { x0: 0, y0: 1, x1: 1, y1: 1, color: 'black', width: 2 });
-
-        p.render.primitives.line(context, { x0: 0, y0: 0, x1: 1, y1: 0, color: 'black', width: 1 });
-
-        p.emitSync(`chart-windows/${w.id}/inside`, { context });
+        p.emitSync(`chart-windows/inside`, { id: w.id, context });
       });
 
       top += height;
@@ -141,6 +125,10 @@ const ChartWindows = (p, options) => {
 
     return { context };
   });
+
+  p.chartWindows = {
+    get: (id) => p.state.get().chartWindows.filter((w) => w.id === id).pop(),
+  };
 };
 
 ChartWindows.plugin = {

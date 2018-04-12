@@ -84,11 +84,11 @@ const AdvancedEvents = (p, options) => {
     });
 
     p.handler.attach('mousemove', (e) => {
-      p.handler.emit('mousemove', e);
+      const { x, y } = getCoords(e);
+
+      p.handler.emit('mousemove', { x, y, e });
 
       if (mousedown) {
-        const { x, y } = getCoords(e);
-
         if (lastpos) {
           if (pathStarted) p.handler.emit('path', { x, y, e });
           p.handler.emit('drag', { x: x - lastpos.x, y: y - lastpos.y, e });

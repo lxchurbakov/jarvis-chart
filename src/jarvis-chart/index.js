@@ -4,6 +4,7 @@ import Handler from './plugins/base/Handler';
 import Render from './plugins/base/Render';
 import State from './plugins/base/State';
 import AdvancedEvents from './plugins/base/AdvancedEvents';
+import Cursor from './plugins/base/Cursor';
 
 import ChartModes from './plugins/chart/ChartModes';
 import ChartWindow from './plugins/chart/ChartWindow';
@@ -19,8 +20,7 @@ import Brush from './plugins/elements/Brush';
 import Ellipse from './plugins/elements/Ellipse';
 import Fibonacci from './plugins/elements/Fibonacci';
 
-import DebugInfo from './plugins/other/DebugInfo';
-import DebugRect from './plugins/other/DebugRect';
+import Debug from './plugins/other/Debug';
 
 import RenderCanvas from './plugins/renders/Canvas';
 import RenderSvg from './plugins/renders/Svg';
@@ -34,6 +34,7 @@ export default (node, options) => {
   p.plugin(State, options);
 
   p.plugin(AdvancedEvents, options);
+  p.plugin(Cursor, options);
 
   p.plugin(ChartValues, options);
   p.plugin(ChartWindows, options);
@@ -54,8 +55,7 @@ export default (node, options) => {
 
   // p.plugin(Indicators, options);
 
-  p.plugin(DebugInfo, options);
-  p.plugin(DebugRect, options);
+  p.plugin(Debug, options);
 
   p.plugin(RenderCanvas, options);
   p.plugin(RenderSvg, options);

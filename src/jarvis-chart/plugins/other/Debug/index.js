@@ -1,3 +1,5 @@
+import Matrix from 'lib/matrix';
+
 const fpsColor = (fps) => {
   const hue = 113 * (fps / 60);
 
@@ -77,13 +79,33 @@ const DebugInfo = (p, options) => {
 
     return { context };
   });
+
+  /* Highlight windows */
+
+  p.on('chart-windows/inside', ({ context, id }) => {
+    const w = p.chartWindows.get(id);
+
+    const height = w.weight * context.api.screen.height();
+    const width = context.api.screen.width();
+    const color = `hsla(${(parseInt(w.id, 36) + 300) % 256}, 100%, 50%, 0.7)`;
+
+    const currentMatrix = context.api.matrix.get();
+
+    context.api.matrix.push(Matrix.translate(1, 1));
+    context.api.matrix.push(Matrix.resetScale(currentMatrix));
+    p.render.primitives.text(context, { x: -5, textAlign: 'right', y: 13 + 5, font: '300 13px Open Sans', text: `Window #${w.id} (${(100 * w.weight).toFixed(2)}%)`, opacity: 0.8 });
+    context.api.matrix.pop();
+    context.api.matrix.pop();
+
+    p.render.primitives.rectangle(context, { x: 0, y: 0, width: 1, height: 1, color, opacity: 0.2 });
+  });
 };
 
 DebugInfo.plugin = {
   name: 'debug-info',
   version: '1.0.0',
   dependencies: {
-    'render': '1.0.0',
+    // 'render': '1.0.0',
   }
 };
 
