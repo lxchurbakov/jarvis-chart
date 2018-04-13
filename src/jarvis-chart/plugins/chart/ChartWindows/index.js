@@ -54,9 +54,7 @@ const ChartWindows = (p, options) => {
   /* Отрисовываем окна */
   p.on('render/draw', ({ context }) => {
     const windows = p.chartWindows.all();
-
     drawWindows(p, context, { windows });
-
     return { context };
   });
 

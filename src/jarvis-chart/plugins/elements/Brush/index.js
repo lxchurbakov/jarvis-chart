@@ -1,3 +1,5 @@
+import Matrix from 'lib/matrix';
+
 const drawBrush = (p, context, brush) => {
   brush.forEach((curr, index) => {
     if (index > 0) {
@@ -23,12 +25,14 @@ const drawBrush = (p, context, brush) => {
  *
  */
 const Brush = (p) => {
-
   /* Создаём элемент кисть */
+  console.warn('Кисть и другие инструменты не работают, нужно хранить top окна в самом окне')
 
   p.on('elements/register', () => {
-    p.elements.register('brush', (context, brush) => {
-      drawBrush(p, context, brush);
+    p.elements.register('brush', {
+      inside: (context, brush) => {
+        drawBrush(p, context, brush);
+      }
     });
   });
 
@@ -37,8 +41,8 @@ const Brush = (p) => {
   p.on('state/default', (state) => ({ ...state, brush: null }));
 
   /* Выводим кисть, которую мы сейчас редактируем  */
-  
-  p.on('chart-window/inside', ({ context, state }) => {
+
+  p.on('chart-windows-content/entry', ({ context, state }) => {
     const brush = p.state.get().brush;
 
     if (brush) {
@@ -50,20 +54,24 @@ const Brush = (p) => {
 
   /* Обрабатываем события для режима brush */
 
-  p.on('chart-modes/brush/pathstart', ({ x, y, e }) => {
-    p.state.update((state) => ({ ...state, brush: [] }));
-  });
+  p.on('handler/attach', () => {
+    p.handler.on('chart-windows-modes/brush/pathstart', ({ x, y, e }) => {
+      p.state.update((state) => ({ ...state, brush: [] }));
+    });
 
-  p.on('chart-modes/brush/pathend', ({ x, y, e }) => {
-    p.elements.push('brush', p.state.get().brush);
-    p.state.update((state) => ({ ...state, brush: null }));
-  });
+    p.handler.on('chart-windows-modes/brush/path', ({ x, y, e }) => {
+      // const windowMatrix = p.chartWindowsScaleTranslate
+      // const [ xreal, yreal ] = p.chartWind
 
-  p.on('chart-modes/brush/path', ({ x, y, e }) => {
-    const [ xreal, yreal ] = p.chartWindow.toWorld([x, y]);
-    const newPoint = { x: xreal, y: yreal };
+      const newPoint = { x, y };
 
-    p.state.update((state) => ({ ...state, brush: state.brush.concat([ newPoint ]) }));
+      p.state.update((state) => ({ ...state, brush: state.brush.concat([ newPoint ]) }));
+    });
+
+    p.handler.on('chart-windows-modes/brush/pathend', ({ x, y, e }) => {
+      // p.elements.push('brush', p.state.get().brush);
+      p.state.update((state) => ({ ...state, brush: null }));
+    });
   });
 };
 
@@ -74,8 +82,8 @@ Brush.plugin = {
     'render': '1.0.0',
     'state': '1.0.0',
     'elements': '1.0.0',
-    'chart-modes': '1.0.0',
-    'chart-window': '1.0.0',
+    'chart-windows-modes': '1.0.0',
+    'chart-windows': '1.0.0',
   }
 };
 

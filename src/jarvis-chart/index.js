@@ -26,6 +26,7 @@ import ChartWindowsGrid from './plugins/content/ChartWindowsGrid';
 import ChartWindowsUI from './plugins/content/ChartWindowsUI';
 import ChartWindowsContent from './plugins/content/ChartWindowsContent';
 import Indicators from './plugins/content/Indicators';
+import Elements from './plugins/content/Elements';
 
 /* Различные индикаторы */
 
@@ -42,6 +43,7 @@ import ViewMode from './plugins/modes/ViewMode';
 
 /* Элементы */
 
+import Brush from './plugins/elements/Brush';
 
 /* Рендеры */
 
@@ -55,7 +57,6 @@ import Debug from './plugins/other/Debug';
 /* Код приложеия */
 
 export default (node, options) => {
-  console.todo('Необходимо реализовать элементы')
   console.todo('Добавить chart-windows/resize событие')
 
   const p = new Pluggable();
@@ -86,6 +87,7 @@ export default (node, options) => {
   p.plugin(ChartWindowsUI, options);
   p.plugin(ChartWindowsContent, options);
   p.plugin(Indicators, options);
+  // p.plugin(Elements, options);
 
   /* Индикаторы */
 
@@ -97,8 +99,12 @@ export default (node, options) => {
   p.plugin(Stochastic, options);
 
   /* Режимы */
-  
+
   p.plugin(ViewMode, options);
+
+  /* Элементы */
+
+  // p.plugin(Brush, options);
 
   /* Всякое */
 

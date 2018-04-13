@@ -72,10 +72,13 @@ const DebugInfo = (p, options) => {
     return { context, id };
   });
 
+  // p.on('chart-windows-modes/default', () => 'brush');
+
   p.on('chart-windows/init', () => {
     p.chartWindows.create();
     p.chartWindows.create();
 
+    // p.chartWindows.get(0).indicators.push({ type: 'candles' });
     p.chartWindows.get(0).indicators.push({ type: 'candles' });
     p.chartWindows.get(0).indicators.push({ type: 'bollinger', meta: { tl: 5, bl: 5 } });
     p.chartWindows.get(1).indicators.push({ type: 'lines', meta: { distance: 5 } });
