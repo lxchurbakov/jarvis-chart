@@ -15,6 +15,7 @@ import ChartWindows from './plugins/chart/ChartWindows';
 import ChartWindowsEvents from './plugins/chart/ChartWindowsEvents';
 import ChartWindowsDrag from './plugins/chart/ChartWindowsDrag';
 import ChartWindowsCrop from './plugins/chart/ChartWindowsCrop';
+import ChartWindowsModes from './plugins/chart/ChartWindowsModes';
 
 /* Content плагины */
 
@@ -37,6 +38,7 @@ import Stochastic from './plugins/indicators/Stochastic';
 
 /* Режимы */
 
+import ViewMode from './plugins/modes/ViewMode';
 
 /* Элементы */
 
@@ -73,6 +75,7 @@ export default (node, options) => {
   p.plugin(ChartWindowsEvents, options);
   p.plugin(ChartWindowsDrag, options);
   p.plugin(ChartWindowsCrop, options);
+  p.plugin(ChartWindowsModes, options);
 
   /* Content плагины */
 
@@ -92,6 +95,10 @@ export default (node, options) => {
   p.plugin(Bars, options);
   p.plugin(DarvasBox, options);
   p.plugin(Stochastic, options);
+
+  /* Режимы */
+  
+  p.plugin(ViewMode, options);
 
   /* Всякое */
 

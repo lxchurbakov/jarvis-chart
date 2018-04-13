@@ -41,7 +41,6 @@ const matrixForPriceline = (translate, zoom, width, height) =>
  * ChartWindowsScaleTranslate плагин
  *
  * Добавляет окнам масштаб и перенос. Создаёт API для получения этих значений и соответствующих матриц
- * Также ловит события drag и zoom, но это пока. В будущем перейти на ViewMode
  *
  * Важное замечание: этот плагин реализует режим работы автозума. При вызове метода get.xy() или matrix.xy() или аналогично но с y(),
  * происходит подсчёт автозума, который в свою очередь вызывает определение границ индикаторов. В коде определения границ индикаторы не должны использовать
@@ -54,56 +53,6 @@ const ChartWindowsScaleTranslate = (p, options) => {
   p.on('state/default', (state) => ({ ...state, chartWindowsScaleTranslate: { translateX: 0, zoomX: 1 }}));
   p.on('chart-windows/create', (w) => ({ ...w, chartWindowsScaleTranslate: { translateY: 0, zoomY: 1, autoZoom: false }}));
 
-  /* Добавляем слушаетелй (перенесу в ViewMode) */
-  p.on('handler/attach', () => {
-    console.todo('Перенести обработку drag и zoom в view mode');
-
-    p.handler.on('chart-windows-events/drag', ({ x, y, e, id }) => {
-      p.state.update((state) => {
-        let { chartWindowsScaleTranslate, chartWindows } = state;
-
-        chartWindowsScaleTranslate.translateX = chartWindowsScaleTranslate.translateX - (x / state.chartWindowsScaleTranslate.zoomX);
-
-        chartWindows = chartWindows.map((cw) => {
-          if (cw.id === id) {
-            cw.chartWindowsScaleTranslate = {
-              ...cw.chartWindowsScaleTranslate,
-              translateY: cw.chartWindowsScaleTranslate.translateY + (y)
-            };
-            return cw;
-          } else {
-            return cw;
-          }
-        });
-
-        return { ...state, chartWindowsScaleTranslate, chartWindows };
-      });
-
-      p.emitSync('chart-windows-scale-translate/change', id);
-    });
-
-    p.handler.on('chart-windows-events/zoom', ({ delta, x, y, e, id }) => {
-      const k = delta / 1000;
-
-      p.state.update((state) => ({
-        ...state,
-        chartWindowsScaleTranslate: {
-          ...state.chartWindowsScaleTranslate,
-          zoomX: state.chartWindowsScaleTranslate.zoomX - k,
-        },
-        chartWindows: state.chartWindows.map((cw) => cw.id === id ? ({
-          ...cw,
-          chartWindowsScaleTranslate: {
-            ...cw.chartWindowsScaleTranslate,
-            zoomY: cw.chartWindowsScaleTranslate.zoomY -k
-          },
-         }) : cw )
-      }));
-
-      p.emitSync('chart-windows-scale-translate/change', id);
-    });
-  });
-  
   /* chartWindowsScaleTranslate API */
   p.chartWindowsScaleTranslate = {
     /* Методы для работы с сырыми значениями */
@@ -186,6 +135,32 @@ const ChartWindowsScaleTranslate = (p, options) => {
         const { width, height } = options;
 
         return matrixForWindow(translate, zoom, width, height);
+      },
+    },
+    /* Обновим перенос и зум */
+    set: {
+      /* Зададим x и y */
+      xy: (id, { translate, zoom }) => {
+        const { x: translateX, y: translateY } = translate;
+        const { x: zoomX, y: zoomY } = zoom;
+        
+        p.state.update((state) => ({
+          ...state,
+          chartWindowsScaleTranslate: {
+            ...state.chartWindowsScaleTranslate,
+            translateX,
+            zoomX,
+          }, 
+
+          chartWindows: state.chartWindows.map((cw) => cw.id === id ? ({
+            ...cw,
+            chartWindowsScaleTranslate: {
+              ...cw.chartWindowsScaleTranslate,
+              translateY,
+              zoomY,
+            },
+           }) : cw )
+        }));
       },
     },
   };

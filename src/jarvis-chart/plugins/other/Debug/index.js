@@ -30,6 +30,11 @@ const DebugInfo = (p, options) => {
 
   const browser = getBrowser();
 
+  // p.on(/(.*)/, (data, ...args) => {
+  //   console.log('Event', data, args)
+  //   return data;
+  // });
+
   p.on('render/draw', ({ context, state }) => {
 
     const time = performance.now();
@@ -71,10 +76,10 @@ const DebugInfo = (p, options) => {
     p.chartWindows.create();
     p.chartWindows.create();
 
-    p.chartWindows.get(0).indicators.push({ type: 'bars' });
-    p.chartWindows.get(0).indicators.push({ type: 'darvas-box', meta: { tl: 5, bl: 5 } });
-    p.chartWindows.get(1).indicators.push({ type: 'stochastic', meta: { distance: 5 } });
-    p.chartWindows.get(1).chartWindowsScaleTranslate.autoZoom = true;
+    p.chartWindows.get(0).indicators.push({ type: 'candles' });
+    p.chartWindows.get(0).indicators.push({ type: 'bollinger', meta: { tl: 5, bl: 5 } });
+    p.chartWindows.get(1).indicators.push({ type: 'lines', meta: { distance: 5 } });
+    // p.chartWindows.get(1).chartWindowsScaleTranslate.autoZoom = true;
   });
 };
 

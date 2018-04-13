@@ -12,29 +12,33 @@ const bound = (value, min, max) => Math.min(max, Math.max(min, value));
  *
  */
 const ViewMode = (p, options) => {
-
   /* Пусть изначальный режим будет просмотр */
-
-  p.on('chart-modes/default', (mode) => 'view');
+  p.on('chart-windows-modes/default', (mode) => 'view');
 
   /* Обработчики */
+  p.on('handler/attach', () => {
+    p.handler.on('chart-windows-modes/view/drag', ({ x, y, e, id }) => {
+      let { translate, zoom } = p.chartWindowsScaleTranslate.raw.xy(id);
 
-  p.on('chart-modes/view/drag', ({ x, y, e }) => {
-    const { x: tx, y: ty } = p.chartWindow.translate.get();
-    const { x: zx, y: zy } = p.chartWindow.zoom.get();
+      translate.x -= x / zoom.x;
+      translate.y += y;
 
-    p.chartWindow.translate.set({
-      x: tx + x / zx,
-      y: ty - y / zy,
+      p.chartWindowsScaleTranslate.set.xy(id, { translate, zoom });
+
+      p.emitSync('chart-windows-scale-translate/change', id);
     });
-  });
 
-  p.on('chart-modes/view/zoom', ({ delta, e }) => {
-    const { x: zx, y: zy } = p.chartWindow.zoom.get();
+    p.handler.on('chart-windows-modes/view/zoom', ({ delta, x, y, e, id }) => {
+      const k = delta / 1000;
 
-    p.chartWindow.zoom.set({
-      x: bound(zx - delta / 1000, 0.5, 10),
-      y: bound(zy - delta / 1000, 0.5, 10),
+      let { translate, zoom } = p.chartWindowsScaleTranslate.raw.xy(id);
+
+      zoom.x -= k;
+      zoom.y -= k;
+
+      p.chartWindowsScaleTranslate.set.xy(id, { translate, zoom });
+
+      p.emitSync('chart-windows-scale-translate/change', id);
     });
   });
 };
@@ -43,8 +47,8 @@ ViewMode.plugin = {
   name: 'view-mode',
   version: '1.0.0',
   dependencies: {
-    'chart-window': '1.0.0',
-    'chart-modes': '1.0.0',
+    'chart-windows': '1.0.0',
+    'chart-windows-modes': '1.0.0',
   }
 };
 
