@@ -28,8 +28,12 @@ import Indicators from './plugins/content/Indicators';
 
 /* Различные индикаторы */
 
+import Lines from './plugins/indicators/Lines';
 import Candles from './plugins/indicators/Candles';
 import Bollinger from './plugins/indicators/Bollinger';
+import Bars from './plugins/indicators/Bars';
+import DarvasBox from './plugins/indicators/DarvasBox';
+import Stochastic from './plugins/indicators/Stochastic';
 
 /* Режимы */
 
@@ -82,8 +86,12 @@ export default (node, options) => {
 
   /* Индикаторы */
 
+  p.plugin(Lines, options);
   p.plugin(Candles, options);
   p.plugin(Bollinger, options);
+  p.plugin(Bars, options);
+  p.plugin(DarvasBox, options);
+  p.plugin(Stochastic, options);
 
   /* Всякое */
 
