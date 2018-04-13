@@ -13,9 +13,9 @@ import EventEmitter from 'lib/event-emitter';
  * handler/attach - сокет, который должен вызывать присоединение слушателей к элементу handler
  *
  */
-const Handler = (p) => {
+const Handler = (p, options) => {
   /* Attach to the main node on mount */
-  p.on('mount', ({ node, options }) => {
+  p.on('mount', ({ node }) => {
     const div = document.createElement('div');
 
     div.style.width  = "100%";

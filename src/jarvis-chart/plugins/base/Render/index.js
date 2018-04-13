@@ -17,7 +17,6 @@
  */
 const Render = (p, options) => {
   p.on('mount', ({ node }) => {
-
     /* Получаем render */
     const render = p.emitSync(`render/init/${options.render}`);
 
@@ -25,21 +24,20 @@ const Render = (p, options) => {
       throw `Рендер типа ${options.render} не зарегистрирован`;
 
     /* Создаём контекст */
-
     const context = render.Context(node, options);
 
     let requested = false;
 
     const draw = () => {
       context.clear();
-
       p.emitSync('render/draw', { context })
-
       context.flush();
 
       requestAnimationFrame(draw);
       requested = true;
     };
+
+    console.todo('Continuously опция для рендера');
 
     p.render = {
       /*

@@ -30,20 +30,18 @@ const AdvancedEvents = (p, options) => {
   let lastpos   = null;
   let lasttime  = null;
 
+  let pathStarted = false;
+
   p.on('handler/attach', () => {
     p.handler.attach('wheel', (e) => {
+      const { x, y } = getCoords(e);
       e.preventDefault();
-      p.handler.emit('zoom', { delta: e.deltaY, e });
+      p.handler.emit('zoom', { delta: e.deltaY, x, y, e });
     });
 
     p.handler.attach('click', (e) => {
       if ((new Date()) - lasttime > options.clickThreshold) return;
-
-      const rect = e.target.getBoundingClientRect();
-
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
+      const { x, y } = getCoords(e);
       p.handler.emit('click', { x, y, e });
     });
 
@@ -51,7 +49,7 @@ const AdvancedEvents = (p, options) => {
       const { x, y } = getCoords(e);
       p.handler.emit('mousedown', { x, y, e });
       p.handler.emit('pathstart', { x, y, e });
-
+      pathStarted = true;
       mousedown = true;
       lastpos = { x, y };
       lasttime = new Date();
@@ -59,10 +57,14 @@ const AdvancedEvents = (p, options) => {
 
     p.handler.attach('mouseup', (e) => {
       const { x, y } = getCoords(e);
-      p.handler.emit('mouseup', { x, y, e });
-      p.handler.emit('pathend', { x, y, e });
       mousedown = false;
       lastpos = false;
+      p.handler.emit('mouseup', { x, y, e });
+
+      if (pathStarted) {
+        p.handler.emit('pathend', { e });
+        pathStarted = false;
+      }
     });
 
     p.handler.attach('mouseover', (e) => {
@@ -74,19 +76,22 @@ const AdvancedEvents = (p, options) => {
       p.handler.emit('mouseout', e);
       mousedown = false;
       inside = false;
+      if (pathStarted) {
+        p.handler.emit('pathend', { e });
+        pathStarted = false;
+      }
     });
 
     p.handler.attach('mousemove', (e) => {
-      p.handler.emit('mousemove', e);
-
+      const { x, y } = getCoords(e);
+      p.handler.emit('mousemove', { x, y, e });
       if (mousedown) {
-        const { x, y } = getCoords(e);
-
         if (lastpos) {
-          p.handler.emit('path', { x, y, e });
+          if (pathStarted) {
+            p.handler.emit('path', { x, y, e });
+          }
           p.handler.emit('drag', { x: x - lastpos.x, y: y - lastpos.y, e });
         }
-
         lastpos = { x, y };
       }
     });

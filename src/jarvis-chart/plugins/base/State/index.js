@@ -12,20 +12,24 @@
  *
  */
 const State = (p) => {
+  let state;
+
+  p.state = {
+    update: (updater) => {
+      state = updater(state);
+      p.emitSync('state/update', state);
+      p.render.draw(state);
+    },
+    get: () => state,
+  };
+
   p.on('mount', ({ node }) => {
-    let state;
-
-    p.state = {
-      update: (updater) => {
-        state = updater(state);
-        p.emitSync('state/update', state);
-        p.render.draw(state);
-      },
-      get: () => state,
-    };
-
     state = p.emitSync('state/default', {});
 
+    /* Для инициализации значений за стейтом */
+    p.emitSync('state/ready');
+
+    /* Первичный рендер */
     p.render.draw(state);
 
     return { node };

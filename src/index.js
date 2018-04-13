@@ -3,6 +3,20 @@ import "./index.html";
 import Chart from './jarvis-chart';
 import values from './values';
 
+window.env = process.env.NODE_ENV;
+
+console.warnOnce = (() => {
+  let warned = {};
+
+  return (str) => {
+    if (!warned[str])
+      console.warn(str);
+    warned[str] = true;
+  };
+})();
+
+console.todo = (text) => console.log(`TODO: %c${text}`, 'color: blue');
+
 const node = document.getElementById('chart');
 
 /* Just copy pasted from internet, ignore it */

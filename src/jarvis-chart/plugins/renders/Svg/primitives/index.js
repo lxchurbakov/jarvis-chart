@@ -58,7 +58,7 @@ const polyline = (context, { points, width, opacity = 1, color, matrix }) => {
 
 const rectangle = (context, { x, y, width, height, opacity = 1, color, matrix }) => {
   context.push(`
-    <rect x='${x}' y='${y}' width='${width}' height='${height}' style='fill: ${color}' transform='${matrix ? matrix.toCss() : ''}' fill-opacity='${opacity}' />
+    <rect x='${x}' y='${y}' width='${width}' height='${height}' fill='${color}' transform='${matrix ? matrix.toCss() : ''}' fill-opacity='${opacity}' />
   `);
 };
 

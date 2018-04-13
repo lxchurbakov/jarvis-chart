@@ -21,6 +21,7 @@ const last = (arr) => arr[arr.length - 1];
  *   screen.height() - получает высоту канвы
  *   screen.inside([x, y]) - получает из экранных координат координаты внтури текущего преобразования
  *   screen.outside([x, y]) - получает из текущих координат их экранные версии
+ *   screen.clip(x, y, width, height) - устанавливает область клиппирования. Внимание! Это будет дропнуто про pop()
  *
  *   crop.fits() - проверяет, входит ли точка (с учётом текущей матрицы преобразований) в область экрана (видима ли)
  *   crop.raw() - проверяет, входит ли точка (без учёта текущей матрицы преобразований) в область экрана (видима ли
@@ -78,11 +79,21 @@ export default (options) => {
     },
   };
 
+  const sizeStack = [{ width: options.width, height: options.height }];
+
   const screen = {
-    width:  () => options.width,
-    height: () => options.height,
+    width:  () => last(sizeStack).width,
+    height: () => last(sizeStack).height,
     inside:  ([x, y]) => Matrix.apply([x, y], matrix.get()),
     outside: ([x, y]) => Matrix.apply([x, y], matrix.get().reverse()),
+    clip:    (x, y, width, height) => {
+      options.screen.clip(x, y, width, height);
+      sizeStack.push({ width, height });
+    },
+    reclip:  () => {
+      options.screen.reclip();
+      sizeStack.pop();
+    },
   };
 
   const crop = {
