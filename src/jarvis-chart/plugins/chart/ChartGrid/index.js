@@ -11,7 +11,7 @@ const ChartGrid = (p, options) => {
 
   /* Для каждого окна на момент отрисовки */
   p.on('chart-windows/inside', ({ context, top, id }) => {
-    /* Передвинемся по нужным координатам */
+    /* Получим зум и перенос */
     const { translateX, zoomX } = p.state.get();
     const { translateY, zoomY } = p.chartWindows.get(id);
 
@@ -20,13 +20,16 @@ const ChartGrid = (p, options) => {
 
     /* Один раз посчитаем конфигурацию сетки */
     const values = p.values.get();
-    const gridConfig = getGridConfig(context, translate, zoom, options, values);
+    const gridConfig = getGridConfig(context, translate, zoom, values);
 
     /* Зарисуем сетку на заднем плане */
     drawGrid(p, context, translate, zoom, gridConfig);
 
     /* Позволим внедриться - отрисуем неизвестное содержимое */
-    p.render.primitives.group(context, { matrix: matrixForWindow(translate, zoom, options) }, () => {
+    const width  = context.api.screen.width();
+    const height = context.api.screen.height();
+
+    p.render.primitives.group(context, { matrix: matrixForWindow(translate, zoom, width, height) }, () => {
       p.emitSync('chart-grid/inside', { context, id });
     });
 
@@ -46,7 +49,7 @@ const ChartGrid = (p, options) => {
       /* Изменим соответствующие значения */
       p.state.update((state) => ({ ...state, translateX: state.translateX - (x / state.zoomX) }));
       p.state.update((state) => ({ ...state, chartWindows: state.chartWindows.map((cw) => {
-        return cw.id === id ? ({ ...cw, translateY: cw.translateY + y }) : cw
+        return cw.id === id ? ({ ...cw, translateY: cw.translateY + (y / cw.zoomY) }) : cw
       }) }));
     });
 

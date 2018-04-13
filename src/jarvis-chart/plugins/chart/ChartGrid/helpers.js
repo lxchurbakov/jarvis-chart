@@ -3,12 +3,14 @@ import Matrix from 'lib/matrix';
 /**
  * Построить матрицу для пространства внутри окна
  */
-export const matrixForWindow = (translate, zoom, options) =>
+export const matrixForWindow = (translate, zoom, width, height) =>
   Matrix.join(
     /* Зуммируем относительно середины экрана */
-    Matrix.translate(translate.x - options.width / 2, 0),
+    // Matrix.translate(translate.x - width / 2, 0),
+    Matrix.translate(translate.x - width / 2, translate.y - height / 2),
     Matrix.scale(zoom.x, zoom.y),
-    Matrix.translate(-translate.x + options.width / 2, 0),
+    // Matrix.translate(-translate.x + width / 2, 0),
+    Matrix.translate(-translate.x + width / 2, -translate.y + height / 2),
 
     Matrix.translate(translate.x, translate.y),
   );
@@ -16,7 +18,7 @@ export const matrixForWindow = (translate, zoom, options) =>
 /**
  * Построить матрицу для таймлайна (то же самое, что и для окна, только игнорируя перенос/зум по оси Х)
  */
-export const matrixForTimeline = (translate, zoom, width) =>
+export const matrixForTimeline = (translate, zoom, width, height) =>
   Matrix.join(
     /* Зуммируем относительно середины экрана, но только по X */
     Matrix.translate(translate.x - width / 2, 0),
@@ -29,9 +31,12 @@ export const matrixForTimeline = (translate, zoom, width) =>
 /**
  * Построить матрицу для прайслайна (то же самое, что и для окна, только игнорируя перенос/зум по оси Y)
  */
-export const matrixForPriceline = (translate, zoom) =>
+export const matrixForPriceline = (translate, zoom, width, height) =>
   Matrix.join(
+    Matrix.translate(0, translate.y - height / 2),
     Matrix.scale(1, zoom.y),
+    // Matrix.translate(-translate.x + width / 2, 0),
+    Matrix.translate(0, -translate.y + height / 2),
 
     Matrix.translate(0, translate.y),
   );
@@ -39,14 +44,16 @@ export const matrixForPriceline = (translate, zoom) =>
 /**
  * Узнать конфигурацию сетки (видимых линий с подписями)
  */
-export const getGridConfig = (context, translate, zoom, options, values) => {
-  const windowMatrix = matrixForWindow(translate, zoom, options)
+export const getGridConfig = (context, translate, zoom, values) => {
+  const width  = context.api.screen.width();
+  const height = context.api.screen.height();
+
+  const windowMatrix = matrixForWindow(translate, zoom, width, height)
+
+  /* Найдём положение точек внутри окна */
 
   const [x0real, y0real] = Matrix.apply([ 0, 0 ], windowMatrix);
   const [x1real, y1real] = Matrix.apply([ 10, 10 ], windowMatrix);
-
-  const width  = context.api.screen.width();
-  const height = context.api.screen.height();
 
   /* Priceline конфиг */
   const pricePointRealHeight = Math.abs(y1real - y0real) / 10;
@@ -55,7 +62,7 @@ export const getGridConfig = (context, translate, zoom, options, values) => {
   const visiblePricePointsCount = Math.abs(Math.ceil(height / pricePointRealHeight));
   const firstVisiblePricePointIndex = Math.floor(-pricePointsRealOffset / pricePointRealHeight);
 
-  const pricePointsNth = Math.floor(visiblePricePointsCount / 10); /* Показываем только 10 отметок цены */
+  const pricePointsNth = Math.floor(visiblePricePointsCount / (height / 50)); /* Показываем цену каждые 50px */
 
   const priceline = (new Array(visiblePricePointsCount).fill(0))
     .map((v, i) => i + firstVisiblePricePointIndex)
@@ -91,7 +98,7 @@ export const drawGrid = (p, context, translate, zoom, config) => {
   const width = context.api.screen.width();
   const height = context.api.screen.height();
 
-  context.api.matrix.push(matrixForPriceline(translate, zoom));
+  context.api.matrix.push(matrixForPriceline(translate, zoom, width, height));
     priceline.forEach((pricepoint) => {
       const x0 = 0;
       const y0 = pricepoint.y;
@@ -103,7 +110,7 @@ export const drawGrid = (p, context, translate, zoom, config) => {
     });
   context.api.matrix.pop();
 
-  context.api.matrix.push(matrixForTimeline(translate, zoom, width));
+  context.api.matrix.push(matrixForTimeline(translate, zoom, width, height));
       /* Отрисуем линии цены */
     timeline.forEach((timepoint) => {
       const x0 = timepoint.x;
@@ -133,7 +140,7 @@ export const drawTimeline = (p, context, translate, zoom, config) => {
   p.render.primitives.line(context, { x0: 0, y0: 50, x1: width, y1: 50, color: '#ccc' })
 
   /* Отрисуем значения времени */
-  context.api.matrix.push(matrixForTimeline(translate, zoom, width));
+  context.api.matrix.push(matrixForTimeline(translate, zoom, width, height));
     timeline.forEach((timepoint) => {
       const x = timepoint.x;
       const y = 50;
@@ -166,7 +173,7 @@ export const drawPriceline = (p, context, translate, zoom, config) => {
   p.render.primitives.line(context, { x0: x, y0: 0, x1: x, y1: height, color: '#ccc' })
 
   /* Отрисуем каждое значение цены */
-  context.api.matrix.push(matrixForPriceline(translate, zoom, width));
+  context.api.matrix.push(matrixForPriceline(translate, zoom, width, height));
     priceline.forEach((pricepoint) => {
       const x = width - 50;
       const y = pricepoint.y;

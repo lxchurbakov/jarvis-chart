@@ -60,7 +60,7 @@ const line = (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix }) =>
 
   /* Descale line */
   context.api.matrix.replace(Matrix.identity());
-  
+
   context.stroke();
   context.api.matrix.pop();
 
@@ -126,9 +126,7 @@ const text = (context, { x, y, font = "13px arial", text, matrix, textAlign = 'c
   if (drop) {
     context.api.matrix.replace(Matrix.identity());
 
-    window.env === 'development' && (
-      (x || y) && console.warnOnce('Использование drop свойства текста и параметров x или y может привести к неправильному позиционированию')
-    )
+    console.warnOnce('Использование drop свойства текста и параметров x или y может привести к неправильному позиционированию')
   }
 
   context.font = font;

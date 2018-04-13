@@ -1,8 +1,9 @@
 import Matrix from 'lib/matrix';
 
 /* Построить матрицу преобразований для окна */
-const matrixForWindow = (height, top) => {
+const matrixForWindow = (width, height, top) => {
   return Matrix.join(
+    // Matrix.translate(width / 2, height / 2), /* Делаем точку 0;0 центром окна */
     Matrix.scale(1, -1), /* Разворачиваем ось Y */
     Matrix.translate(0, top + height), /* 1. Переносим на top + height пикселей вниз */
   );
@@ -19,7 +20,7 @@ const drawWindows = (p, context, { windows }) => {
     const width  = context.api.screen.width();
 
     /* Применяем матрицу к контексту */
-    context.api.matrix.push(matrixForWindow(height, top));
+    context.api.matrix.push(matrixForWindow(width, height, top));
       /* Если это не последнее окно, рисуем линию, за которую можно будет таскать меняя размер */
       if (i < len - 1) {
         p.render.primitives.line(context, { x0: 0, y0: 0, x1: width, y1: 0, color: '#333', width: 1, opacity: 0.5 });
