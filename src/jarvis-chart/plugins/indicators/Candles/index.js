@@ -42,6 +42,7 @@ const Candles = (p) => {
     });
 
     p.chartWindows.get(0).indicators.push({ type: 'candles' });
+    p.chartWindows.get(1).indicators.push({ type: 'candles' });
   });
 };
 

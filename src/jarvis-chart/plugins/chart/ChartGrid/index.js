@@ -18,14 +18,9 @@ const ChartGrid = (p, options) => {
     const translate = { x: translateX, y: translateY };
     const zoom      = { x: zoomX, y: zoomY };
 
-    let gridConfig;
-
     /* Один раз посчитаем конфигурацию сетки */
-    p.render.primitives.group(context, { matrix: matrixForWindow(translate, zoom, options) }, () => {
-      const values = p.values.get();
-
-      gridConfig = getGridConfig(context, translate, zoom, values);
-    });
+    const values = p.values.get();
+    const gridConfig = getGridConfig(context, translate, zoom, options, values);
 
     /* Зарисуем сетку на заднем плане */
     drawGrid(p, context, translate, zoom, gridConfig);
@@ -59,9 +54,9 @@ const ChartGrid = (p, options) => {
       const k = delta / 1000;
 
       p.state.update((state) => ({ ...state, zoomX: state.zoomX - k }));
-      // p.state.update((state) => ({ ...state, chartWindows: state.chartWindows.map((cw) => {
-      //   return cw.id === id ? ({ ...cw, translateY: cw.translateY + y }) : cw
-      // }) }));
+      p.state.update((state) => ({ ...state, chartWindows: state.chartWindows.map((cw) => {
+        return cw.id === id ? ({ ...cw, zoomY: cw.zoomY -k }) : cw
+      }) }));
     });
   });
 };

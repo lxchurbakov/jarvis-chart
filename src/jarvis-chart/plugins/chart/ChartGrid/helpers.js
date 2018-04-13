@@ -39,19 +39,30 @@ export const matrixForPriceline = (translate, zoom) =>
 /**
  * Узнать конфигурацию сетки (видимых линий с подписями)
  */
-export const getGridConfig = (context, translate, zoom, values) => {
-  const [x0real, y0real] = context.api.screen.inside([0, 0]);
-  const [x1real, y1real] = context.api.screen.inside([10, 10]);
+export const getGridConfig = (context, translate, zoom, options, values) => {
+  const windowMatrix = matrixForWindow(translate, zoom, options)
+
+  const [x0real, y0real] = Matrix.apply([ 0, 0 ], windowMatrix);
+  const [x1real, y1real] = Matrix.apply([ 10, 10 ], windowMatrix);
 
   const width  = context.api.screen.width();
   const height = context.api.screen.height();
 
-  const count = Math.floor(height / 50); /* Делаем pricline плотность 50px */
-  const nth   = Math.floor(height / count);
-  const start = Math.floor(-translate.y / nth);
+  /* Priceline конфиг */
+  const pricePointRealHeight = Math.abs(y1real - y0real) / 10;
+  const pricePointsRealOffset = y0real;
 
-  const priceline = (new Array(count + 2).fill(0)).map((v, i) => i + start).map((y) => ({ y: y * nth, text: y * nth }))
+  const visiblePricePointsCount = Math.abs(Math.ceil(height / pricePointRealHeight));
+  const firstVisiblePricePointIndex = Math.floor(-pricePointsRealOffset / pricePointRealHeight);
 
+  const pricePointsNth = Math.floor(visiblePricePointsCount / 10); /* Показываем только 10 отметок цены */
+
+  const priceline = (new Array(visiblePricePointsCount).fill(0))
+    .map((v, i) => i + firstVisiblePricePointIndex)
+    .map((y) => ({ y: y, text: y }))
+    .filter((v, i) => (i + firstVisiblePricePointIndex) % pricePointsNth === 0);
+
+  /* Timeline конфиг */
   const candleRealWidth = x1real - x0real;
   const candlesRealOffset = x0real;
 

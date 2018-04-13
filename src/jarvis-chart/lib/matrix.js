@@ -160,8 +160,10 @@ Matrix.dropScale = (matrix, x = true, y = true) => {
   return new Matrix(a, b, c, d, tx, ty);
 };
 
-Matrix.resetTranslate = (matrix, x = true, y = true) =>
-  Matrix.translate(x ? -matrix.get(0, 2) : 0, y ? -matrix.get(1, 2) : 0)
+Matrix.resetTranslate = (matrix, x = true, y = true) => {
+  console.warnOnce('К сожалению, resetTranslate не может работать исправно, если есть зум. Постарайтесь обходиться без него');
+  return Matrix.translate(x ? -matrix.get(0, 2) : 0, y ? -matrix.get(1, 2) : 0);
+};
 
 const matrixMultiplicationStep = (A, B, x, y) =>
   A.get(0, y) * B.get(x, 0) + A.get(1, y) * B.get(x, 1) + A.get(2, y) * B.get(x, 2);
