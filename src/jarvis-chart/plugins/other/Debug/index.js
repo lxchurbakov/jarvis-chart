@@ -72,6 +72,7 @@ const DebugInfo = (p, options) => {
   p.on('chart-windows/init', () => {
     p.chartWindows.create();
     p.chartWindows.create();
+    p.chartWindows.create();
   });
 };
 

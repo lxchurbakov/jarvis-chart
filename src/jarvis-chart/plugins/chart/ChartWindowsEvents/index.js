@@ -1,19 +1,14 @@
-import { getWindowIdThatIsTouchedByBottomBorder, getWindowIdThatIsTouched, resizeWindowsIncreasingWindowWithId } from './helpers';
+import { getWindowIdThatIsTouched } from './helpers';
 
 /**
  * ChartWindowsEvents плагин
  *
- * Плагин, обрабатывающий события для окон чарта. Позволяет ресайзить окна и пробрасывает события в окна чарта
- * Один из самых больших плагинов, т.к. соединяет в себе по сути два разных плагина
+ * Плагин, обрабатывающий события для окон чарта. Пробрасывает события в окна чарта
  *
  */
 const ChartWindowsEvents = (p, options) => {
 
   console.todo('Нужно пробросить события click и mousemove | ChartWindowsEvents')
-
-  /* Переменные, хранящие ID и место начала ресайза окон */
-  let dragId    = null;
-  let dragStart = null;
 
   /* Переменные, хранящие ID и место начала PATH на одном окне */
   let pathWindowId = null;
@@ -26,25 +21,12 @@ const ChartWindowsEvents = (p, options) => {
       const windows = p.chartWindows.all();
       const yRelative = y / options.height;
 
-      /* Высчитываем окно, нижняя граница которого находится под курсором */
-      const wId = getWindowIdThatIsTouchedByBottomBorder(windows, yRelative);
+      const id = getWindowIdThatIsTouched(windows, yRelative);
 
-      if (wId !== null) {
-        /* Если такое есть */
-        dragId = wId;
-        dragStart = yRelative;
-        /* Заодно выставим курсор таскания */
-        p.cursor.set('move');
-      } else {
-        /* Если нет, находим окно, над которым курсор */
-        const id = getWindowIdThatIsTouched(windows, yRelative);
+      p.handler.emit('chart-windows-events/pathstart', { x, y, e, id });
 
-        p.handler.emit('chart-windows-events/pathstart', { x, y, e, id });
-
-        /* Схороняем */
-        pathWindowId = id;
-        pathWindowStart = { x, y };
-      }
+      pathWindowId = id;
+      pathWindowStart = { x, y };
     });
 
     /* Обрабатываем path */
@@ -52,19 +34,7 @@ const ChartWindowsEvents = (p, options) => {
       const yRelative = y / options.height;
       const windows = p.chartWindows.all();
 
-      if (dragId !== null) {
-        /* Если мы уже тащим какое-то окно за его нижнюю границу */
-        const diff = dragStart - yRelative;
-
-        /* Обновим его размеры */
-        p.state.update((state) => ({
-          ...state,
-          chartWindows: resizeWindowsIncreasingWindowWithId(state.chartWindows, dragId, diff),
-        }));
-        p.chartWindows.fix();
-
-        dragStart = yRelative;
-      } else if (pathWindowId !== null) {
+      if (pathWindowId !== null) {
         /* Если мы уже вазюкаем мышью по какому-то окну */
         const id = getWindowIdThatIsTouched(windows, yRelative);
 
@@ -83,27 +53,10 @@ const ChartWindowsEvents = (p, options) => {
 
     /* Обрабатываем pathend */
     p.handler.on('pathend', ({ e }) => {
-      if (dragId !== null) {
-        /* Если мы что-то тащили, то уберём курсор */
-        p.cursor.set('auto');
-        dragId = null;
-      } else if (pathWindowId) {
+      if (pathWindowId !== null) {
         /* Если мы вазюкали по окну, сообщим об окончании */
         p.handler.emit('chart-windows-events/pathend', { e, id: pathWindowId });
         pathWindowId = null;
-      }
-    });
-
-    /* Поменяем курсор над таскаемой линией */
-    p.handler.on('mousemove', ({ x, y, e }) => {
-      const { chartWindows } = p.state.get();
-
-      const wId = getWindowIdThatIsTouchedByBottomBorder(chartWindows, y / options.height);
-
-      if (wId !== null) {
-        p.cursor.set('move');
-      } else if (dragId === null) {
-        p.cursor.set('auto');
       }
     });
 

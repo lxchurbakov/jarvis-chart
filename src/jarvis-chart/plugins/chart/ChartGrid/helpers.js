@@ -6,10 +6,8 @@ import Matrix from 'lib/matrix';
 export const matrixForWindow = (translate, zoom, width, height) =>
   Matrix.join(
     /* Зуммируем относительно середины экрана */
-    // Matrix.translate(translate.x - width / 2, 0),
     Matrix.translate(translate.x - width / 2, translate.y - height / 2),
     Matrix.scale(zoom.x, zoom.y),
-    // Matrix.translate(-translate.x + width / 2, 0),
     Matrix.translate(-translate.x + width / 2, -translate.y + height / 2),
 
     Matrix.translate(translate.x, translate.y),
@@ -35,7 +33,6 @@ export const matrixForPriceline = (translate, zoom, width, height) =>
   Matrix.join(
     Matrix.translate(0, translate.y - height / 2),
     Matrix.scale(1, zoom.y),
-    // Matrix.translate(-translate.x + width / 2, 0),
     Matrix.translate(0, -translate.y + height / 2),
 
     Matrix.translate(0, translate.y),

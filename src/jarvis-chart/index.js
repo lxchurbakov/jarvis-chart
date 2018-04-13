@@ -13,6 +13,8 @@ import Cursor from './plugins/base/Cursor';
 import ChartValues from './plugins/chart/ChartValues';
 import ChartWindows from './plugins/chart/ChartWindows';
 import ChartWindowsEvents from './plugins/chart/ChartWindowsEvents';
+import ChartWindowsDrag from './plugins/chart/ChartWindowsDrag';
+
 import ChartGrid from './plugins/chart/ChartGrid';
 import Indicators from './plugins/chart/Indicators';
 
@@ -52,6 +54,7 @@ export default (node, options) => {
   p.plugin(ChartValues, options);
   p.plugin(ChartWindows, options);
   p.plugin(ChartWindowsEvents, options);
+  p.plugin(ChartWindowsDrag, options);
   p.plugin(ChartGrid, options);
   p.plugin(Indicators, options);
 
