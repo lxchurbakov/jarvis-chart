@@ -99,6 +99,14 @@ const ChartWindows = (p, options) => {
 
       return id - 1;
     },
+
+    /* Обновить окно */
+    update: (id, updater) => {
+      p.state.update((state) => ({
+        ...state,
+        chartWindows: state.chartWindows.map(cw => cw.id === id ? updater(cw) : cw)
+      }));
+    },
   };
 };
 

@@ -15,8 +15,15 @@ import ChartWindows from './plugins/chart/ChartWindows';
 import ChartWindowsEvents from './plugins/chart/ChartWindowsEvents';
 import ChartWindowsDrag from './plugins/chart/ChartWindowsDrag';
 
-import ChartGrid from './plugins/chart/ChartGrid';
-import Indicators from './plugins/chart/Indicators';
+/* Content плагины */
+
+import ChartWindowsLayers from './plugins/content/ChartWindowsLayers';
+import ChartWindowsScaleTranslate from './plugins/content/ChartWindowsScaleTranslate';
+import ChartWindowsGridConfig from './plugins/content/ChartWindowsGridConfig';
+import ChartWindowsGrid from './plugins/content/ChartWindowsGrid';
+import ChartWindowsUI from './plugins/content/ChartWindowsUI';
+import ChartWindowsContent from './plugins/content/ChartWindowsContent';
+import Indicators from './plugins/content/Indicators';
 
 /* Различные индикаторы */
 
@@ -24,9 +31,9 @@ import Candles from './plugins/indicators/Candles';
 
 /* Режимы */
 
-import ViewMode from './plugins/modes/ViewMode';
 
 /* Элементы */
+
 
 /* Рендеры */
 
@@ -37,46 +44,48 @@ import RenderSvg from './plugins/renders/Svg';
 
 import Debug from './plugins/other/Debug';
 
+/* Код приложеия */
+
 export default (node, options) => {
   console.todo('Необходимо реализовать элементы')
   console.todo('Добавить chart-windows/resize событие')
 
   const p = new Pluggable();
 
-  /* Basic plugins */
+  /* Basic плагины */
+
   p.plugin(Handler, options);
   p.plugin(Render, options);
   p.plugin(State, options);
-
   p.plugin(AdvancedEvents, options);
   p.plugin(Cursor, options);
+
+  /* Chart плагины */
 
   p.plugin(ChartValues, options);
   p.plugin(ChartWindows, options);
   p.plugin(ChartWindowsEvents, options);
   p.plugin(ChartWindowsDrag, options);
-  p.plugin(ChartGrid, options);
+
+  /* Content плагины */
+
+  p.plugin(ChartWindowsLayers, options);
+  p.plugin(ChartWindowsScaleTranslate, options);
+  p.plugin(ChartWindowsGridConfig, options);
+  p.plugin(ChartWindowsGrid, options);
+  p.plugin(ChartWindowsUI, options);
+  p.plugin(ChartWindowsContent, options);
   p.plugin(Indicators, options);
 
+  /* Индикаторы */
+
   p.plugin(Candles, options);
-  // p.plugin(ChartModes, options);
 
-  /* Chart Window (translation, zoom) plugin */
-  // p.plugin(ChartWindow, options);
-
-  /* Content */
-  // p.plugin(ChartContent, options);
-
-  // p.plugin(ViewMode, options);
-
-  // p.plugin(Elements, options);
-  // p.plugin(Brush, options);
-  // p.plugin(Ellipse, options);
-  // p.plugin(Fibonacci, options);
-
-  // p.plugin(Indicators, options);
+  /* Всякое */
 
   p.plugin(Debug, options);
+
+  /* Render плагины */
 
   p.plugin(RenderCanvas, options);
   p.plugin(RenderSvg, options);

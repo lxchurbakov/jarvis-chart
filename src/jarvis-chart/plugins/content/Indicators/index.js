@@ -13,7 +13,7 @@ const Indicators = (p) => {
   };
 
   /* Отрисовывем индикаторы */
-  p.on('chart-grid/inside', ({ id, context }) => {
+  p.on('chart-windows-content/entry', ({ id, context }) => {
     const { indicators } = p.chartWindows.get(id);
 
     indicators.forEach(({ type, meta }) => {
