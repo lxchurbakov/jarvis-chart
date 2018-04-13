@@ -4,7 +4,7 @@ const ChartWindowsContent = (p, options) => {
     const height = context.api.screen.height();
 
     const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
-    const windowMatrix = p.chartWindowsScaleTranslate.matrix.window(translate, zoom, width, height);
+    const windowMatrix = p.chartWindowsScaleTranslate.matrix.xy(id);
 
     context.api.matrix.push(windowMatrix);
       p.emitSync('chart-windows-content/entry', { context, id });

@@ -3,8 +3,6 @@ const ChartWindowsGrid = (p, options) => {
     const gridConfig = p.chartWindowsGridConfig.get(id);
     const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
 
-    p.render.primitives.rectangle(context, { x: -10, y: -10, width: 20, height: 20, color: 'red' });
-
     /* Развернём конфиг */
     const { priceline, timeline } = gridConfig;
 
@@ -12,7 +10,7 @@ const ChartWindowsGrid = (p, options) => {
     const width = context.api.screen.width();
     const height = context.api.screen.height();
 
-    context.api.matrix.push(p.chartWindowsScaleTranslate.matrix.priceline(translate, zoom, width, height));
+    context.api.matrix.push(p.chartWindowsScaleTranslate.matrix.y(id));
       priceline.forEach((pricepoint) => {
         const x0 = 0;
         const y0 = pricepoint.y;
@@ -24,7 +22,7 @@ const ChartWindowsGrid = (p, options) => {
       });
     context.api.matrix.pop();
 
-    context.api.matrix.push(p.chartWindowsScaleTranslate.matrix.timeline(translate, zoom, width, height));
+    context.api.matrix.push(p.chartWindowsScaleTranslate.matrix.x(id));
         /* Отрисуем линии цены */
       timeline.forEach((timepoint) => {
         const x0 = timepoint.x;

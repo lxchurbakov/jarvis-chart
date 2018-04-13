@@ -1,8 +1,7 @@
 import Matrix from 'lib/matrix';
 
 const getGridConfig = (width, height, windowMatrix, values) => {
-    /* Найдём положение точек внутри окна */
-
+  /* Найдём положение точек внутри окна */
   const [x0real, y0real] = Matrix.apply([ 0, 0 ], windowMatrix);
   const [x1real, y1real] = Matrix.apply([ 10, 10 ], windowMatrix);
 
@@ -34,16 +33,16 @@ const getGridConfig = (width, height, windowMatrix, values) => {
     .map(({ time }, index) => ({ x: (index + firstVisibleCandleIndex) * 10, text: time }))
     .filter((v, i) => (i + firstVisibleCandleIndex) % candlesNth === 0);
 
-  return { priceline, timeline };
+  return { priceline, timeline, first: firstVisibleCandleIndex, count: visibleCandlesCount };
 };
 
 const getGridConfigForWindow = (p, options, id) => {
-  const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
+  // const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
   const { width, height: h } = options;
   const height = h * p.chartWindows.get(id).weight;
   const values = p.values.get()
 
-  const windowMatrix = p.chartWindowsScaleTranslate.matrix.window(translate, zoom, width, height);
+  const windowMatrix = p.chartWindowsScaleTranslate.matrix.xy(id);
   const gridConfig = getGridConfig(width, height, windowMatrix, values);
 
   return gridConfig;
@@ -51,6 +50,7 @@ const getGridConfigForWindow = (p, options, id) => {
 
 const ChartWindowsGridConfig = (p, options) => {
   console.todo('Кэшировать значения конфигурации сетки')
+  console.todo('Перевести построение конфигурации сетки на ChartCrop')
   p.chartWindowsGridConfig = {
     get: (id) => getGridConfigForWindow(p, options, id)
   };

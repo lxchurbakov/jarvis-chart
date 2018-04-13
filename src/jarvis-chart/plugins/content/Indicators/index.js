@@ -19,7 +19,7 @@ const Indicators = (p) => {
     indicators.forEach(({ type, meta }) => {
       const config = indicatorsConfig[type];
 
-      config.inside(context, meta);
+      config.inside(context, meta, id);
     });
 
     return { id, context };

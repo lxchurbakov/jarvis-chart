@@ -1,6 +1,6 @@
 import Matrix from 'lib/matrix';
 
-const drawTimeline = (p, context, translate, zoom, config) => {
+const drawTimeline = (p, context, translate, zoom, config, id) => {
   /* Развернём конфиг */
   const { timeline } = config;
 
@@ -11,11 +11,11 @@ const drawTimeline = (p, context, translate, zoom, config) => {
   const areaHeight = 30;
 
   /* Отрисуем прямоугольник подложку */
-  p.render.primitives.rectangle(context, { x: 0, y: 0, width: width, height: areaHeight, color: 'white', opacity: 0.9 })
+  p.render.primitives.rectangle(context, { x: 0, y: 0, width: width, height: areaHeight, color: 'white', opacity: 0.7 })
   p.render.primitives.line(context, { x0: 0, y0: areaHeight, x1: width, y1: areaHeight, color: '#ccc' })
 
   /* Отрисуем значения времени */
-  context.api.matrix.push(p.chartWindowsScaleTranslate.matrix.timeline(translate, zoom, width, height));
+  context.api.matrix.push(p.chartWindowsScaleTranslate.matrix.x(id));
     timeline.forEach((timepoint) => {
       const x = timepoint.x;
       const y = areaHeight;
@@ -30,7 +30,7 @@ const drawTimeline = (p, context, translate, zoom, config) => {
   context.api.matrix.pop();
 };
 
-const drawPriceline = (p, context, translate, zoom, config) => {
+const drawPriceline = (p, context, translate, zoom, config, id) => {
   /* Развернём конфиг */
   const { priceline } = config;
 
@@ -45,7 +45,7 @@ const drawPriceline = (p, context, translate, zoom, config) => {
   p.render.primitives.line(context, { x0: x, y0: 0, x1: x, y1: height, color: '#ccc' })
 
   /* Отрисуем каждое значение цены */
-  context.api.matrix.push(p.chartWindowsScaleTranslate.matrix.priceline(translate, zoom, width, height));
+  context.api.matrix.push(p.chartWindowsScaleTranslate.matrix.y(id));
     priceline.forEach((pricepoint) => {
       const x = width - 50;
       const y = pricepoint.y;
@@ -64,8 +64,8 @@ const ChartWindowsUI = (p, options) => {
     const gridConfig = p.chartWindowsGridConfig.get(id);
     const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
 
-    drawTimeline(p, context, translate, zoom, gridConfig);
-    drawPriceline(p, context, translate, zoom, gridConfig);
+    drawTimeline(p, context, translate, zoom, gridConfig, id);
+    drawPriceline(p, context, translate, zoom, gridConfig, id);
   });
 };
 

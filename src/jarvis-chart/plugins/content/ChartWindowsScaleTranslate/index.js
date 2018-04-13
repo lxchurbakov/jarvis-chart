@@ -6,9 +6,9 @@ import Matrix from 'lib/matrix';
 const matrixForWindow = (translate, zoom, width, height) =>
   Matrix.join(
     /* Зуммируем относительно середины экрана */
-    Matrix.translate(translate.x - width / 2, translate.y - height / 2),
+    Matrix.translate(translate.x - width / 2, 0),
     Matrix.scale(zoom.x, zoom.y),
-    Matrix.translate(-translate.x + width / 2, -translate.y + height / 2),
+    Matrix.translate(-translate.x + width / 2, 0),
 
     Matrix.translate(translate.x, translate.y),
   );
@@ -31,21 +31,29 @@ const matrixForTimeline = (translate, zoom, width, height) =>
  */
 const matrixForPriceline = (translate, zoom, width, height) =>
   Matrix.join(
-    Matrix.translate(0, translate.y - height / 2),
+    // Matrix.translate(0, -height / 2),
     Matrix.scale(1, zoom.y),
-    Matrix.translate(0, -translate.y + height / 2),
+    // Matrix.translate(0, height / 2),
 
     Matrix.translate(0, translate.y),
   );
+
+const getAutoZoom = (p, id) => {
+  const { min, max } = p.emitSync('chart-windows-scale-translate/autozoom', { id, min: 0, max: 100 });
+
+  return { min, max };
+};
 
 /**
  *
  */
 const ChartWindowsScaleTranslate = (p, options) => {
   p.on('state/default', (state) => ({ ...state, chartWindowsScaleTranslate: { translateX: 0, zoomX: 1 }}));
-  p.on('chart-windows/create', (w) => ({ ...w, chartWindowsScaleTranslate: { translateY: 0, zoomY: 1 }}));
+  p.on('chart-windows/create', (w) => ({ ...w, chartWindowsScaleTranslate: { translateY: 0, zoomY: 1, autoZoom: true }}));
 
   p.on('handler/attach', () => {
+    console.todo('Перенести обработку drag и zoom в view mode');
+
     p.handler.on('chart-windows-events/drag', ({ x, y, e, id }) => {
       p.state.update((state) => {
         let { chartWindowsScaleTranslate, chartWindows } = state;
@@ -56,7 +64,7 @@ const ChartWindowsScaleTranslate = (p, options) => {
           if (cw.id === id) {
             cw.chartWindowsScaleTranslate = {
               ...cw.chartWindowsScaleTranslate,
-              translateY: cw.chartWindowsScaleTranslate.translateY + (y / cw.chartWindowsScaleTranslate.zoomY)
+              translateY: cw.chartWindowsScaleTranslate.translateY + (y)
             };
             return cw;
           } else {
@@ -93,20 +101,70 @@ const ChartWindowsScaleTranslate = (p, options) => {
   });
 
   p.chartWindowsScaleTranslate = {
-    matrix: {
-      window: matrixForWindow,
-      timeline: matrixForTimeline,
-      priceline: matrixForPriceline,
+
+    /* Сырые координаты */
+    raw: {
+      /* Получить translate и zoom по X */
+      x: () => p.state.get().chartWindowsScaleTranslate,
+      /* Получить translate и zoom по Y */
+      y: (id) => p.chartWindows.get(id).chartWindowsScaleTranslate,
+      /* */
+      xy: (id) => {
+        const { chartWindowsScaleTranslate: { translateX, zoomX } } = p.state.get();
+        const { chartWindowsScaleTranslate: { translateY, zoomY } } = p.chartWindows.get(id);
+
+        const translate = { x: translateX, y: translateY };
+        const zoom      = { x: zoomX, y: zoomY };
+
+        return { translate, zoom };
+      },
     },
+
+    /* Препроцесснутые координаты с автозумом */
     get: (id) => {
-      const { chartWindowsScaleTranslate: { translateX, zoomX }  } = p.state.get();
-      const { chartWindowsScaleTranslate: { translateY, zoomY } } = p.chartWindows.get(id);
+      const { translate, zoom } = p.chartWindowsScaleTranslate.raw.xy(id);
+      const { weight, chartWindowsScaleTranslate: { autoZoom } } = p.chartWindows.get(id);
 
-      const translate = { x: translateX, y: translateY };
-      const zoom      = { x: zoomX, y: zoomY };
+      if (autoZoom) {
+        const { min, max } = p.emitSync('chart-windows-scale-translate/autozoom', { id, min: Infinity, max: -Infinity });
+        const height = options.height * weight;
 
-      return { translate, zoom };
-    }
+        zoom.y = (height) / (max - min);
+        translate.y = -min * zoom.y;
+
+        return { translate, zoom };
+      } else {
+        return { translate, zoom };
+      }
+    },
+
+    /* Матрицы масштабирования/переноса */
+    matrix: {
+      /* Только для X (использует raw x, т.к. не нужен автозум) - остальные не используют raw */
+      /* Можно использовать в ChartCrop и в индикаторах и везде */
+      x: () => {
+        const { translateX, zoomX } = p.chartWindowsScaleTranslate.raw.x();
+        const translate = { x: translateX };
+        const zoom = { x: zoomX };
+        const { width, height } = options;
+
+        return matrixForTimeline(translate, zoom, width, height);
+      },
+      /* Только для Y */
+      y: (id) => {
+        const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
+        const { width, height } = options;
+
+        return matrixForPriceline(translate, zoom, width, height);
+      },
+      /* Для всего окна */
+      xy: (id) => {
+        const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
+        const { width, height } = options;
+
+        return matrixForWindow(translate, zoom, width, height);
+      },
+    },
   };
 };
 

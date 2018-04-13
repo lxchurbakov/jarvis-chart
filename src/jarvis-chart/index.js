@@ -14,6 +14,7 @@ import ChartValues from './plugins/chart/ChartValues';
 import ChartWindows from './plugins/chart/ChartWindows';
 import ChartWindowsEvents from './plugins/chart/ChartWindowsEvents';
 import ChartWindowsDrag from './plugins/chart/ChartWindowsDrag';
+import ChartCrop from './plugins/chart/ChartCrop';
 
 /* Content плагины */
 
@@ -28,6 +29,7 @@ import Indicators from './plugins/content/Indicators';
 /* Различные индикаторы */
 
 import Candles from './plugins/indicators/Candles';
+import Bollinger from './plugins/indicators/Bollinger';
 
 /* Режимы */
 
@@ -66,6 +68,7 @@ export default (node, options) => {
   p.plugin(ChartWindows, options);
   p.plugin(ChartWindowsEvents, options);
   p.plugin(ChartWindowsDrag, options);
+  p.plugin(ChartCrop, options);
 
   /* Content плагины */
 
@@ -80,6 +83,7 @@ export default (node, options) => {
   /* Индикаторы */
 
   p.plugin(Candles, options);
+  p.plugin(Bollinger, options);
 
   /* Всякое */
 

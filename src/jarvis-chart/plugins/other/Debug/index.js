@@ -64,15 +64,15 @@ const DebugInfo = (p, options) => {
       p.render.primitives.text(context, { x: width - 5, textAlign: 'right', y: -height + 13 + 5, font: '300 13px Open Sans', text: `Window #${w.id} (${(100 * w.weight).toFixed(2)}%)`, opacity: 0.8 });
     context.api.matrix.pop();
 
-    // p.render.primitives.rectangle(context, { x: 0, y: 0, width, height, color, opacity: 0.2 });
-
     return { context, id };
   });
 
   p.on('chart-windows/init', () => {
     p.chartWindows.create();
     p.chartWindows.create();
-    p.chartWindows.create();
+
+    p.chartWindows.get(0).indicators.push({ type: 'candles' });
+    p.chartWindows.get(0).indicators.push({ type: 'bollinger', meta: { distance: 5 } });
   });
 };
 

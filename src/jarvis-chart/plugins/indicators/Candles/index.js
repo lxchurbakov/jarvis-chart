@@ -13,36 +13,40 @@ const candle = (p, context, { x, y, min, max, open, close }) => {
   p.render.primitives.rectangle(context, { x, y: marginBottom + paddingBottom + y, width: 7, height: bodyHeight, color });
 };
 
-const candles = (p, context, { values }) => {
-  /* Do not draw elements that are outside the screen */
-  const [  screenFirst ] = context.api.screen.inside([ 0, 0 ]);
-  const [ screenSecond ] = context.api.screen.inside([ 10, 0 ]);
-
-  const screenStart = -screenFirst;
-  const screenWidth = screenSecond - screenFirst;
-
-  const offset = Math.floor(Math.max(screenStart / screenWidth - 1, 0));
-  const count  = Math.ceil(context.api.screen.width() / screenWidth) + 2;
+const candles = (p, context, { first, count, values }) => {
 
   values.forEach(({ min, max, open, close }, index) => {
-    if (index < offset || index > offset + count) return;
+    if (index < first || index > first + count) return;
 
     candle(p, context, { x: index * 10 - 3.5, y: 0, min, max, open, close });
   });
 };
 
+/**
+ *
+ */
 const Candles = (p) => {
   p.on('indicators/register', () => {
     p.indicators.register('candles', {
-      inside: (context, meta) => {
+      inside: (context, meta, id) => {
         const values = p.values.get();
+        /* Не нужно отрисовывать свечки вне экрана */
+        const { offset, count } = p.chartCrop.horizontal(id, 0, 10);
 
-        candles(p, context, { values });
+        candles(p, context, { first: offset, count: count, values });
       },
     });
+  });
 
-    p.chartWindows.get(0).indicators.push({ type: 'candles' });
-    p.chartWindows.get(1).indicators.push({ type: 'candles' });
+  p.on('chart-windows-scale-translate/autozoom', ({ id, min, max }) => {
+    const values = p.values.get();
+    /* Не нужно отрисовывать свечки вне экрана */
+    const { offset, count } = p.chartCrop.horizontal(id, 0, 10);
+
+    min = Math.min(min, values.slice(Math.max(0, offset), Math.max(0, offset + count)).reduce((acc, v) => Math.min(v.min, acc), Infinity));
+    max = Math.max(max, values.slice(Math.max(0, offset), Math.max(0, offset + count)).reduce((acc, v) => Math.max(v.max, acc), -Infinity));
+
+    return { id, min, max };
   });
 };
 
