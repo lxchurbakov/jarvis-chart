@@ -79,13 +79,21 @@ export default (options) => {
     },
   };
 
+  const sizeStack = [{ width: options.width, height: options.height }];
+
   const screen = {
-    width:  () => options.width,
-    height: () => options.height,
+    width:  () => last(sizeStack).width,
+    height: () => last(sizeStack).height,
     inside:  ([x, y]) => Matrix.apply([x, y], matrix.get()),
     outside: ([x, y]) => Matrix.apply([x, y], matrix.get().reverse()),
-    clip:    (x, y, width, height) => options.screen.clip(x, y, width, height),
-    reclip:  () => options.screen.reclip(),
+    clip:    (x, y, width, height) => {
+      options.screen.clip(x, y, width, height);
+      sizeStack.push({ width, height });
+    },
+    reclip:  () => {
+      options.screen.reclip();
+      sizeStack.pop();
+    },
   };
 
   const crop = {

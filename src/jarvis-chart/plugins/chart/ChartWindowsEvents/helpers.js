@@ -1,6 +1,7 @@
+/* Заключаем число в рамки */
 export const bound = (v, min, max) => Math.max(min, Math.min(max, v))
 
-export const getWindowBorderTouch = (windows, yRelative, threshold = 0.01) => {
+export const getWindowIdThatIsTouchedByBottomBorder = (windows, yRelative, threshold = 0.01) => {
   let top = 0;
   let result = null;
 
@@ -14,7 +15,7 @@ export const getWindowBorderTouch = (windows, yRelative, threshold = 0.01) => {
   return result;
 };
 
-export const getWindowTouch = (windows, yRelative) => {
+export const getWindowIdThatIsTouched = (windows, yRelative) => {
   let top = 0;
   let result = null;
 
@@ -27,7 +28,7 @@ export const getWindowTouch = (windows, yRelative) => {
   return result;
 };
 
-export const resizeWindows = (windows, id, diff) => {
+export const resizeWindowsIncreasingWindowWithId = (windows, id, diff) => {
   windows.forEach((w, index) => {
     if (w.id === id) {
       w.weight = bound(w.weight - diff, 0, 1);

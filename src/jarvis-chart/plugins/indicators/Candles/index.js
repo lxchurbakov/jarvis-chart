@@ -27,7 +27,7 @@ const candles = (p, context, { values }) => {
   values.forEach(({ min, max, open, close }, index) => {
     if (index < offset || index > offset + count) return;
 
-    candle(p, context, { x: index * 10, y: 0, min, max, open, close });
+    candle(p, context, { x: index * 10 - 3.5, y: 0, min, max, open, close });
   });
 };
 

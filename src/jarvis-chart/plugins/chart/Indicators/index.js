@@ -1,11 +1,9 @@
 const Indicators = (p) => {
 
   /* Добавляем в каждое новое окно поле индикаторов */
-
   p.on('chart-windows/create', (w) => ({ ...w, indicators: [] }));
 
   /* Indicators API */
-
   let indicatorsConfig = {};
 
   p.indicators = {
@@ -15,8 +13,7 @@ const Indicators = (p) => {
   };
 
   /* Отрисовывем индикаторы */
-
-  p.on('chart-windows/inside', ({ id, context }) => {
+  p.on('chart-grid/inside', ({ id, context }) => {
     const { indicators } = p.chartWindows.get(id);
 
     indicators.forEach(({ type, meta }) => {
@@ -29,7 +26,6 @@ const Indicators = (p) => {
   });
 
   /* Создаём хук для индикаторов чтобы зарегистрироваться */
-
   p.on('mount', ({ node }) => {
     p.emitSync('indicators/register');
     return { node };

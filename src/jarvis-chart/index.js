@@ -14,20 +14,17 @@ import ChartValues from './plugins/chart/ChartValues';
 import ChartWindows from './plugins/chart/ChartWindows';
 import ChartWindowsEvents from './plugins/chart/ChartWindowsEvents';
 import ChartGrid from './plugins/chart/ChartGrid';
-// import Indicators from './plugins/chart/Indicators';
+import Indicators from './plugins/chart/Indicators';
 
 /* Различные индикаторы */
 
-console.warn('Необходимо реализовать индикаторы')
-// import Candles from './plugins/indicators/Candles';
+import Candles from './plugins/indicators/Candles';
 
 /* Режимы */
 
 import ViewMode from './plugins/modes/ViewMode';
 
 /* Элементы */
-
-console.warn('Необходимо реализовать элементы')
 
 /* Рендеры */
 
@@ -39,6 +36,9 @@ import RenderSvg from './plugins/renders/Svg';
 import Debug from './plugins/other/Debug';
 
 export default (node, options) => {
+  console.todo('Необходимо реализовать элементы')
+  console.todo('Добавить chart-windows/resize событие')
+
   const p = new Pluggable();
 
   /* Basic plugins */
@@ -53,9 +53,9 @@ export default (node, options) => {
   p.plugin(ChartWindows, options);
   p.plugin(ChartWindowsEvents, options);
   p.plugin(ChartGrid, options);
-  // p.plugin(Indicators, options);
+  p.plugin(Indicators, options);
 
-  // p.plugin(Candles, options);
+  p.plugin(Candles, options);
   // p.plugin(ChartModes, options);
 
   /* Chart Window (translation, zoom) plugin */
