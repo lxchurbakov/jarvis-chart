@@ -1,5 +1,8 @@
 import Matrix from 'lib/matrix';
 
+/**
+ * Собственно сам метод нахождения GridConfig'а
+ */
 const getGridConfig = (width, height, windowMatrix, values) => {
   /* Найдём положение точек внутри окна */
   const [x0real, y0real] = Matrix.apply([ 0, 0 ], windowMatrix);
@@ -37,7 +40,6 @@ const getGridConfig = (width, height, windowMatrix, values) => {
 };
 
 const getGridConfigForWindow = (p, options, id) => {
-  // const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
   const { width, height: h } = options;
   const height = h * p.chartWindows.get(id).weight;
   const values = p.values.get()
@@ -48,9 +50,17 @@ const getGridConfigForWindow = (p, options, id) => {
   return gridConfig;
 };
 
+/**
+ * ChartWindowsGridConfig плагин
+ *
+ * Строит GridConfig объект - дескриптор для сетки и значений, отображающихся на UI
+ * Нужен в отдельном модуле, т.к. используется и в ChartWindowsGrid и в ChartWindowsUI.
+ *
+ */
 const ChartWindowsGridConfig = (p, options) => {
-  console.todo('Кэшировать значения конфигурации сетки')
-  console.todo('Перевести построение конфигурации сетки на ChartCrop')
+  console.todo('Кэшировать значения конфигурации сетки');
+  console.todo('Перевести построение конфигурации сетки на ChartCrop');
+
   p.chartWindowsGridConfig = {
     get: (id) => getGridConfigForWindow(p, options, id)
   };

@@ -1,3 +1,8 @@
+/**
+ * ChartWindowsContent плагин
+ *
+ * Применяет матрицу и передаёт контекст плагинам дальше
+ */
 const ChartWindowsContent = (p, options) => {
   p.on('chart-windows-layers/content', ({ context, id }) => {
     const width = context.api.screen.width();
@@ -9,6 +14,8 @@ const ChartWindowsContent = (p, options) => {
     context.api.matrix.push(windowMatrix);
       p.emitSync('chart-windows-content/entry', { context, id });
     context.api.matrix.pop();
+    
+    return { context, id };
   });
 };
 

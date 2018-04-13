@@ -1,7 +1,12 @@
 /**
  * ChartLayers плагин
  *
- * Разбивает содержимое окна на три слоя и отрисовывает окно послойно
+ * Разбивает содержимое окна на три слоя и отрисовывает их по очереди.
+ * -> Background
+ * -> Content
+ * -> UI
+ *
+ *
  */
 const ChartWindowsLayers = (p, options) => {
   p.on('chart-windows/inside', ({ context, id }) => {

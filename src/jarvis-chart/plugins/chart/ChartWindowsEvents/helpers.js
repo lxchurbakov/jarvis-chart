@@ -1,3 +1,6 @@
+/**
+ * Возвращает ID окна, над которым сейчас курсор
+ */
 export const getWindowIdThatIsTouched = (windows, yRelative, threshold = 0.01) => {
   let top = 0;
   let result = null;

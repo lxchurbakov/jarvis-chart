@@ -3,6 +3,8 @@ import Matrix from 'lib/matrix';
 /**
  * ChartCrop плагин
  *
+ * Добавляет API для проверки вхождения тех или иных элементов в видимую область
+ *
  */
 const ChartCrop = (p, options) => {
   const horizontal = (id, start, len) => {
@@ -20,7 +22,7 @@ const ChartCrop = (p, options) => {
     return { offset: firstVisibleCandleIndex, count: visibleCandlesCount };
   };
 
-  p.chartCrop = { horizontal };
+  p.chartWindowsCrop = { horizontal };
 };
 
 ChartCrop.plugin = {

@@ -14,7 +14,6 @@ const candle = (p, context, { x, y, min, max, open, close }) => {
 };
 
 const candles = (p, context, { first, count, values }) => {
-
   values.forEach(({ min, max, open, close }, index) => {
     if (index < first || index > first + count) return;
 
@@ -23,30 +22,28 @@ const candles = (p, context, { first, count, values }) => {
 };
 
 /**
- *
+ * Candles Индикатор
  */
 const Candles = (p) => {
   p.on('indicators/register', () => {
     p.indicators.register('candles', {
       inside: (context, meta, id) => {
+        const { offset, count } = p.chartWindowsCrop.horizontal(id, 0, 10);
         const values = p.values.get();
-        /* Не нужно отрисовывать свечки вне экрана */
-        const { offset, count } = p.chartCrop.horizontal(id, 0, 10);
 
         candles(p, context, { first: offset, count: count, values });
       },
+      bounds: (meta, id) => {
+        const { offset, count } = p.chartWindowsCrop.horizontal(id, 0, 10);
+        const values = p.values.get();
+        const selection = values.slice(Math.max(0, offset), Math.max(0, offset + count));
+
+        const min = selection.reduce((acc, v) => Math.min(v.min, acc), Infinity);
+        const max = selection.reduce((acc, v) => Math.max(v.max, acc), -Infinity);
+
+        return { min, max };
+      },
     });
-  });
-
-  p.on('chart-windows-scale-translate/autozoom', ({ id, min, max }) => {
-    const values = p.values.get();
-    /* Не нужно отрисовывать свечки вне экрана */
-    const { offset, count } = p.chartCrop.horizontal(id, 0, 10);
-
-    min = Math.min(min, values.slice(Math.max(0, offset), Math.max(0, offset + count)).reduce((acc, v) => Math.min(v.min, acc), Infinity));
-    max = Math.max(max, values.slice(Math.max(0, offset), Math.max(0, offset + count)).reduce((acc, v) => Math.max(v.max, acc), -Infinity));
-
-    return { id, min, max };
   });
 };
 

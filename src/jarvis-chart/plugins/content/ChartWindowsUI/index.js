@@ -59,6 +59,11 @@ const drawPriceline = (p, context, translate, zoom, config, id) => {
   context.api.matrix.pop();
 };
 
+/**
+ * Отрисовывает UI
+ *
+ * TODO добавить курсор и его проекции на оси. (нужно отслеживать положение курсора)
+ */
 const ChartWindowsUI = (p, options) => {
   p.on('chart-windows-layers/ui', ({ context, id }) => {
     const gridConfig = p.chartWindowsGridConfig.get(id);

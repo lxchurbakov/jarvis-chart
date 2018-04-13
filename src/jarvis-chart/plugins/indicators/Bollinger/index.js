@@ -9,13 +9,13 @@ const actionOnSelection = (values, left, right, predicate) => {
 };
 
 /**
- *
+ * Bollinger индикатор
  */
 const Bollinger = (p) => {
   p.on('indicators/register', () => {
     p.indicators.register('bollinger', {
       inside: (context, meta, id) => {
-        let { offset, count } = p.chartCrop.horizontal(id, 0, 10);
+        let { offset, count } = p.chartWindowsCrop.horizontal(id, 0, 10);
         const values = p.values.get();
         const { distance } = meta;
 
@@ -46,17 +46,6 @@ const Bollinger = (p) => {
       },
     });
   });
-
-  // p.on('chart-windows-scale-translate/autozoom', ({ id, min, max }) => {
-  //   const values = p.values.get();
-  //   /* Не нужно отрисовывать свечки вне экрана */
-  //   const { offset, count } = p.chartCrop.horizontal(id, 0, 10);
-  //
-  //   min = Math.min(min, values.slice(Math.max(0, offset), Math.max(0, offset + count)).reduce((acc, v) => Math.min(v.min, acc), Infinity));
-  //   max = Math.max(max, values.slice(Math.max(0, offset), Math.max(0, offset + count)).reduce((acc, v) => Math.max(v.max, acc), -Infinity));
-  //
-  //   return { id, min, max };
-  // });
 };
 
 Bollinger.plugin = {

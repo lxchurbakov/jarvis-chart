@@ -1,3 +1,8 @@
+/**
+ * Indicators плагин
+ *
+ * Добавляет поддержку индикаторов
+ */
 const Indicators = (p) => {
 
   /* Добавляем в каждое новое окно поле индикаторов */
@@ -18,11 +23,33 @@ const Indicators = (p) => {
 
     indicators.forEach(({ type, meta }) => {
       const config = indicatorsConfig[type];
-
-      config.inside(context, meta, id);
+      
+      if (config.inside) {
+        config.inside(context, meta, id);
+      } else {
+        console.warnOnce(`Индикатор ${type} не имеет метода вывода`)
+      }
     });
 
     return { id, context };
+  });
+  
+  /* Найдём границы индикаторов */
+  p.on('chart-windows-scale-translate/autozoom', ({ id, min, max }) => {
+    const { indicators } = p.chartWindows.get(id);
+
+    indicators.forEach(({ type, meta }) => {
+      const config = indicatorsConfig[type];
+
+      if (config.bounds) {
+        const { min: n, max: x } = config.bounds(meta, id);
+        
+        min = min !== null ? Math.min(min, n) : n;
+        max = max !== null ? Math.max(max, x) : x;
+      }
+    });
+
+    return { id, min, max };
   });
 
   /* Создаём хук для индикаторов чтобы зарегистрироваться */

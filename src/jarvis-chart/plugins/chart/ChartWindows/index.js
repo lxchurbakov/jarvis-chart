@@ -1,15 +1,17 @@
 import Matrix from 'lib/matrix';
 
-/* Построить матрицу преобразований для окна */
-const matrixForWindow = (width, height, top) => {
-  return Matrix.join(
-    // Matrix.translate(width / 2, height / 2), /* Делаем точку 0;0 центром окна */
+/**
+ * Построить матрицу преобразований для окна
+ */
+const matrixForWindow = (width, height, top) =>
+  Matrix.join(
     Matrix.scale(1, -1), /* Разворачиваем ось Y */
     Matrix.translate(0, top + height), /* 1. Переносим на top + height пикселей вниз */
   );
-};
 
-/* Отрисовываем окна */
+/**
+ * Отрисовываем окна
+ */
 const drawWindows = (p, context, { windows }) => {
   const len = windows.length;
 
@@ -40,6 +42,9 @@ const drawWindows = (p, context, { windows }) => {
 
 /**
  * ChartWindows плагин
+ *
+ * Добавляет множественные окна для графика.
+ *
  */
 const ChartWindows = (p, options) => {
 
@@ -60,18 +65,22 @@ const ChartWindows = (p, options) => {
     p.emitSync('chart-windows/init');
   });
 
-  /* Создадим Chart Windows API */
-
+  /* ID новоиспеченного окна */
   let id = 0;
 
+  /* Создадим Chart Windows API */
   p.chartWindows = {
-    /* Получить все окна */
+    /**
+     * Получить все окна
+     */
     all: ()   => p.state.get().chartWindows,
-
-    /* Получить одно окно */
+    /**
+     * Получить одно окно
+     */
     get: (id) => p.state.get().chartWindows.filter((w) => w.id === id).pop(),
-
-    /* Отмасштабировать окна правильно */
+    /**
+     * Пофиксить веса окон, так, чтобы в сумме они давали 1
+     */
     fix: () => {
       p.state.update((state) => {
         const { chartWindows } = state;
@@ -80,18 +89,18 @@ const ChartWindows = (p, options) => {
         return { ...state, chartWindows: chartWindows.map((cw) => ({ ...cw, weight: cw.weight / sumw }))  };
       });
     },
-
-    /* Создать новое окно */
+    /**
+     * Создать новое окно и вернуть его ID
+     */
     create: () => {
+      /* Вычислим новый вес */
       const windows = p.chartWindows.all();
-      const len     = windows.length;
-
-      const weight    = 1 / (len + 1);
-      const everymiss = len > 0 ? (weight / len) : 0;
+      const weight  = 1 / (windows.length + 1);
 
       /* Позволим плагинам дополнять окна состоянием */
       const w = p.emitSync('chart-windows/create', { id: id++, weight });
 
+      /* Дополняем стейт этим новым окном */
       p.state.update((state) => ({ ...state, chartWindows: state.chartWindows.concat([ w ]) }));
 
       /* Исправляем размеры на случай превышения размера экрана */
@@ -99,14 +108,18 @@ const ChartWindows = (p, options) => {
 
       return id - 1;
     },
-
-    /* Обновить окно */
+    /**
+     * Обновляет окно
+     */
     update: (id, updater) => {
       p.state.update((state) => ({
         ...state,
         chartWindows: state.chartWindows.map(cw => cw.id === id ? updater(cw) : cw)
       }));
     },
+    /**
+     * TODO удаляет окно
+     */
   };
 };
 

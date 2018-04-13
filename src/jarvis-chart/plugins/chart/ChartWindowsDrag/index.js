@@ -6,6 +6,7 @@ import { getWindowIdThatIsTouchedByBottomBorder, resizeWindowsIncreasingWindowWi
  * Позволяет ресайзить окна ChartWindows
  */
 const ChartWindowsDrag = (p, options) => {
+
   /* Переменные, хранящие ID и место начала ресайза окон */
   let dragId    = null;
   let dragStart = null;
@@ -21,7 +22,7 @@ const ChartWindowsDrag = (p, options) => {
       const wId = getWindowIdThatIsTouchedByBottomBorder(windows, yRelative);
 
       if (wId !== null) {
-        /* Если такое есть */
+        /* Схороняем */
         dragId = wId;
         dragStart = yRelative;
         /* Заодно выставим курсор таскания */
@@ -58,7 +59,7 @@ const ChartWindowsDrag = (p, options) => {
       }
     });
 
-    /* Поменяем курсор над таскаемой линией */
+    /* Поменяем курсор при движении над таскаемой линией */
     p.handler.on('mousemove', ({ x, y, e }) => {
       const { chartWindows } = p.state.get();
 
