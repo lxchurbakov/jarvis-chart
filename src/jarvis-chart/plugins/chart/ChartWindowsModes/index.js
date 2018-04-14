@@ -26,7 +26,7 @@ const ChartWindowsModes = (p) => {
       p.handler.emit(`chart-windows-modes/${mode}/${name}`, data);
     };
 
-    ['drag', 'click', 'zoom', 'path', 'pathstart', 'pathend']
+    ['drag', 'click', 'zoom', 'path', 'pathstart', 'pathend', 'mousemove']
       .forEach((name) => {
         p.handler.on(`chart-windows-events/${name}`, (d) => emitModeEvent(name, d));
       })

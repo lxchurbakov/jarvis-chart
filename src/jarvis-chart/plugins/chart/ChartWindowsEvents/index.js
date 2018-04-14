@@ -68,6 +68,28 @@ const ChartWindowsEvents = (p, options) => {
         p.handler.emit('chart-windows-events/zoom', { delta, x, y, e, id });
       }
     });
+
+    /* Пробросим клик */
+    p.handler.on('click', ({ x, y, e }) => {
+      const { chartWindows } = p.state.get();
+
+      const id = getWindowIdThatIsTouched(chartWindows, y);
+
+      if (id !== null) {
+        p.handler.emit('chart-windows-events/click', { x, y, e, id });
+      }
+    });
+
+    /* Пробросим mousemove */
+    p.handler.on('mousemove', ({ x, y, e }) => {
+      const { chartWindows } = p.state.get();
+
+      const id = getWindowIdThatIsTouched(chartWindows, y);
+
+      if (id !== null) {
+        p.handler.emit('chart-windows-events/mousemove', { x, y, e, id });
+      }
+    });
   });
 };
 

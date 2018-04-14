@@ -11,8 +11,13 @@ const Elements = (p) => {
 
     elements.forEach((element) => {
       const { type, meta } = element;
+      const config = elementsConfigs[type];
 
-      elementsConfigs[type].inside(context, meta);
+      if (config.inside) {
+        config.inside(context, meta);
+      } else {
+        console.warnOnce(`Элемент ${type} не имеет метода отрисовки`);
+      }
     });
 
     return { context, id };
@@ -28,7 +33,7 @@ const Elements = (p) => {
       p.chartWindows.update(id, (w) => ({
         ...w,
         elements: w.elements.concat([element])
-      }))
+      }));
     },
   };
 

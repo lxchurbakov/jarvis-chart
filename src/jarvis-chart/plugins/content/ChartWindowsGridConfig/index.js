@@ -45,9 +45,6 @@ const getGridConfig = (p, id) => {
  *
  */
 const ChartWindowsGridConfig = (p, options) => {
-  console.todo('Кэшировать значения конфигурации сетки');
-  console.todo('Перевести построение конфигурации сетки на ChartCrop');
-
   p.chartWindowsGridConfig = {
     get: (id) => getGridConfig(p, id)
   };

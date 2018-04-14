@@ -5,11 +5,8 @@
  */
 const ChartWindowsGrid = (p, options) => {
   p.on('chart-windows-layers/background', ({ context, id }) => {
-    const gridConfig = p.chartWindowsGridConfig.get(id);
+    const { priceline, timeline } = p.chartWindowsGridConfig.get(id);
     const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
-
-    /* Развернём конфиг */
-    const { priceline, timeline } = gridConfig;
 
     /* Узнаем размеры экрана */
     const width = context.api.screen.width();
@@ -27,7 +24,7 @@ const ChartWindowsGrid = (p, options) => {
         p.render.primitives.line(context, { x0, y0, x1, y1, color });
       });
     context.api.matrix.pop();
-    
+
     /* Отрисуем линии времени */
     context.api.matrix.push(p.chartWindowsScaleTranslate.matrix.x(id));
       timeline.forEach((timepoint) => {
