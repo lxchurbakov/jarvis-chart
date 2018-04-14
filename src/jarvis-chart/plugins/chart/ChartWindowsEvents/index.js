@@ -19,9 +19,8 @@ const ChartWindowsEvents = (p, options) => {
     /* Обрабатываем pathstart */
     p.handler.on('pathstart', ({ x, y, e }) => {
       const windows = p.chartWindows.all();
-      const yRelative = y / options.height;
 
-      const id = getWindowIdThatIsTouched(windows, yRelative);
+      const id = getWindowIdThatIsTouched(windows, y);
 
       p.handler.emit('chart-windows-events/pathstart', { x, y, e, id });
 
@@ -31,12 +30,11 @@ const ChartWindowsEvents = (p, options) => {
 
     /* Обрабатываем path */
     p.handler.on('path', ({ x, y, e }) => {
-      const yRelative = y / options.height;
       const windows = p.chartWindows.all();
 
       if (pathWindowId !== null) {
         /* Если мы уже вазюкаем мышью по какому-то окну */
-        const id = getWindowIdThatIsTouched(windows, yRelative);
+        const id = getWindowIdThatIsTouched(windows, y);
 
         if (id !== pathWindowId) {
           /* Если мы вдруг завазюкали на другое окно */
@@ -64,7 +62,7 @@ const ChartWindowsEvents = (p, options) => {
     p.handler.on('zoom', ({ delta, x, y, e }) => {
       const { chartWindows } = p.state.get();
 
-      const id = getWindowIdThatIsTouched(chartWindows, y / options.height);
+      const id = getWindowIdThatIsTouched(chartWindows, y);
 
       if (id !== null) {
         p.handler.emit('chart-windows-events/zoom', { delta, x, y, e, id });

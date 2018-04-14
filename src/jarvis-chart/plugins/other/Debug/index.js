@@ -66,7 +66,11 @@ const DebugInfo = (p, options) => {
     const currentMatrix = context.api.matrix.get();
 
     context.api.matrix.push(Matrix.resetScale(currentMatrix));
-      p.render.primitives.text(context, { x: width - 5, textAlign: 'right', y: -height + 13 + 5, font: '300 13px Open Sans', text: `Window #${w.id} (${(100 * w.weight).toFixed(2)}%)`, opacity: 0.8 });
+      p.render.primitives.text(context, {
+        x: width - 5, textAlign: 'right', y: -height + 13 + 5, font: '300 13px Open Sans',
+        text: `Window #${w.id} (${Math.floor(w.height)}x${w.width} at ${w.left};${w.top})`,
+        opacity: 0.8
+      });
     context.api.matrix.pop();
 
     return { context, id };
@@ -77,11 +81,13 @@ const DebugInfo = (p, options) => {
   p.on('chart-windows/init', () => {
     p.chartWindows.create();
     p.chartWindows.create();
+    // p.chartWindows.create();
+    // p.chartWindows.create();
 
     // p.chartWindows.get(0).indicators.push({ type: 'candles' });
     p.chartWindows.get(0).indicators.push({ type: 'candles' });
     p.chartWindows.get(0).indicators.push({ type: 'bollinger', meta: { tl: 5, bl: 5 } });
-    p.chartWindows.get(1).indicators.push({ type: 'lines', meta: { distance: 5 } });
+    // p.chartWindows.get(1).indicators.push({ type: 'lines', meta: { distance: 5 } });
     // p.chartWindows.get(1).chartWindowsScaleTranslate.autoZoom = true;
   });
 };

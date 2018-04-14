@@ -4,6 +4,8 @@ import { getWindowIdThatIsTouchedByBottomBorder, resizeWindowsIncreasingWindowWi
  * ChartWindowsDrag плагин
  *
  * Позволяет ресайзить окна ChartWindows
+ *
+ * TODO не учитывает left и width окна
  */
 const ChartWindowsDrag = (p, options) => {
 
@@ -16,15 +18,14 @@ const ChartWindowsDrag = (p, options) => {
     /* Обрабатываем pathstart */
     p.handler.on('pathstart', ({ x, y, e }) => {
       const windows = p.chartWindows.all();
-      const yRelative = y / options.height;
 
       /* Высчитываем окно, нижняя граница которого находится под курсором */
-      const wId = getWindowIdThatIsTouchedByBottomBorder(windows, yRelative);
+      const wId = getWindowIdThatIsTouchedByBottomBorder(windows, y);
 
       if (wId !== null) {
         /* Схороняем */
         dragId = wId;
-        dragStart = yRelative;
+        dragStart = y;
         /* Заодно выставим курсор таскания */
         p.cursor.set('move');
       }
@@ -32,21 +33,19 @@ const ChartWindowsDrag = (p, options) => {
 
     /* Обрабатываем path */
     p.handler.on('path', ({ x, y, e }) => {
-      const yRelative = y / options.height;
       const windows = p.chartWindows.all();
 
       if (dragId !== null) {
         /* Если мы уже тащим какое-то окно за его нижнюю границу */
-        const diff = dragStart - yRelative;
+        const diff = dragStart - y;
 
         /* Обновим его размеры */
         p.state.update((state) => ({
           ...state,
           chartWindows: resizeWindowsIncreasingWindowWithId(state.chartWindows, dragId, diff),
         }));
-        p.chartWindows.fix();
 
-        dragStart = yRelative;
+        dragStart = y;
       }
     });
 
@@ -63,7 +62,7 @@ const ChartWindowsDrag = (p, options) => {
     p.handler.on('mousemove', ({ x, y, e }) => {
       const { chartWindows } = p.state.get();
 
-      const wId = getWindowIdThatIsTouchedByBottomBorder(chartWindows, y / options.height);
+      const wId = getWindowIdThatIsTouchedByBottomBorder(chartWindows, y);
 
       if (wId !== null) {
         p.cursor.set('move');

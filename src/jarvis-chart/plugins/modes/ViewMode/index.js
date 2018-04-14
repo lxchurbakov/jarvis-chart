@@ -24,8 +24,6 @@ const ViewMode = (p, options) => {
       translate.y += y;
 
       p.chartWindowsScaleTranslate.set.xy(id, { translate, zoom });
-
-      p.emitSync('chart-windows-scale-translate/change', id);
     });
 
     p.handler.on('chart-windows-modes/view/zoom', ({ delta, x, y, e, id }) => {
@@ -37,8 +35,6 @@ const ViewMode = (p, options) => {
       zoom.y -= k;
 
       p.chartWindowsScaleTranslate.set.xy(id, { translate, zoom });
-
-      p.emitSync('chart-windows-scale-translate/change', id);
     });
   });
 };

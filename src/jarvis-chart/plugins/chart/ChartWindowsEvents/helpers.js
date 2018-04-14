@@ -1,19 +1,17 @@
 /**
  * Возвращает ID окна, над которым сейчас курсор
  */
-export const getWindowIdThatIsTouched = (windows, yRelative, threshold = 0.01) => {
-  let top = 0;
+export const getWindowIdThatIsTouched = (windows, y, threshold = 15) => {
   let result = null;
 
   windows.forEach((w, i) => {
     if (
-      yRelative > top &&
-      yRelative < (w.weight + top) &&
+      y > w.top &&
+      y < (w.height + w.top) &&
       /* Не ловить события, близкие к нижней границе окна, т.к. они должны вести к drag */
-      Math.abs((w.weight + top) - yRelative) > threshold
+      Math.abs((w.height + w.top) - y) > threshold
     )
       result = w.id;
-    top += w.weight;
   });
 
   return result;

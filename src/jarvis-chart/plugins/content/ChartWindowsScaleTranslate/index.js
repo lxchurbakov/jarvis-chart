@@ -5,7 +5,7 @@ import Matrix from 'lib/matrix';
  *
  * Важно! точка масштабирования по Y также влияет на позиционирование автозума
  */
-const matrixForWindow = (translate, zoom, width, height) =>
+const matrixForWindow = (translate, zoom, width) =>
   Matrix.join(
     /* Зуммируем относительно середины экрана */
     Matrix.translate(translate.x - width / 2, 0),
@@ -18,7 +18,7 @@ const matrixForWindow = (translate, zoom, width, height) =>
 /**
  * Построить матрицу для таймлайна (то же самое, что и для окна, только игнорируя перенос/зум по оси Х)
  */
-const matrixForTimeline = (translate, zoom, width, height) =>
+const matrixForTimeline = (translate, zoom, width) =>
   Matrix.join(
     /* Зуммируем относительно середины экрана, но только по X */
     Matrix.translate(translate.x - width / 2, 0),
@@ -31,7 +31,7 @@ const matrixForTimeline = (translate, zoom, width, height) =>
 /**
  * Построить матрицу для прайслайна (то же самое, что и для окна, только игнорируя перенос/зум по оси Y)
  */
-const matrixForPriceline = (translate, zoom, width, height) =>
+const matrixForPriceline = (translate, zoom, width) =>
   Matrix.join(
     Matrix.scale(1, zoom.y),
     Matrix.translate(0, translate.y),
@@ -46,6 +46,8 @@ const matrixForPriceline = (translate, zoom, width, height) =>
  * происходит подсчёт автозума, который в свою очередь вызывает определение границ индикаторов. В коде определения границ индикаторы не должны использовать
  * небезопасные для автозума методы этого модуля. Безопасными считаются *.x() методы.
  *
+ *
+ * Работает, полагая, что все окна шириной на весь чарт. Если нужна кастомность, придётся немного допиливать
  */
 const ChartWindowsScaleTranslate = (p, options) => {
   /* Добавляем значения зума и смещения в стейт и каждое окно */
@@ -58,7 +60,7 @@ const ChartWindowsScaleTranslate = (p, options) => {
     /* Методы для работы с сырыми значениями */
     raw: {
       /**
-       * Получить translate и zoom по X 
+       * Получить translate и zoom по X
        */
       x: () => p.state.get().chartWindowsScaleTranslate,
       /**
@@ -83,19 +85,17 @@ const ChartWindowsScaleTranslate = (p, options) => {
      */
     get: (id) => {
       const { translate, zoom } = p.chartWindowsScaleTranslate.raw.xy(id);
-      const { weight, chartWindowsScaleTranslate: { autoZoom } } = p.chartWindows.get(id);
+      const { height, chartWindowsScaleTranslate: { autoZoom } } = p.chartWindows.get(id);
 
       if (autoZoom) {
         const { min, max } = p.emitSync('chart-windows-scale-translate/autozoom', { id, min: null, max: null });
-        
+
         if (min !== null && max !== null) {
-          const height = options.height * weight;
-          
-          /* Важно! зависит от точка масштабирования по Y */
+          /* Важно! зависит от точки масштабирования по Y */
           zoom.y = (height) / (max - min);
           translate.y = -min * zoom.y;
         } else {
-          console.warnOnce(`Auto Zoom включён, но ни один индикатор не вернул границ, окно ${id}`)
+          console.warnOnce(`Auto Zoom включён, но ни один индикатор не вернул границ, autoZoom показатели не будут использованы. [окно ${id}]`)
         }
 
         return { translate, zoom };
@@ -114,27 +114,27 @@ const ChartWindowsScaleTranslate = (p, options) => {
         const { translateX, zoomX } = p.chartWindowsScaleTranslate.raw.x();
         const translate = { x: translateX };
         const zoom = { x: zoomX };
-        const { width, height } = options;
+        const { width } = options;
 
-        return matrixForTimeline(translate, zoom, width, height);
+        return matrixForTimeline(translate, zoom, width);
       },
       /**
        * Аналогичная матрица, только для Y - не может быть вызвана в режиме определения автозума
        */
       y: (id) => {
         const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
-        const { width, height } = options;
+        const { width } = options;
 
-        return matrixForPriceline(translate, zoom, width, height);
+        return matrixForPriceline(translate, zoom, width);
       },
       /**
        * Аналогичная матрица, только для всего окна - не может быть вызвана в режиме определения автозума
        */
       xy: (id) => {
         const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
-        const { width, height } = options;
+        const { width } = options;
 
-        return matrixForWindow(translate, zoom, width, height);
+        return matrixForWindow(translate, zoom, width);
       },
     },
     /* Обновим перенос и зум */
@@ -143,24 +143,26 @@ const ChartWindowsScaleTranslate = (p, options) => {
       xy: (id, { translate, zoom }) => {
         const { x: translateX, y: translateY } = translate;
         const { x: zoomX, y: zoomY } = zoom;
-        
+
         p.state.update((state) => ({
           ...state,
           chartWindowsScaleTranslate: {
             ...state.chartWindowsScaleTranslate,
-            translateX,
-            zoomX,
-          }, 
-
-          chartWindows: state.chartWindows.map((cw) => cw.id === id ? ({
-            ...cw,
-            chartWindowsScaleTranslate: {
-              ...cw.chartWindowsScaleTranslate,
-              translateY,
-              zoomY,
-            },
-           }) : cw )
+            translateX, zoomX,
+          },
+          chartWindows: state.chartWindows.map(
+            (cw) => cw.id === id
+              ? ({
+                ...cw,
+                chartWindowsScaleTranslate: {
+                  ...cw.chartWindowsScaleTranslate,
+                  translateY, zoomY,
+                },
+             }) : cw
+           )
         }));
+
+        p.emitSync('chart-windows-scale-translate/change', id);
       },
     },
   };

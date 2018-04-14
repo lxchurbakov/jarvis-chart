@@ -22,7 +22,24 @@ const ChartCrop = (p, options) => {
     return { offset: firstVisibleCandleIndex, count: visibleCandlesCount };
   };
 
-  p.chartWindowsCrop = { horizontal };
+  const vertical = (id, start, len) => {
+    const matrix = p.chartWindowsScaleTranslate.matrix.y(id);
+
+    const { height: windowHeight } = p.chartWindows.get(id);
+
+    const [x0real, y0real] = Matrix.apply([ 0, start ], matrix);
+    const [x1real, y1real] = Matrix.apply([ 0,   len ], matrix);
+
+    const height = Math.abs(y1real - y0real);
+    const offset = -y0real;
+
+    const visibleCandlesCount = Math.ceil(windowHeight / height);
+    const firstVisibleCandleIndex = Math.floor(offset / height);
+
+    return { offset: firstVisibleCandleIndex, count: visibleCandlesCount };
+  };
+
+  p.chartWindowsCrop = { horizontal, vertical };
 };
 
 ChartCrop.plugin = {

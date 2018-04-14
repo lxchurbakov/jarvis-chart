@@ -3,51 +3,38 @@ import Matrix from 'lib/matrix';
 /**
  * Собственно сам метод нахождения GridConfig'а
  */
-const getGridConfig = (width, height, windowMatrix, values) => {
+const getGridConfig = (p, id) => {
+  const values = p.values.get()
+  const { width, height } = p.chartWindows.get(id);
+  const windowMatrix = p.chartWindowsScaleTranslate.matrix.xy(id);
+
   /* Найдём положение точек внутри окна */
-  const [x0real, y0real] = Matrix.apply([ 0, 0 ], windowMatrix);
-  const [x1real, y1real] = Matrix.apply([ 10, 10 ], windowMatrix);
+  let { offset: firstVisiblePricePointIndex, count: visiblePricePointsCount } = p.chartWindowsCrop.vertical(id, 0, 1);
 
-  /* Priceline конфиг */
-  const pricePointRealHeight = Math.abs(y1real - y0real) / 10;
-  const pricePointsRealOffset = y0real;
+  // firstVisiblePricePointIndex = firstVisiblePricePointIndex);
+  visiblePricePointsCount  = Math.max(0, firstVisiblePricePointIndex + visiblePricePointsCount) - firstVisiblePricePointIndex;
 
-  const visiblePricePointsCount = Math.abs(Math.ceil(height / pricePointRealHeight));
-  const firstVisiblePricePointIndex = Math.floor(-pricePointsRealOffset / pricePointRealHeight);
-
-  const pricePointsNth = Math.floor(visiblePricePointsCount / (height / 50)); /* Показываем цену каждые 50px */
+  const pricePointsNth = Math.floor(visiblePricePointsCount / (height / 50)); /* Каждые 50px плотность сетки */
 
   const priceline = (new Array(visiblePricePointsCount).fill(0))
-    .map((v, i) => i + firstVisiblePricePointIndex)
+    .map((v, i) => (i + firstVisiblePricePointIndex))
     .map((y) => ({ y: y, text: y }))
     .filter((v, i) => (i + firstVisiblePricePointIndex) % pricePointsNth === 0);
 
   /* Timeline конфиг */
-  const candleRealWidth = x1real - x0real;
-  const candlesRealOffset = x0real;
+  let { offset: candlesOffset, count: candlesCount } = p.chartWindowsCrop.horizontal(id, 0, 10);
 
-  const visibleCandlesCount = Math.ceil(width / candleRealWidth);
-  const firstVisibleCandleIndex = Math.max(0, Math.floor(-candlesRealOffset / candleRealWidth));
+  candlesOffset = Math.max(0, candlesOffset);
+  candlesCount  = Math.max(0, candlesOffset + candlesCount) - candlesOffset;
 
-  const candlesNth = Math.floor(visibleCandlesCount / 10); /* Показываем только 10 линий */
+  const candlesNth = Math.floor(candlesCount / (width / 100)); /* Каждые 100px плотность сетки */
 
   const timeline = values
-    .slice(firstVisibleCandleIndex, firstVisibleCandleIndex + visibleCandlesCount + 1)
-    .map(({ time }, index) => ({ x: (index + firstVisibleCandleIndex) * 10, text: time }))
-    .filter((v, i) => (i + firstVisibleCandleIndex) % candlesNth === 0);
+    .slice(candlesOffset, candlesOffset + candlesCount + 1)
+    .map(({ time }, index) => ({ x: (index + candlesOffset) * 10, text: time }))
+    .filter((v, i) => (i + candlesOffset) % candlesNth === 0);
 
-  return { priceline, timeline, first: firstVisibleCandleIndex, count: visibleCandlesCount };
-};
-
-const getGridConfigForWindow = (p, options, id) => {
-  const { width, height: h } = options;
-  const height = h * p.chartWindows.get(id).weight;
-  const values = p.values.get()
-
-  const windowMatrix = p.chartWindowsScaleTranslate.matrix.xy(id);
-  const gridConfig = getGridConfig(width, height, windowMatrix, values);
-
-  return gridConfig;
+  return { priceline, timeline, first: candlesOffset, count: candlesCount };
 };
 
 /**
@@ -62,7 +49,7 @@ const ChartWindowsGridConfig = (p, options) => {
   console.todo('Перевести построение конфигурации сетки на ChartCrop');
 
   p.chartWindowsGridConfig = {
-    get: (id) => getGridConfigForWindow(p, options, id)
+    get: (id) => getGridConfig(p, id)
   };
 };
 
