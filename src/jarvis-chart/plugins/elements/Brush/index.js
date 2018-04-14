@@ -26,8 +26,6 @@ const drawBrush = (p, context, brush) => {
  */
 const Brush = (p) => {
   /* Создаём элемент кисть */
-  console.warn('Кисть и другие инструменты не работают, нужно хранить top окна в самом окне')
-
   p.on('elements/register', () => {
     p.elements.register('brush', {
       inside: (context, brush) => {
@@ -36,41 +34,43 @@ const Brush = (p) => {
     });
   });
 
-  /* Создаём поле brush в стейте для хранения кисти, которую мы сейчас редактируем */
-
-  p.on('state/default', (state) => ({ ...state, brush: null }));
+  p.on('chart-windows/create', (w) => ({ ...w, brush: null }));
 
   /* Выводим кисть, которую мы сейчас редактируем  */
+  p.on('chart-windows-content/entry', ({ context, id }) => {
+    const { brush } = p.chartWindows.get(id);
 
-  p.on('chart-windows-content/entry', ({ context, state }) => {
-    const brush = p.state.get().brush;
+    brush && drawBrush(p, context, brush);
 
-    if (brush) {
-      drawBrush(p, context, brush);
-    }
-
-    return { context };
+    return { context, id };
   });
 
   /* Обрабатываем события для режима brush */
 
   p.on('handler/attach', () => {
-    p.handler.on('chart-windows-modes/brush/pathstart', ({ x, y, e }) => {
-      p.state.update((state) => ({ ...state, brush: [] }));
+    p.handler.on('chart-windows-modes/brush/pathstart', ({ x, y, e, id }) => {
+      p.chartWindows.update(id, (w) => ({ ...w, brush: [] }));
     });
 
-    p.handler.on('chart-windows-modes/brush/path', ({ x, y, e }) => {
-      // const windowMatrix = p.chartWindowsScaleTranslate
-      // const [ xreal, yreal ] = p.chartWind
+    p.handler.on('chart-windows-modes/brush/path', ({ x, y, e, id }) => {
+      const matrix = Matrix.join(
+        p.chartWindowsScaleTranslate.matrix.xy(id),
+        p.chartWindows.matrix(id),
+      );
 
-      const newPoint = { x, y };
+      const [ xreal, yreal ] = Matrix.apply([x, y], matrix.reverse());
 
-      p.state.update((state) => ({ ...state, brush: state.brush.concat([ newPoint ]) }));
+      const newPoint = { x: xreal, y: yreal };
+
+      p.chartWindows.update(id, (w) => ({ ...w, brush: w.brush.concat([ newPoint ]) }));
     });
 
-    p.handler.on('chart-windows-modes/brush/pathend', ({ x, y, e }) => {
-      // p.elements.push('brush', p.state.get().brush);
-      p.state.update((state) => ({ ...state, brush: null }));
+    p.handler.on('chart-windows-modes/brush/pathend', ({ x, y, e, id }) => {
+      const { brush } = p.chartWindows.get(id);
+
+      p.elements.push(id, { type: 'brush', meta: brush });
+
+      p.chartWindows.update(id, (w) => ({ ...w, brush: null }));
     });
   });
 };
@@ -84,6 +84,7 @@ Brush.plugin = {
     'elements': '1.0.0',
     'chart-windows-modes': '1.0.0',
     'chart-windows': '1.0.0',
+    'chart-windows-scale-translate': '1.0.0',
   }
 };
 

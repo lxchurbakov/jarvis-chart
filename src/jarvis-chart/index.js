@@ -87,7 +87,7 @@ export default (node, options) => {
   p.plugin(ChartWindowsUI, options);
   p.plugin(ChartWindowsContent, options);
   p.plugin(Indicators, options);
-  // p.plugin(Elements, options);
+  p.plugin(Elements, options);
 
   /* Индикаторы */
 
@@ -104,7 +104,7 @@ export default (node, options) => {
 
   /* Элементы */
 
-  // p.plugin(Brush, options);
+  p.plugin(Brush, options);
 
   /* Всякое */
 

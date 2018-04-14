@@ -40,8 +40,7 @@ const ChartWindowsModes = (p) => {
   };
 
   /* Добавляем методы во внешний API  */
-
-  // p.on('api', (api) => ({ ...api, mode: p.mode }));
+  p.on('api', (api) => ({ ...api, chartWindowsModes: p.chartWindowsModes }));
 };
 
 ChartWindowsModes.plugin = {

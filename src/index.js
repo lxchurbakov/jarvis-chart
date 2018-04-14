@@ -49,7 +49,7 @@ console.log(chart);
 /* Attach events to UI */
 
 document.getElementById('mode-view').addEventListener('click', () => {
-  chart.mode.set('view');
+  chart.chartWindowsModes.set('view');
 });
 
 // document.getElementById('mode-points').addEventListener('click', () => {
@@ -57,7 +57,7 @@ document.getElementById('mode-view').addEventListener('click', () => {
 // });
 
 document.getElementById('mode-brush').addEventListener('click', () => {
-  chart.mode.set('brush');
+  chart.chartWindowsModes.set('brush');
 });
 
 document.getElementById('mode-ellipse').addEventListener('click', () => {
