@@ -11,7 +11,7 @@ const drawTimeline = (p, context, translate, zoom, config, id) => {
   const areaHeight = 30;
 
   /* Отрисуем прямоугольник подложку */
-  p.render.primitives.rectangle(context, { x: 0, y: 0, width: width, height: areaHeight, color: 'white', opacity: 0.7 })
+  p.render.primitives.rectangle(context, { x: 0, y: 0, width: width, height: areaHeight, color: 'white', opacity: 0.5 })
   p.render.primitives.line(context, { x0: 0, y0: areaHeight, x1: width, y1: areaHeight, color: '#ccc' })
 
   /* Отрисуем значения времени */
