@@ -73,7 +73,7 @@ const ChartWindows = (p, options) => {
      */
     matrix: (id) => {
       const { top, left, width, height } = p.chartWindows.get(id);
-      
+
       return matrixForWindow(top, left, width, height);
     },
     /**
@@ -121,6 +121,17 @@ const ChartWindows = (p, options) => {
     /**
      * TODO удаляет окно
      */
+    remove: (id) => {
+      const { height } = p.chartWindows.get(id);
+      const weight = options.height / height;
+      const k = 1 / (1 - weight);
+
+      p.state.update((state) => ({
+        ...state,
+        chartWindows: state.chartWindows
+          .map((w) => ({ ...w, height: w.height * k, top: w.top * k }))
+      }));
+    },
   };
 };
 

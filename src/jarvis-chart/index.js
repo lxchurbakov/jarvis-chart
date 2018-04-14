@@ -19,6 +19,7 @@ import ChartWindowsModes from './plugins/chart/ChartWindowsModes';
 
 /* Content плагины */
 
+import ChartWindowsRemove from './plugins/content/ChartWindowsRemove';
 import ChartWindowsLayers from './plugins/content/ChartWindowsLayers';
 import ChartWindowsScaleTranslate from './plugins/content/ChartWindowsScaleTranslate';
 import ChartWindowsGridConfig from './plugins/content/ChartWindowsGridConfig';
@@ -80,6 +81,7 @@ export default (node, options) => {
 
   /* Content плагины */
 
+  p.plugin(ChartWindowsRemove, options);
   p.plugin(ChartWindowsLayers, options);
   p.plugin(ChartWindowsScaleTranslate, options);
   p.plugin(ChartWindowsGridConfig, options);

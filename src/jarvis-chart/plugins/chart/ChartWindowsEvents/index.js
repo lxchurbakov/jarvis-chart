@@ -7,9 +7,6 @@ import { getWindowIdThatIsTouched } from './helpers';
  *
  */
 const ChartWindowsEvents = (p, options) => {
-
-  console.todo('Нужно пробросить события click и mousemove | ChartWindowsEvents')
-
   /* Переменные, хранящие ID и место начала PATH на одном окне */
   let pathWindowId = null;
   let pathWindowStart = null;
