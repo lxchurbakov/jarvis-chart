@@ -7,12 +7,18 @@ const ChartWindowsRemove = (p, options) => {
     return { context, id };
   });
 
-  // p.on('handler/attach', () => {
-  //   p.handler.on('chart-windows-events/click', ({ x, y, e, id }) => {
-  //     // const { top, height } =
-  //     // console.log('click', id, x, y)
-  //   });
-  // });
+  p.on('handler/attach', () => {
+    p.handler.on('chart-windows-events/click', ({ x, y, e, id }) => {
+      const { height } = p.chartWindows.get(id);
+      const yFromTop = height - y;
+      const clicksRemoveIcon = x >= 10 && x <= 30 && yFromTop >= 10 && yFromTop <= 30;
+
+      if (clicksRemoveIcon) {
+        p.chartWindows.remove(id);
+        // console.log('remove', id)
+      }
+    });
+  });
 };
 
 ChartWindowsRemove.plugin = {

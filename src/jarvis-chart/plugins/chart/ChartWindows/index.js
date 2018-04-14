@@ -123,13 +123,29 @@ const ChartWindows = (p, options) => {
      */
     remove: (id) => {
       const { height } = p.chartWindows.get(id);
-      const weight = options.height / height;
+      const weight = height / options.height;
       const k = 1 / (1 - weight);
+
+      console.log({ k })
+
+      let top = 0;
 
       p.state.update((state) => ({
         ...state,
         chartWindows: state.chartWindows
-          .map((w) => ({ ...w, height: w.height * k, top: w.top * k }))
+          .filter((w) => w.id !== id)
+          .map((w) => {
+            const newHeight = w.height * k;
+            const newTop = top;
+
+            top += newHeight;
+
+            return {
+              ...w,
+              height: newHeight,
+              top: newTop,
+            };
+          })
       }));
     },
     /**

@@ -79,6 +79,7 @@ const DebugInfo = (p, options) => {
   p.on('chart-windows/init', () => {
     p.chartWindows.create();
     p.chartWindows.create();
+    p.chartWindows.create();
 
     p.chartWindows.get(0).indicators.push({ type: 'candles' });
     p.chartWindows.get(0).indicators.push({ type: 'bollinger', meta: { tl: 5, bl: 5 } });
