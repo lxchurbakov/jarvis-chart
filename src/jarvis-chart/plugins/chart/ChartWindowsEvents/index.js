@@ -19,10 +19,14 @@ const ChartWindowsEvents = (p, options) => {
 
       const id = getWindowIdThatIsTouched(windows, y);
 
-      p.handler.emit('chart-windows-events/pathstart', { x, y, e, id });
+      if (id !== null) {
+        const { x: windowX, y: windowY } = p.chartWindows.screenToWindow(id, x, y);
 
-      pathWindowId = id;
-      pathWindowStart = { x, y };
+        p.handler.emit('chart-windows-events/pathstart', { x: windowX, y: windowY, e, id });
+
+        pathWindowId = id;
+        pathWindowStart = { x, y };
+      }
     });
 
     /* Обрабатываем path */
@@ -38,7 +42,9 @@ const ChartWindowsEvents = (p, options) => {
           p.handler.emit('chart-windows-events/pathend', { e, id: pathWindowId });
           pathWindowId = null;
         } else {
-          p.handler.emit('chart-windows-events/path', { x, y, e, id });
+          const { x: windowX, y: windowY } = p.chartWindows.screenToWindow(id, x, y);
+
+          p.handler.emit('chart-windows-events/path', { x: windowX, y: windowY, e, id });
           p.handler.emit('chart-windows-events/drag', { x: pathWindowStart.x - x, y: pathWindowStart.y - y, e, id });
 
           pathWindowStart = { x, y };
@@ -62,7 +68,9 @@ const ChartWindowsEvents = (p, options) => {
       const id = getWindowIdThatIsTouched(chartWindows, y);
 
       if (id !== null) {
-        p.handler.emit('chart-windows-events/zoom', { delta, x, y, e, id });
+        const { x: windowX, y: windowY } = p.chartWindows.screenToWindow(id, x, y);
+
+        p.handler.emit('chart-windows-events/zoom', { delta, x: windowX, y: windowY, e, id });
       }
     });
 
@@ -73,7 +81,9 @@ const ChartWindowsEvents = (p, options) => {
       const id = getWindowIdThatIsTouched(chartWindows, y);
 
       if (id !== null) {
-        p.handler.emit('chart-windows-events/click', { x, y, e, id });
+        const { x: windowX, y: windowY } = p.chartWindows.screenToWindow(id, x, y);
+
+        p.handler.emit('chart-windows-events/click', { x: windowX, y: windowY, e, id });
       }
     });
 

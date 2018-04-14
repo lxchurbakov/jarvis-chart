@@ -2,7 +2,7 @@ const ChartWindowsRemove = (p, options) => {
   p.on('chart-windows-layers/ui', ({ context, id }) => {
     const { top, height } = p.chartWindows.get(id);
 
-    p.render.primitives.rectangle(context, { x: 10, y: height - 20, width: 20, height: 20, color: 'red' })
+    p.render.primitives.rectangle(context, { x: 10, y: height - 30, width: 20, height: 20, color: 'red' })
 
     return { context, id };
   });

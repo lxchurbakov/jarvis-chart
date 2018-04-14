@@ -55,7 +55,6 @@ const Brush = (p) => {
     p.handler.on('chart-windows-modes/brush/path', ({ x, y, e, id }) => {
       const matrix = Matrix.join(
         p.chartWindowsScaleTranslate.matrix.xy(id),
-        p.chartWindows.matrix(id),
       );
 
       const [ xreal, yreal ] = Matrix.apply([x, y], matrix.reverse());
