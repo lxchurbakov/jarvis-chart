@@ -119,7 +119,7 @@ const ChartWindows = (p, options) => {
       }));
     },
     /**
-     * TODO удаляет окно
+     * Удаляет окно
      */
     remove: (id) => {
       const { height } = p.chartWindows.get(id);
@@ -131,6 +131,17 @@ const ChartWindows = (p, options) => {
         chartWindows: state.chartWindows
           .map((w) => ({ ...w, height: w.height * k, top: w.top * k }))
       }));
+    },
+    /**
+     * Переводит экранные координаты в "экранные координаты окна"
+     */
+    screenToWindow: (id, x, y) => {
+      const { top, left, width, height } = p.chartWindows.get(id);
+
+      return {
+        x: x - left,
+        y: height - (y - top)
+      };
     },
   };
 };
