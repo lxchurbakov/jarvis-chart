@@ -23,6 +23,8 @@ const candles = (p, context, { first, count, values }) => {
 
 /**
  * Candles Индикатор
+ *
+ * Простой индикатор - тип вывода
  */
 const Candles = (p) => {
   p.on('indicators/register', () => {
@@ -38,10 +40,14 @@ const Candles = (p) => {
         const values = p.values.get();
         const selection = values.slice(Math.max(0, offset), Math.max(0, offset + count));
 
-        const min = selection.reduce((acc, v) => Math.min(v.min, acc), Infinity);
-        const max = selection.reduce((acc, v) => Math.max(v.max, acc), -Infinity);
+        if (selection.length) {
+          const min = selection.reduce((acc, v) => Math.min(v.min, acc), Infinity);
+          const max = selection.reduce((acc, v) => Math.max(v.max, acc), -Infinity);
 
-        return { min, max };
+          return { min, max };
+        } else {
+          return { min: null, max: null };
+        }
       },
     });
   });

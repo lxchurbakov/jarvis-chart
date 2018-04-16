@@ -92,14 +92,14 @@ const DebugInfo = (p, options) => {
       p.chartWindows.all().forEach(w => (w.id !== 0) && p.chartWindows.remove(w.id));
 
       p.chartWindows.get(0).indicators = [];
-      p.chartWindows.get(0).indicators.push({ type: graph });
+      p.indicators.create(0, graph, {});
 
       indicators.forEach(i => {
         if (indicatorsOnMain.indexOf(i) > -1) {
-          p.chartWindows.get(0).indicators.push({ type: i, meta: {} });
+          p.indicators.create(0, i, {});
         } else {
           const id = p.chartWindows.create();
-          p.chartWindows.get(id).indicators.push({ type: i, meta: {} });
+          p.indicators.create(id, i, {});
         }
       });
     },

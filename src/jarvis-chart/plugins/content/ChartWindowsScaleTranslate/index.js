@@ -1,4 +1,5 @@
 import Matrix from 'lib/matrix';
+import bound from 'lib/bound';
 
 /**
  * Построить матрицу для пространства внутри окна
@@ -141,8 +142,11 @@ const ChartWindowsScaleTranslate = (p, options) => {
     set: {
       /* Зададим x и y */
       xy: (id, { translate, zoom }) => {
-        const { x: translateX, y: translateY } = translate;
-        const { x: zoomX, y: zoomY } = zoom;
+        let { x: translateX, y: translateY } = translate;
+        let { x: zoomX, y: zoomY } = zoom;
+
+        zoomX = bound(zoomX, 0.1, 10);
+        zoomY = bound(zoomY, 0.1, 10);
 
         p.state.update((state) => ({
           ...state,
@@ -165,6 +169,10 @@ const ChartWindowsScaleTranslate = (p, options) => {
         p.emitSync('chart-windows-scale-translate/change', id);
       },
       x: ({ translateX, zoomX }) => {
+
+        zoomX = bound(zoomX, 0.1, 10);
+        // zoomY = bound(zoomY, 0.1, 10);
+
         p.state.update((state) => ({
           ...state,
           chartWindowsScaleTranslate: {
