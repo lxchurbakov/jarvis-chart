@@ -1,5 +1,7 @@
 /**
  * Lines Индикатор
+ *
+ * Простой индикатор - тип вывода
  */
 const Lines = (p) => {
   p.on('indicators/register', () => {

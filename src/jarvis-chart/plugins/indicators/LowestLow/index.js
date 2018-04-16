@@ -2,27 +2,40 @@ import Matrix from 'lib/matrix';
 
 import { actionOnSelection, movingAverage } from '../helpers';
 
+const INDICATOR_TYPE = 'lowest-low';
+
 /**
- * Bollinger индикатор
+ * LowestLow индикатор
  */
 const HighestHigh = (p) => {
+  let data = null;
+
+  p.on('indicators/create', (indicator) => {
+    const { id, type, meta } = indicator;
+
+    if (type === INDICATOR_TYPE && data === null) {
+      const distance = 5;
+      const values = p.values.get();
+
+      data = actionOnSelection(values, distance, 0, (selection) =>
+        selection.reduce((a, value) => Math.min(a, value.min), Infinity));
+    }
+
+    return indicator;
+  });
+
   p.on('indicators/register', () => {
-    const distance = 5;
-
-    const values = p.values.get();
-
-    const highestHigh = actionOnSelection(values, distance, 0, (selection) =>
-      selection.reduce((a, value) => Math.min(a, value.min), Infinity));
-
-    p.indicators.register('lowest-low', {
+    p.indicators.register(INDICATOR_TYPE, {
       inside: (context, { distance = 5 }, id) => {
-        let { offset, count } = p.chartWindowsCrop.horizontal(id, 0, 10);
-        offset = Math.max(0, offset);
-        count  = Math.max(0, offset + count) - offset;
+        if (data !== null) {
+          let { offset, count } = p.chartWindowsCrop.horizontal(id, 0, 10);
+          offset = Math.max(0, offset);
+          count  = Math.max(0, offset + count) - offset;
 
-        const points = highestHigh.slice(offset, offset + count).map((value, index) => ({ x: 10 * (offset + index), y: value }));
+          const points = data.slice(offset, offset + count).map((value, index) => ({ x: 10 * (offset + index), y: value }));
 
-        p.render.primitives.polyline(context, { points, color: '#7437e8', width: 1 });
+          p.render.primitives.polyline(context, { points, color: '#7437e8', width: 1 });
+        }
       },
     });
   });

@@ -23,6 +23,8 @@ const candles = (p, context, { first, count, values }) => {
 
 /**
  * Candles Индикатор
+ *
+ * Простой индикатор - тип вывода
  */
 const Candles = (p) => {
   p.on('indicators/register', () => {

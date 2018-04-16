@@ -27,7 +27,9 @@ const bars = (p, context, { first, count, values }) => {
 };
 
 /**
- * Candles Индикатор
+ * Bars Индикатор
+ *
+ * Простой индикатор - тип вывода
  */
 const Bars = (p) => {
   p.on('indicators/register', () => {
