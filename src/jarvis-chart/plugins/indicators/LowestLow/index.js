@@ -5,7 +5,7 @@ import { actionOnSelection, movingAverage } from '../helpers';
 const INDICATOR_TYPE = 'lowest-low';
 
 /**
- * Bollinger индикатор
+ * LowestLow индикатор
  */
 const HighestHigh = (p) => {
   let data = null;
@@ -15,7 +15,6 @@ const HighestHigh = (p) => {
 
     if (type === INDICATOR_TYPE && data === null) {
       const distance = 5;
-
       const values = p.values.get();
 
       data = actionOnSelection(values, distance, 0, (selection) =>
@@ -26,8 +25,6 @@ const HighestHigh = (p) => {
   });
 
   p.on('indicators/register', () => {
-
-
     p.indicators.register(INDICATOR_TYPE, {
       inside: (context, { distance = 5 }, id) => {
         if (data !== null) {

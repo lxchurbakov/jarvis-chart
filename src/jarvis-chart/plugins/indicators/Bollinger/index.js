@@ -7,7 +7,6 @@ const INDICATOR_TYPE = 'bollinger';
  * Bollinger индикатор
  */
 const Bollinger = (p) => {
-
   /* Закэшируем данные */
   let data = null;
 

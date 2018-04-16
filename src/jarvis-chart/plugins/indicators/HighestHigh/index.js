@@ -8,6 +8,7 @@ const INDICATOR_TYPE = 'highest-high';
  * HighestHigh индикатор
  */
 const HighestHigh = (p) => {
+  /* Кэшируем данные */
   let data = null;
 
   p.on('indicators/create', (indicator) => {

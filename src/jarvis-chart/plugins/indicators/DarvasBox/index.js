@@ -6,13 +6,15 @@ const INDICATOR_TYPE = 'darvas-box';
  * DarvasBox индикатор
  */
 const DarvasBox = (p, options) => {
-
+  /* Кэшируем данные */
   let data = null;
 
+  /* В момент создания индикатора */
   p.on('indicators/create', (indicator) => {
     const { id, type, meta } = indicator;
 
     if (type === INDICATOR_TYPE && data === null) {
+      /* Вычисляем данные */
       const tl = 5;
       const bl = 5;
 

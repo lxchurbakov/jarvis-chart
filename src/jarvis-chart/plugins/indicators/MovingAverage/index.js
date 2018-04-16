@@ -5,7 +5,7 @@ import { actionOnSelection, movingAverage } from '../helpers';
 const INDICATOR_TYPE = 'moving-average';
 
 /**
- * Bollinger индикатор
+ * MovingAverage индикатор
  */
 const MovingAverage = (p) => {
   let data = null;

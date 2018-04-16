@@ -36,9 +36,6 @@ const Stochastic = (p) => {
   });
 
   p.on('indicators/register', () => {
-
-
-
     p.indicators.register(INDICATOR_TYPE, {
       inside: (context, meta, id) => {
         if (data !== null) {
