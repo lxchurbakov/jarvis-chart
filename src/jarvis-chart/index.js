@@ -43,6 +43,7 @@ import RSI from './plugins/indicators/RSI';
 import MovingAverage from './plugins/indicators/MovingAverage';
 import HighestHigh from './plugins/indicators/HighestHigh';
 import LowestLow from './plugins/indicators/LowestLow';
+import MACD from './plugins/indicators/MACD';
 
 /* Режимы */
 
@@ -116,6 +117,7 @@ export default (node, options) => {
   p.plugin(MovingAverage, options);
   p.plugin(HighestHigh, options);
   p.plugin(LowestLow, options);
+  p.plugin(MACD, options);
 
   /* Режимы */
 

@@ -49,7 +49,7 @@ const Stochastic = (p) => {
           const stochasticMAPoints = stochasticMA.slice(offset, offset + count).map((value, index) => ({ x: 10 * (index + offset), y: value }));
 
           p.render.primitives.polyline(context, { points: stochasticPoints, color: '#7437e8', width: 1 });
-          p.render.primitives.polyline(context, { points: stochasticMAPoints, color: 'red', width: 1 });
+          p.render.primitives.polyline(context, { points: stochasticMAPoints, color: '#FA2C50', width: 1 });
         }
       },
       bounds: (meta, id) => {
