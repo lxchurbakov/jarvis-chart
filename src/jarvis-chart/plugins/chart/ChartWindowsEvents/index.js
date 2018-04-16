@@ -94,7 +94,9 @@ const ChartWindowsEvents = (p, options) => {
       const id = getWindowIdThatIsTouched(chartWindows, y);
 
       if (id !== null) {
-        p.handler.emit('chart-windows-events/mousemove', { x, y, e, id });
+        const { x: windowX, y: windowY } = p.chartWindows.screenToWindow(id, x, y);
+
+        p.handler.emit('chart-windows-events/mousemove', { x: windowX, y: windowY, e, id });
       }
     });
   });

@@ -14,6 +14,13 @@ const Cursor = (p, options) => {
 
     return { node };
   });
+
+  /* TODO это костыль */
+  p.on('handler/attach', () => {
+    p.handler.on('mousemove', () => {
+      p.cursor.set('auto');
+    }, 1000);
+  });
 };
 
 Cursor.plugin = {

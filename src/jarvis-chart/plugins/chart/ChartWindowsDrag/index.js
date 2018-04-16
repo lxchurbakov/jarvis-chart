@@ -67,7 +67,7 @@ const ChartWindowsDrag = (p, options) => {
       if (wId !== null) {
         p.cursor.set('move');
       } else if (dragId === null) {
-        p.cursor.set('auto');
+        // p.cursor.set('auto');
       }
     });
   });
