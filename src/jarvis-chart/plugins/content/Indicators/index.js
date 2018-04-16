@@ -13,18 +13,34 @@ const Indicators = (p) => {
   let indicatorId = 0;
 
   p.indicators = {
+    /**
+     * Регистрирует новый тип индикатор
+     */
     register: (type, config) => {
       indicatorsConfig[type] = config;
     },
-    push: (id, type, meta) => {
+    /**
+     * Создаёт инстанс индикатора на окне
+     */
+    create: (id, type, meta) => {
+      if (!indicatorsConfig[type])
+        throw `Невозможно создать индикатор типа ${type}, т.к. он не зарегистрирован`;
+
+      /* Дадим индикатору возможность подготовиться к выводу */
+      const newIndicator = p.emitSync('indicators/create', { id, type, meta });
+
+      /* Дополним состояние */
       indicatorId++;
       p.chartWindows.update(id, (w) => ({
         ...w,
-        indicators: w.indicators.concat([{ type, meta, indicatorId }]),
+        indicators: w.indicators.concat([newIndicator]),
       }));
 
       return indicatorId;
     },
+    /**
+     * Удаляет инстанс индикатора с окна
+     */
     remove: (id, indicatorId) => {
       p.chartWindows.update(id, (w) => ({
         ...w,
