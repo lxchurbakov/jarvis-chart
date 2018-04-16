@@ -89,18 +89,18 @@ const LeftUI = ({
     <div onClick={onEye}><EyeIcon width={25} height={25} /></div>
     {/* <div><PadlockIcon width={25} height={25} /></div> */}
     <div onClick={onPaint}><PaintIcon width={25} height={25} /></div>
-    <div onClick={onVector}><VectorIcon width={25} height={25} /></div>
+    {/* <div onClick={onVector}><VectorIcon width={25} height={25} /></div> */}
     <div onClick={onLineCircle}><LineCircleIcon width={25} height={25} /></div>
     <div onClick={onLineCircleHorizontal}><LineCircleHorizontalIcon width={25} height={25} /></div>
     <div onClick={onSegmentDiagonal}><SegmentDiagonalIcon width={25} height={25} /></div>
     <div onClick={onSegmentHorizontal}><SegmentHorizontalIcon width={25} height={25} /></div>
     <div onClick={onRectangle}><RectangleIcon width={25} height={25} /></div>
-    <div onClick={onCircle}><CircleIcon width={25} height={25} /></div>
-    <div onClick={onTriangle}><TriangleIcon width={25} height={25} /></div>
+    {/*<div onClick={onCircle}><CircleIcon width={25} height={25} /></div> */}
+    {/*<div onClick={onTriangle}><TriangleIcon width={25} height={25} /></div> */}
     {/* <div onClick={onFile}><GoldenRatioIcon width={25} height={25} /></div> */}
     {/* <div onClick={onFile}><EraserIcon width={25} height={25} /></div> */}
     {/* <div onClick={onFile}><PencilIcon width={25} height={25} /></div> */}
-    <div onClick={onText}><TextIcon width={25} height={25} /></div>
+    {/*<div onClick={onText}><TextIcon width={25} height={25} /></div> */}
     {/* <div onClick={onFile}><UndoIcon width={25} height={25} /></div> */}
     {/* <div onClick={onFile}><RedoIcon width={25} height={25} /></div> */}
   </LeftUIWrap>

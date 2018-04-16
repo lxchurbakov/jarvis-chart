@@ -4,7 +4,7 @@ const drawBrush = (p, context, brush) => {
   brush.forEach((curr, index) => {
     if (index > 0) {
       const prev = brush[index - 1];
-      p.render.primitives.line(context, { x0: prev.x, y0: prev.y, x1: curr.x, y1: curr.y, color: 'red' });
+      p.render.primitives.line(context, { x0: prev.x, y0: prev.y, x1: curr.x, y1: curr.y, color: '#FA2C50' });
     }
   });
 };

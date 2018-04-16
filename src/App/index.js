@@ -20,14 +20,14 @@ class App extends React.Component {
 
   paint = () => this.chart.chartWindowsModes.set('brush');
   eye = () => this.chart.chartWindowsModes.set('view');
-  vector = () => this.chart.chartWindowsModes.set('vector');
+  // vector = () => this.chart.chartWindowsModes.set('vector');
 
   lineCircle = () => this.chart.chartWindowsModes.set('line');
   lineCircleHorizontal = () => this.chart.chartWindowsModes.set('line-horizontal');
   segmentDiagonal = () => this.chart.chartWindowsModes.set('segment');
   segmentHorizontal = () => this.chart.chartWindowsModes.set('segment-horizontal');
   rectangle = () => this.chart.chartWindowsModes.set('rectangle');
-  circle = () => this.chart.chartWindowsModes.set('circle');
+  circle = () => this.chart.chartWindowsModes.set('ellipse');
   triangle = () => this.chart.chartWindowsModes.set('triangle');
   text = () => this.chart.chartWindowsModes.set('text');
 

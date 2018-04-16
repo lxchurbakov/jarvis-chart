@@ -46,6 +46,12 @@ import ViewMode from './plugins/modes/ViewMode';
 /* Элементы */
 
 import Brush from './plugins/elements/Brush';
+import Line from './plugins/elements/Line';
+import LineHorizontal from './plugins/elements/LineHorizontal';
+import Segment from './plugins/elements/Segment';
+import SegmentHorizontal from './plugins/elements/SegmentHorizontal';
+import Rectangle from './plugins/elements/Rectangle';
+import Ellipse from './plugins/elements/Ellipse';
 
 /* Рендеры */
 
@@ -109,6 +115,12 @@ export default (node, options) => {
   /* Элементы */
 
   p.plugin(Brush, options);
+  p.plugin(Line, options);
+  p.plugin(LineHorizontal, options);
+  p.plugin(Segment, options);
+  p.plugin(SegmentHorizontal, options);
+  p.plugin(Rectangle, options);
+  p.plugin(Ellipse, options);
 
   /* Всякое */
 
