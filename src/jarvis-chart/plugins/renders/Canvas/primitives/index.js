@@ -45,7 +45,7 @@ const group = (context, { matrix }, cb) => {
   }
 };
 
-const line = (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix }) => {
+const line = (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix, dash = null }) => {
   if (matrix) {
     context.api.matrix.push(matrix);
   }
@@ -57,6 +57,8 @@ const line = (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix }) =>
   context.lineWidth = width === 1 ? 0.6 : width;
   context.globalAlpha = opacity;
   context.strokeStyle = color;
+
+  dash && context.setLineDash(dash);
 
   /* Descale line */
   context.api.matrix.replace(Matrix.identity());

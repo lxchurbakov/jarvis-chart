@@ -21,7 +21,7 @@ const ChartWindowsGrid = (p, options) => {
         const y1 = pricepoint.y;
         const color = '#ccc';
 
-        p.render.primitives.line(context, { x0, y0, x1, y1, color });
+        p.render.primitives.line(context, { x0, y0, x1, y1, color, dash: [3, 5] });
       });
     context.api.matrix.pop();
 
@@ -34,7 +34,7 @@ const ChartWindowsGrid = (p, options) => {
         const y1 = height;
         const color = '#ccc';
 
-        p.render.primitives.line(context, { x0, y0, x1, y1, color });
+        p.render.primitives.line(context, { x0, y0, x1, y1, color, dash: [3, 5] });
       });
     context.api.matrix.pop();
   });
