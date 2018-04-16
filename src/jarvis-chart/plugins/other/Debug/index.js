@@ -85,6 +85,25 @@ const DebugInfo = (p, options) => {
     // p.chartWindows.get(1).indicators.push({ type: 'stochastic', meta: { distance: 5 } });
     // p.chartWindows.get(1).chartWindowsScaleTranslate.autoZoom = true;
   });
+
+  const indicatorsOnMain = ['bollinger', 'highest-high', 'darvas-box', 'lowest-low', 'moving-average']
+  p.on('api', (api) => ({ ...api, debug: {
+    update: (indicators, graph) => {
+      p.chartWindows.all().forEach(w => (w.id !== 0) && p.chartWindows.remove(w.id));
+
+      p.chartWindows.get(0).indicators = [];
+      p.chartWindows.get(0).indicators.push({ type: graph });
+
+      indicators.forEach(i => {
+        if (indicatorsOnMain.indexOf(i) > -1) {
+          p.chartWindows.get(0).indicators.push({ type: i, meta: {} });
+        } else {
+          const id = p.chartWindows.create();
+          p.chartWindows.get(id).indicators.push({ type: i, meta: {} });
+        }
+      });
+    },
+  }}));
 };
 
 DebugInfo.plugin = {

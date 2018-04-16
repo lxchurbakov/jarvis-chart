@@ -23,8 +23,8 @@ const Indicators = (p) => {
 
     indicators.forEach(({ type, meta }) => {
       const config = indicatorsConfig[type];
-      
-      if (config.inside) {
+
+      if (config && config.inside) {
         config.inside(context, meta, id);
       } else {
         console.warnOnce(`Индикатор ${type} не имеет метода вывода`)
@@ -33,7 +33,7 @@ const Indicators = (p) => {
 
     return { id, context };
   });
-  
+
   /* Найдём границы индикаторов */
   p.on('chart-windows-scale-translate/autozoom', ({ id, min, max }) => {
     const { indicators } = p.chartWindows.get(id);
@@ -43,7 +43,7 @@ const Indicators = (p) => {
 
       if (config.bounds) {
         const { min: n, max: x } = config.bounds(meta, id);
-        
+
         min = min !== null ? Math.min(min, n) : n;
         max = max !== null ? Math.max(max, x) : x;
       }
@@ -52,10 +52,8 @@ const Indicators = (p) => {
     return { id, min, max };
   });
 
-  /* Создаём хук для индикаторов чтобы зарегистрироваться */
-  p.on('mount', ({ node }) => {
+  p.on('state/ready', () => {
     p.emitSync('indicators/register');
-    return { node };
   });
 };
 

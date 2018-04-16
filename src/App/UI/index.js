@@ -59,6 +59,7 @@ const SelectStyled = styled.select`
   padding: 10px 16px;
   background: none;
   min-width: 200px;
+  background: white;
 `;
 
 const IndicatorOptionSpan = styled.span`
@@ -78,7 +79,8 @@ const Done = ({ onClick   }) => (
 
 const indicators = [
   'bollinger', 'cci', 'rsi', 'stochastic', 'darvas-box', 'moving-average', 'highest-high',
-  'lowest-low', 'volume', 'volume-profile', 'parabolic-sar', 'macd'
+  'lowest-low',
+  // 'volume', 'volume-profile', 'parabolic-sar', 'macd'
 ]
 
 class Indicators extends React.Component {

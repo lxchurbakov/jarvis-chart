@@ -53,7 +53,7 @@ const ChartWindowsScaleTranslate = (p, options) => {
   /* Добавляем значения зума и смещения в стейт и каждое окно */
   /* По X окна движутся вместе, по Y по отдельности */
   p.on('state/default', (state) => ({ ...state, chartWindowsScaleTranslate: { translateX: 0, zoomX: 1 }}));
-  p.on('chart-windows/create', (w) => ({ ...w, chartWindowsScaleTranslate: { translateY: 0, zoomY: 1, autoZoom: false }}));
+  p.on('chart-windows/create', (w) => ({ ...w, chartWindowsScaleTranslate: { translateY: 0, zoomY: 1, autoZoom: true }}));
 
   /* chartWindowsScaleTranslate API */
   p.chartWindowsScaleTranslate = {
