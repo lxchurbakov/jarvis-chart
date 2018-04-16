@@ -1,8 +1,9 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 
 import {
-  ArrowLeftIcon, ArrowRightIcon, ZoomInIcon, ZoomOutIcon, CalendarIcon, UndoIcon,
+  ArrowLeftIcon, ArrowRightIcon, ZoomInIcon, ZoomOutIcon, CalendarIcon, UndoIcon, GraphIcon,
   FileIcon, EyeIcon, PadlockIcon, PaintIcon, VectorIcon, LineCircleIcon, LineCircleHorizontalIcon, SegmentDiagonalIcon, SegmentHorizontalIcon,
   RectangleIcon, CircleIcon, TriangleIcon, GoldenRatioIcon, EraserIcon, PencilIcon, TextIcon, RedoIcon
 } from './icons';
@@ -38,7 +39,101 @@ const BottomUIWrap = styled.div.attrs({ 'data-ui': 'bottom' })`
   }
 `;
 
-const BottomUI = ({ onLeft, onRight, onZoomIn, onZoomOut }) => (
+const Modal = styled.div`
+  display: ${props => props.visible ? 'block' : 'none'};
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  height: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+`;
+
+const ModalContent = styled.div`
+  width : 600px;
+  margin: 200px auto;
+`;
+
+const SelectStyled = styled.select`
+  padding: 10px 16px;
+  background: none;
+  min-width: 200px;
+`;
+
+const IndicatorOptionSpan = styled.span`
+  margin-right: 10px;
+  cursor: pointer;
+`;
+
+const IndicatorOption = ({ text, active }) => (
+  <IndicatorOptionSpan>{ text }</IndicatorOptionSpan>
+);
+
+const Done = ({ onClick   }) => (
+  <div onClick={onClick} style={{ color: '#FA2C50', marginTop: 200, cursor: 'pointer' }}>Done</div>
+);
+
+class Indicators extends React.Component {
+  constructor () {
+    super();
+
+    this.state = { visible: false };
+  }
+
+  toggle = () => {
+    this.setState((state) => ({ ...state, visible: !state.visible }));
+  }
+
+  render () {
+    const { visible } = this.state;
+    const { modal } = this.props;
+
+    return (
+      <div>
+        <CircleButton onClick={this.toggle}>
+          <GraphIcon width={40} height={20} />
+        </CircleButton>
+        {ReactDOM.createPortal((
+          <Modal visible={visible}>
+            <ModalContent>
+              <h1>Graph Config</h1>
+              <div>
+                <p>Choose Graph render style</p>
+                <SelectStyled>
+                  <option>Candles</option>
+                  <option>Line</option>
+                  <option>Bars</option>
+                </SelectStyled>
+              </div>
+              <div>
+                <p>Click on indicators you want to see</p>
+                <IndicatorOption text="Bollinger" active={false} />
+                <IndicatorOption text="CCI" active={false} />
+                <IndicatorOption text="RSI" active={false} />
+                <IndicatorOption text="Stochastic" active={false} />
+                <IndicatorOption text="Darvas Box" active={false} />
+                <IndicatorOption text="Moving Average" active={false} />
+                <IndicatorOption text="Highest High" active={false} /> <br />
+                <IndicatorOption text="Lowest Low" active={false} />
+
+                <IndicatorOption text="Volume" active={false} />
+                <IndicatorOption text="Parabolic SAR" active={false} />
+                <IndicatorOption text="Volume Profile" active={false} />
+                <IndicatorOption text="MACD" active={false} />
+              </div>
+              <div>
+                <Done onClick={this.toggle}/>
+              </div>
+            </ModalContent>
+          </Modal>
+        ), modal)}
+      </div>
+    );
+  }
+};
+
+const BottomUI = ({ onLeft, onRight, onZoomIn, onZoomOut, modal }) => (
   <BottomUIWrap>
     <CircleButton onClick={onLeft}>
       <ArrowLeftIcon width={25} height={20} />
@@ -49,6 +144,7 @@ const BottomUI = ({ onLeft, onRight, onZoomIn, onZoomOut }) => (
     {/* <CircleButton>
       <UndoIcon width={25} height={20} />
     </CircleButton> */}
+    <Indicators modal={modal} />
     <CircleButton onClick={onZoomOut}>
       <ZoomOutIcon width={25} height={20} />
     </CircleButton>
@@ -111,10 +207,11 @@ export default ({
   onPaint, onEye, onVector, onLineCircle, onLineCircleHorizontal, onSegmentDiagonal,
   onSegmentHorizontal, onRectangle, onCircle, onTriangle, onText,
   onLeft, onRight, onZoomIn, onZoomOut,
+  modal,
 }) => (
   <UIWrap>
     {children}
-    <BottomUI onLeft={onLeft} onRight={onRight} onZoomIn={onZoomIn} onZoomOut={onZoomOut} />
+    <BottomUI onLeft={onLeft} onRight={onRight} onZoomIn={onZoomIn} onZoomOut={onZoomOut} modal={modal} />
     <LeftUI
       onPaint={onPaint} onEye={onEye} onVector={onVector}
       onLineCircle={onLineCircle} onLineCircleHorizontal={onLineCircleHorizontal}

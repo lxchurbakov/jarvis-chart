@@ -51,7 +51,6 @@ import LineHorizontal from './plugins/elements/LineHorizontal';
 import Segment from './plugins/elements/Segment';
 import SegmentHorizontal from './plugins/elements/SegmentHorizontal';
 import Rectangle from './plugins/elements/Rectangle';
-import Ellipse from './plugins/elements/Ellipse';
 
 /* Рендеры */
 
@@ -120,7 +119,6 @@ export default (node, options) => {
   p.plugin(Segment, options);
   p.plugin(SegmentHorizontal, options);
   p.plugin(Rectangle, options);
-  p.plugin(Ellipse, options);
 
   /* Всякое */
 

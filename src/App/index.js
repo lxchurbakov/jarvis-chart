@@ -40,6 +40,8 @@ class App extends React.Component {
       width, height
     };
 
+    const { modal } = this.props;
+
     return (
       <div>
         <h1>Jarvis Chart Example</h1>
@@ -59,6 +61,7 @@ class App extends React.Component {
           onCircle={this.circle}
           onTriangle={this.triangle}
           onText={this.text}
+          modal={modal}
         >
           <Chart ref={n => this.chart = n.chart} options={options} />
         </UI>

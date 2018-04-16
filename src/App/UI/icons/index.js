@@ -8,6 +8,7 @@ import eraser from './eraser.svg';
 import eye from './eye.svg';
 import file from './file.svg';
 import goldenRatio from './golden-ratio.svg';
+import graph from './graph.svg';
 import lineCircleHorizontal from './line-circle-horizontal.svg';
 import lineCircle from './line-circle.svg';
 import padlock from './padlock.svg';
@@ -54,6 +55,10 @@ export const FileIcon = ({ width, height }) => (
 
 export const GoldenRatioIcon = ({ width, height }) => (
   <img style={{ width, height , 'userSelect': 'none'}} src={goldenRatio} />
+);
+
+export const GraphIcon = ({ width, height }) => (
+  <img style={{ width, height , 'userSelect': 'none'}} src={graph} />
 );
 
 export const LineCircleHorizontalIcon = ({ width, height }) => (
