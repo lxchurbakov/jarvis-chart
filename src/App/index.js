@@ -31,6 +31,10 @@ class App extends React.Component {
   triangle = () => this.chart.chartWindowsModes.set('triangle');
   text = () => this.chart.chartWindowsModes.set('text');
 
+  done = ({ indicators, graph }) => {
+    console.log(indicators, graph);
+  }
+
   render () {
     const width = '100%';
     const height = '800px';
@@ -62,6 +66,7 @@ class App extends React.Component {
           onTriangle={this.triangle}
           onText={this.text}
           modal={modal}
+          onDone={this.done}
         >
           <Chart ref={n => this.chart = n.chart} options={options} />
         </UI>

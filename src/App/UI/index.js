@@ -64,25 +64,62 @@ const SelectStyled = styled.select`
 const IndicatorOptionSpan = styled.span`
   margin-right: 10px;
   cursor: pointer;
+  color: ${props => props.active ? '#FA2C50' : 'inherit'};
+  user-select: none;
 `;
 
-const IndicatorOption = ({ text, active }) => (
-  <IndicatorOptionSpan>{ text }</IndicatorOptionSpan>
+const IndicatorOption = ({ text, active, onClick }) => (
+  <IndicatorOptionSpan active={active} onClick={onClick}>{ text }</IndicatorOptionSpan>
 );
 
 const Done = ({ onClick   }) => (
   <div onClick={onClick} style={{ color: '#FA2C50', marginTop: 200, cursor: 'pointer' }}>Done</div>
 );
 
+const indicators = [
+  'bollinger', 'cci', 'rsi', 'stochastic', 'darvas-box', 'moving-average', 'highest-high',
+  'lowest-low', 'volume', 'volume-profile', 'parabolic-sar', 'macd'
+]
+
 class Indicators extends React.Component {
   constructor () {
     super();
 
-    this.state = { visible: false };
+    this.state = { visible: false, indicators: [], graph: 'candles' };
   }
 
   toggle = () => {
+    const { visible } = this.state;
+
+    if (visible)
+      this.props.onDone({ indicators: this.state.indicators, graph: this.state.graph });
+
     this.setState((state) => ({ ...state, visible: !state.visible }));
+  }
+
+  toggleIndicator = (i) => {
+    this.setState((state) => {
+      const { indicators } = state;
+
+      const index = indicators.indexOf(i);
+
+      if (index > -1)
+        return {
+          ...state,
+          indicators: indicators.filter(_i => i !== _i)
+        };
+      else
+        return {
+          ...state,
+          indicators: indicators.concat([ i ])
+        }
+
+    });
+  }
+
+  test = (e) => {
+    // console.log(e.target.value)
+    this.setState((state) => ({ ...state, graph: this.a.value }));
   }
 
   render () {
@@ -100,27 +137,19 @@ class Indicators extends React.Component {
               <h1>Graph Config</h1>
               <div>
                 <p>Choose Graph render style</p>
-                <SelectStyled>
-                  <option>Candles</option>
-                  <option>Line</option>
-                  <option>Bars</option>
+                <SelectStyled onInput={this.test} innerRef={a => this.a = a}>
+                  <option>candles</option>
+                  <option>lines</option>
+                  <option>bars</option>
                 </SelectStyled>
               </div>
               <div>
                 <p>Click on indicators you want to see</p>
-                <IndicatorOption text="Bollinger" active={false} />
-                <IndicatorOption text="CCI" active={false} />
-                <IndicatorOption text="RSI" active={false} />
-                <IndicatorOption text="Stochastic" active={false} />
-                <IndicatorOption text="Darvas Box" active={false} />
-                <IndicatorOption text="Moving Average" active={false} />
-                <IndicatorOption text="Highest High" active={false} /> <br />
-                <IndicatorOption text="Lowest Low" active={false} />
+                {indicators.map(i => {
+                  const active = this.state.indicators.indexOf(i) !== -1;
 
-                <IndicatorOption text="Volume" active={false} />
-                <IndicatorOption text="Parabolic SAR" active={false} />
-                <IndicatorOption text="Volume Profile" active={false} />
-                <IndicatorOption text="MACD" active={false} />
+                  return (<IndicatorOption key={i} text={i} active={active} onClick={() => this.toggleIndicator(i)}/>)
+                })}
               </div>
               <div>
                 <Done onClick={this.toggle}/>
@@ -133,7 +162,7 @@ class Indicators extends React.Component {
   }
 };
 
-const BottomUI = ({ onLeft, onRight, onZoomIn, onZoomOut, modal }) => (
+const BottomUI = ({ onLeft, onRight, onZoomIn, onZoomOut, modal, onDone }) => (
   <BottomUIWrap>
     <CircleButton onClick={onLeft}>
       <ArrowLeftIcon width={25} height={20} />
@@ -144,7 +173,7 @@ const BottomUI = ({ onLeft, onRight, onZoomIn, onZoomOut, modal }) => (
     {/* <CircleButton>
       <UndoIcon width={25} height={20} />
     </CircleButton> */}
-    <Indicators modal={modal} />
+    <Indicators modal={modal} onDone={onDone}/>
     <CircleButton onClick={onZoomOut}>
       <ZoomOutIcon width={25} height={20} />
     </CircleButton>
@@ -207,11 +236,11 @@ export default ({
   onPaint, onEye, onVector, onLineCircle, onLineCircleHorizontal, onSegmentDiagonal,
   onSegmentHorizontal, onRectangle, onCircle, onTriangle, onText,
   onLeft, onRight, onZoomIn, onZoomOut,
-  modal,
+  modal, onDone,
 }) => (
   <UIWrap>
     {children}
-    <BottomUI onLeft={onLeft} onRight={onRight} onZoomIn={onZoomIn} onZoomOut={onZoomOut} modal={modal} />
+    <BottomUI onDone={onDone} onLeft={onLeft} onRight={onRight} onZoomIn={onZoomIn} onZoomOut={onZoomOut} modal={modal} />
     <LeftUI
       onPaint={onPaint} onEye={onEye} onVector={onVector}
       onLineCircle={onLineCircle} onLineCircleHorizontal={onLineCircleHorizontal}
