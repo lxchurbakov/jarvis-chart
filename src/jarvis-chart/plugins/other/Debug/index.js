@@ -89,6 +89,7 @@ const DebugInfo = (p, options) => {
   const indicatorsOnMain = ['bollinger', 'highest-high', 'darvas-box', 'lowest-low', 'moving-average']
   p.on('api', (api) => ({ ...api, debug: {
     update: (indicators, graph) => {
+      console.warnOnce('DEBUG PLUGIN использует окна неправильно')
       p.chartWindows.all().forEach(w => (w.id !== 0) && p.chartWindows.remove(w.id));
 
       p.chartWindows.get(0).indicators = [];

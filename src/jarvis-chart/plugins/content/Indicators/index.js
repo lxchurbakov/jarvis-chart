@@ -10,10 +10,26 @@ const Indicators = (p) => {
 
   /* Indicators API */
   let indicatorsConfig = {};
+  let indicatorId = 0;
 
   p.indicators = {
     register: (type, config) => {
       indicatorsConfig[type] = config;
+    },
+    push: (id, type, meta) => {
+      indicatorId++;
+      p.chartWindows.update(id, (w) => ({
+        ...w,
+        indicators: w.indicators.concat([{ type, meta, indicatorId }]),
+      }));
+
+      return indicatorId;
+    },
+    remove: (id, indicatorId) => {
+      p.chartWindows.update(id, (w) => ({
+        ...w,
+        indicators: w.indicators.filter(i => i.indicatorId !== indicatorId),
+      }));
     },
   };
 
