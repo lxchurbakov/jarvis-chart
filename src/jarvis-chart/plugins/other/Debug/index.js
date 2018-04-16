@@ -68,7 +68,7 @@ const DebugInfo = (p, options) => {
     context.api.matrix.push(Matrix.resetScale(currentMatrix));
       p.render.primitives.text(context, {
         x: width - 5, textAlign: 'right', y: -height + 13 + 5, font: '300 13px Open Sans',
-        text: `Window #${w.id} (${Math.floor(w.height)}x${w.width} at ${w.left};${w.top})`,
+        text: `Window #${w.id} (${w.height.toFixed(0)}x${w.width.toFixed(0)} at ${w.left.toFixed(0)};${w.top.toFixed(0)})`,
         opacity: 0.8
       });
     context.api.matrix.pop();

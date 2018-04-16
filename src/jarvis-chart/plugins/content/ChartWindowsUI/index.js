@@ -71,6 +71,8 @@ const ChartWindowsUI = (p, options) => {
 
     drawTimeline(p, context, translate, zoom, gridConfig, id);
     drawPriceline(p, context, translate, zoom, gridConfig, id);
+
+    return { context, id };
   });
 };
 

@@ -28,6 +28,7 @@ import ChartWindowsUI from './plugins/content/ChartWindowsUI';
 import ChartWindowsContent from './plugins/content/ChartWindowsContent';
 import Indicators from './plugins/content/Indicators';
 import Elements from './plugins/content/Elements';
+import ValuesPointer from './plugins/content/ValuesPointer';
 
 /* Различные индикаторы */
 
@@ -90,6 +91,7 @@ export default (node, options) => {
   p.plugin(ChartWindowsContent, options);
   p.plugin(Indicators, options);
   p.plugin(Elements, options);
+  p.plugin(ValuesPointer, options);
 
   /* Индикаторы */
 
