@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = (env) => {
   return {
     context: __dirname + "/src",
@@ -17,8 +19,15 @@ module.exports = (env) => {
     module: {
       rules: [
         { test: /\.jsx?$/, loader: 'babel-loader' },
-        { test: /\.html$/, loader: 'file-loader?name=[name].html' }
+        { test: /\.html$/, loader: 'file-loader?name=[name].html' },
+        { test: /\.svg$/, loader: 'file-loader' },
       ]
+    },
+
+    resolve: {
+      alias: {
+        lib: path.resolve(__dirname, './src/jarvis-chart/lib')
+      }
     }
   };
 };
