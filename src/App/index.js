@@ -12,6 +12,22 @@ const doubleBuffer = (getParameterByName('double-buffer') || 'on') === 'on';
 const clickThreshold = 100;
 
 class App extends React.Component {
+  left = () => {
+    this.chart.chartWindowsScaleTranslate.translate(200);
+  }
+
+  right = () => {
+    this.chart.chartWindowsScaleTranslate.translate(-200);
+  }
+
+  zoomIn = () => {
+    this.chart.chartWindowsScaleTranslate.zoom(1);
+  }
+
+  zoomOut = () => {
+    this.chart.chartWindowsScaleTranslate.zoom(-1);
+  }
+
   render () {
     const width = '100%';
     const height = '600px';
@@ -24,8 +40,8 @@ class App extends React.Component {
     return (
       <div>
         <h1>Jarvis Chart Example</h1>
-        <UI>
-          <Chart options={options} />
+        <UI onLeft={this.left} onRight={this.right} onZoomIn={this.zoomIn} onZoomOut={this.zoomOut}>
+          <Chart ref={n => this.chart = n.chart} options={options} />
         </UI>
       </div>
     );

@@ -21,8 +21,8 @@ const Wrap = styled.div`
   }
 `;
 
-export default ({ children }) => (
-  <Wrap>
+export default ({ children, onClick }) => (
+  <Wrap onClick={onClick}>
     {children}
   </Wrap>
 );

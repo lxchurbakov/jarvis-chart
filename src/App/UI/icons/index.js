@@ -8,25 +8,25 @@ import calendar from './calendar.svg';
 import undo from './undo.svg';
 
 export const ArrowLeft = ({ width, height }) => (
-  <img style={{ width, height, 'user-select': 'none' }} src={arrowLeft} />
+  <img style={{ width, height, 'userSelect': 'none' }} src={arrowLeft} />
 );
 
 export const ArrowRight = ({ width, height }) => (
-  <img style={{ width, height, 'user-select': 'none' }} src={arrowRight} />
+  <img style={{ width, height, 'userSelect': 'none' }} src={arrowRight} />
 );
 
 export const ZoomIn = ({ width, height }) => (
-  <img style={{ width, height, 'user-select': 'none' }} src={zoomIn} />
+  <img style={{ width, height, 'userSelect': 'none' }} src={zoomIn} />
 );
 
 export const ZoomOut = ({ width, height }) => (
-  <img style={{ width, height, 'user-select': 'none' }} src={zoomOut} />
+  <img style={{ width, height, 'userSelect': 'none' }} src={zoomOut} />
 );
 
 export const Calendar = ({ width, height }) => (
-  <img style={{ width, height , 'user-select': 'none'}} src={calendar} />
+  <img style={{ width, height , 'userSelect': 'none'}} src={calendar} />
 );
 
 export const Undo = ({ width, height }) => (
-  <img style={{ width, height, 'user-select': 'none' }} src={undo} />
+  <img style={{ width, height, 'userSelect': 'none' }} src={undo} />
 );

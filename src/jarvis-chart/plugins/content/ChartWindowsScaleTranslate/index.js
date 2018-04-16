@@ -164,8 +164,52 @@ const ChartWindowsScaleTranslate = (p, options) => {
 
         p.emitSync('chart-windows-scale-translate/change', id);
       },
+      x: ({ translateX, zoomX }) => {
+        p.state.update((state) => ({
+          ...state,
+          chartWindowsScaleTranslate: {
+            ...state.chartWindowsScaleTranslate,
+            translateX, zoomX
+          },
+        }));
+      },
     },
   };
+
+  p.on('api', (api) => ({ ...api, chartWindowsScaleTranslate: {
+    translate: (delta) => {
+      console.warnOnce('Необходимо использовать общий счётчик анимации для всех анимаций')
+      const step = delta / 10;
+      let steps = 10;
+
+      const id = setInterval(() => {
+        let { translateX, zoomX } = p.chartWindowsScaleTranslate.raw.x();
+        translateX += step / zoomX;
+        p.chartWindowsScaleTranslate.set.x({ translateX, zoomX });
+
+        steps--;
+
+        if (steps < 1)
+          clearInterval(id);
+      }, 10);
+    },
+    zoom: (delta) => {
+      console.warnOnce('Необходимо использовать общий счётчик анимации для всех анимаций')
+      const step = delta / 10;
+      let steps = 10;
+
+      const id = setInterval(() => {
+        let { translateX, zoomX } = p.chartWindowsScaleTranslate.raw.x();
+        zoomX += step / (Math.abs(zoomX - 1) + 1);
+        p.chartWindowsScaleTranslate.set.x({ translateX, zoomX });
+
+        steps--;
+
+        if (steps < 1)
+          clearInterval(id);
+      }, 10);
+    },
+  }}));
 };
 
 ChartWindowsScaleTranslate.plugin = {
