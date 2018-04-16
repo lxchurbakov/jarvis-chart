@@ -19,7 +19,8 @@ module.exports = (env) => {
     module: {
       rules: [
         { test: /\.jsx?$/, loader: 'babel-loader' },
-        { test: /\.html$/, loader: 'file-loader?name=[name].html' }
+        { test: /\.html$/, loader: 'file-loader?name=[name].html' },
+        { test: /\.svg$/, loader: 'file-loader' },
       ]
     },
 

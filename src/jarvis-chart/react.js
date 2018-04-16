@@ -26,6 +26,6 @@ export default class ChartComponent extends React.Component {
     const { options } = this.props;
     const { width, height } = options;
 
-    return (<div style={{ width, height }} ref={node => this.mountNode = node}></div>);
+    return (<div style={{ width, height, position: 'relative' }} ref={node => this.mountNode = node}></div>);
   }
 };
