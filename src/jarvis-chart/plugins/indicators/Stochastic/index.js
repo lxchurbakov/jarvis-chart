@@ -2,35 +2,58 @@ import Matrix from 'lib/matrix';
 
 import { movingAverage, actionOnSelection } from '../helpers';
 
+const INDICATOR_TYPE = 'stochastic';
+
 /**
  * Stochastic индикатор
  */
 const Stochastic = (p) => {
+
+  let data = null;
+
+  p.on('indicators/create', (indicator) => {
+    const { id, type, meta } = indicator;
+
+    if (type === INDICATOR_TYPE && data === null) {
+      const distance = 5;
+      const values = p.values.get();
+
+      const stochastic = actionOnSelection(values, distance, 0, (selection, index) => {
+        const value = values[index];
+
+        const min = selection.reduce((acc, value) => Math.min(acc, value.min), Infinity);
+        const max = selection.reduce((acc, value) => Math.max(acc, value.max), -Infinity);
+
+        return 100 * (value.close - min) / (max - min);
+      });
+
+      const stochasticMA = movingAverage(stochastic, distance);
+
+      data = { stochastic, stochasticMA };
+    }
+
+    return indicator;
+  });
+
   p.on('indicators/register', () => {
-    const distance = 5;
-    const values = p.values.get();
-    const stochastic = actionOnSelection(values, distance, 0, (selection, index) => {
-      const value = values[index];
 
-      const min = selection.reduce((acc, value) => Math.min(acc, value.min), Infinity);
-      const max = selection.reduce((acc, value) => Math.max(acc, value.max), -Infinity);
 
-      return 100 * (value.close - min) / (max - min);
-    });
 
-    const stochasticMA = movingAverage(stochastic, distance);
-
-    p.indicators.register('stochastic', {
+    p.indicators.register(INDICATOR_TYPE, {
       inside: (context, meta, id) => {
-        let { offset, count } = p.chartWindowsCrop.horizontal(id, 0, 10);
-        offset = Math.max(0, offset);
-        count  = Math.max(0, offset + count) - offset;
+        if (data !== null) {
+          let { offset, count } = p.chartWindowsCrop.horizontal(id, 0, 10);
+          offset = Math.max(0, offset);
+          count  = Math.max(0, offset + count) - offset;
 
-        const stochasticPoints = stochastic.slice(offset, offset + count).map((value, index) => ({ x: 10 * (index + offset), y: value }));
-        const stochasticMAPoints = stochasticMA.slice(offset, offset + count).map((value, index) => ({ x: 10 * (index + offset), y: value }));
+          const { stochastic, stochasticMA } = data;
 
-        p.render.primitives.polyline(context, { points: stochasticPoints, color: '#7437e8', width: 1 });
-        p.render.primitives.polyline(context, { points: stochasticMAPoints, color: 'red', width: 1 });
+          const stochasticPoints = stochastic.slice(offset, offset + count).map((value, index) => ({ x: 10 * (index + offset), y: value }));
+          const stochasticMAPoints = stochasticMA.slice(offset, offset + count).map((value, index) => ({ x: 10 * (index + offset), y: value }));
+
+          p.render.primitives.polyline(context, { points: stochasticPoints, color: '#7437e8', width: 1 });
+          p.render.primitives.polyline(context, { points: stochasticMAPoints, color: 'red', width: 1 });
+        }
       },
       bounds: (meta, id) => {
         return { min: 0, max: 100 };

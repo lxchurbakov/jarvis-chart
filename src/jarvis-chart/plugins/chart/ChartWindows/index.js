@@ -126,8 +126,6 @@ const ChartWindows = (p, options) => {
       const weight = height / options.height;
       const k = 1 / (1 - weight);
 
-      console.log({ k })
-
       let top = 0;
 
       p.state.update((state) => ({
