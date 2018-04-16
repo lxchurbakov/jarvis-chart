@@ -38,6 +38,11 @@ import Bollinger from './plugins/indicators/Bollinger';
 import Bars from './plugins/indicators/Bars';
 import DarvasBox from './plugins/indicators/DarvasBox';
 import Stochastic from './plugins/indicators/Stochastic';
+import CCI from './plugins/indicators/CCI';
+import RSI from './plugins/indicators/RSI';
+import MovingAverage from './plugins/indicators/MovingAverage';
+import HighestHigh from './plugins/indicators/HighestHigh';
+import LowestLow from './plugins/indicators/LowestLow';
 
 /* Режимы */
 
@@ -106,6 +111,11 @@ export default (node, options) => {
   p.plugin(Bars, options);
   p.plugin(DarvasBox, options);
   p.plugin(Stochastic, options);
+  p.plugin(CCI, options);
+  p.plugin(RSI, options);
+  p.plugin(MovingAverage, options);
+  p.plugin(HighestHigh, options);
+  p.plugin(LowestLow, options);
 
   /* Режимы */
 

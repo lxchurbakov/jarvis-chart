@@ -33,6 +33,7 @@ class App extends React.Component {
 
   done = ({ indicators, graph }) => {
     console.log(indicators, graph);
+    this.chart.debug.update(indicators, graph)
   }
 
   render () {

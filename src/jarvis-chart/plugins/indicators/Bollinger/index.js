@@ -8,14 +8,12 @@ import { actionOnSelection } from '../helpers';
 const Bollinger = (p) => {
   p.on('indicators/register', () => {
     p.indicators.register('bollinger', {
-      inside: (context, meta, id) => {
+      inside: (context, { distance = 5 }, id) => {
         let { offset, count } = p.chartWindowsCrop.horizontal(id, 0, 10);
         offset = Math.max(0, offset);
         count  = Math.max(0, offset + count) - offset;
-        
-        const values = p.values.get();
-        const { distance } = meta;
 
+        const values = p.values.get();
 
         const bollinger = actionOnSelection(values, distance, distance, (selection) => {
           const ma = selection.reduce((acc, value) => acc + value.close, 0) / selection.length;
