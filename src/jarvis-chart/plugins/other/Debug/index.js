@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 
 const fpsColor = (fps) => {
   const hue = 113 * (fps / 60);

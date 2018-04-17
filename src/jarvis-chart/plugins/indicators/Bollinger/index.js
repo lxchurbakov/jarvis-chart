@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 import { actionOnSelection } from '../helpers';
 
 const INDICATOR_TYPE = 'bollinger';

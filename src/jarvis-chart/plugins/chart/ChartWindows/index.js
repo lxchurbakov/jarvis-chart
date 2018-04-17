@@ -1,4 +1,5 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
+import { update } from 'lib/lodash';
 
 /**
  * Построить матрицу преобразований для окна
@@ -96,16 +97,11 @@ const ChartWindows = (p, options) => {
       const w = p.emitSync('chart-windows/create', newWindow);
 
       /* Дополняем стейт этим новым окном */
-      p.state.update((state) => ({
-        ...state,
-        chartWindows: state.chartWindows
-          .map((w) => ({
-            ...w,
-            height: w.height * (1 - weight),
-            top: w.top * (1 - weight),
-          }))
+      p.state.update((state) => update(state, 'chartWindows', (cw) =>
+        cw
+          .map((w) => ({ ...w, height: w.height * (1 - weight), top: w.top * (1 - weight) }))
           .concat([ w ])
-      }));
+      ));
 
       return id - 1;
     },
@@ -117,7 +113,7 @@ const ChartWindows = (p, options) => {
         ...state,
         chartWindows: state.chartWindows.map(cw => cw.id === id ? updater(cw) : cw)
       }));
-      
+
       p.emitSync('chart-windows/updated', id);
     },
     /**
@@ -130,9 +126,8 @@ const ChartWindows = (p, options) => {
 
       let top = 0;
 
-      p.state.update((state) => ({
-        ...state,
-        chartWindows: state.chartWindows
+      p.state.update((state) => update(state, 'chartWindows', (cw) =>
+        cw
           .filter((w) => w.id !== id)
           .map((w) => {
             const newHeight = w.height * k;
@@ -146,7 +141,7 @@ const ChartWindows = (p, options) => {
               top: newTop,
             };
           })
-      }));
+      ));
     },
     /**
      * Переводит экранные координаты в "экранные координаты окна"

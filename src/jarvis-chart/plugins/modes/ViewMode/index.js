@@ -1,4 +1,4 @@
-const bound = (value, min, max) => Math.min(max, Math.max(min, value));
+import { bound } from 'lib/lodash';
 
 /**
  * ViewMode плагин

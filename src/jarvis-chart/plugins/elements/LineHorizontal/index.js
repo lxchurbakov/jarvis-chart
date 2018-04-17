@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 
 const drawLine = (p, context, lineHorizontal) => {
   const { start } = lineHorizontal;

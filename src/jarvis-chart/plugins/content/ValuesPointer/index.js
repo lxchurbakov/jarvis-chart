@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 
 const VALUES_POINTER_COLOR = '#FA2C50';
 

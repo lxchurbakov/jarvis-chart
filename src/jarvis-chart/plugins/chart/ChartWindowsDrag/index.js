@@ -1,4 +1,5 @@
-import { getWindowIdThatIsTouchedByBottomBorder, resizeWindowsIncreasingWindowWithId, bound } from './helpers';
+import { getWindowIdThatIsTouchedByBottomBorder, resizeWindowsIncreasingWindowWithId } from './helpers';
+import { bound } from 'lib/lodash';
 
 /**
  * ChartWindowsDrag плагин

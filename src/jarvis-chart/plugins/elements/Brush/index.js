@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 
 const drawBrush = (p, context, brush) => {
   brush.forEach((curr, index) => {
