@@ -1,5 +1,5 @@
 import { Matrix } from 'lib/geometry';
-import bound from 'lib/bound';
+import { bound, update } from 'lib/lodash';
 
 /**
  * Построить матрицу для пространства внутри окна
@@ -148,38 +148,34 @@ const ChartWindowsScaleTranslate = (p, options) => {
         zoomX = bound(zoomX, 0.1, 10);
         zoomY = bound(zoomY, 0.1, 10);
 
-        p.state.update((state) => ({
-          ...state,
-          chartWindowsScaleTranslate: {
-            ...state.chartWindowsScaleTranslate,
-            translateX, zoomX,
-          },
-          chartWindows: state.chartWindows.map(
-            (cw) => cw.id === id
-              ? ({
-                ...cw,
-                chartWindowsScaleTranslate: {
-                  ...cw.chartWindowsScaleTranslate,
-                  translateY, zoomY,
-                },
-             }) : cw
-           )
-        }));
+        p.state.update((state) => {
+          const buffer = update(state, 'chartWindowsScaleTranslate', (cswt) =>
+            ({ ...cswt, translateX, zoomX })
+          );
+
+          return update(buffer, 'chartWindows', (cw) =>
+            cw.map((cw) =>
+              cw.id === id
+                ? update(cw, 'chartWindowsScaleTranslate', (v) => ({ ...v, translateY, zoomY }))
+                : cw
+            )
+          );
+        });
 
         p.emitSync('chart-windows-scale-translate/changed', id);
       },
+      /**
+       * Обновить состояние переноса и зума по X
+       */
       x: ({ translateX, zoomX }) => {
-
         zoomX = bound(zoomX, 0.1, 10);
         // zoomY = bound(zoomY, 0.1, 10);
 
-        p.state.update((state) => ({
-          ...state,
-          chartWindowsScaleTranslate: {
-            ...state.chartWindowsScaleTranslate,
-            translateX, zoomX
-          },
-        }));
+        p.state.update((state) =>
+          update(state, 'chartWindowsScaleTranslate', (cwst) =>
+            ({ ...cswt, translateX, zoomX })
+          )
+        );
 
         p.emitSync('chart-windows-scale-translate/changed', id);
       },

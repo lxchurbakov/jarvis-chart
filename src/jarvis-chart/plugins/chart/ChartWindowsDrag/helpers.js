@@ -1,9 +1,4 @@
 /**
- * Ограничивает число с двух сторон
- */
-export const bound = (v, min, max) => Math.max(min, Math.min(max, v))
-
-/**
  * Высчитывает ID окна, границы которого касается yRelative
  */
 export const getWindowIdThatIsTouchedByBottomBorder = (windows, y, threshold = 15) => {
