@@ -44,6 +44,7 @@ import MovingAverage from './plugins/indicators/MovingAverage';
 import HighestHigh from './plugins/indicators/HighestHigh';
 import LowestLow from './plugins/indicators/LowestLow';
 import MACD from './plugins/indicators/MACD';
+import ParabolicSAR from './plugins/indicators/ParabolicSAR';
 
 /* Режимы */
 
@@ -118,6 +119,7 @@ export default (node, options) => {
   p.plugin(HighestHigh, options);
   p.plugin(LowestLow, options);
   p.plugin(MACD, options);
+  p.plugin(ParabolicSAR, options);
 
   /* Режимы */
 

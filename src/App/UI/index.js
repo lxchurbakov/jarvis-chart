@@ -79,8 +79,8 @@ const Done = ({ onClick   }) => (
 
 const indicators = [
   'bollinger', 'cci', 'rsi', 'stochastic', 'darvas-box', 'moving-average', 'highest-high',
-  'lowest-low', 'macd',
-  // 'volume', 'volume-profile', 'parabolic-sar'
+  'lowest-low', 'macd', 'parabolic-sar',
+  // 'volume', 'volume-profile',
 ]
 
 class Indicators extends React.Component {

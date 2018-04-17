@@ -86,7 +86,7 @@ const DebugInfo = (p, options) => {
     // p.chartWindows.get(1).chartWindowsScaleTranslate.autoZoom = true;
   });
 
-  const indicatorsOnMain = ['bollinger', 'highest-high', 'darvas-box', 'lowest-low', 'moving-average']
+  const indicatorsOnMain = ['bollinger', 'highest-high', 'darvas-box', 'lowest-low', 'moving-average', 'parabolic-sar']
   p.on('api', (api) => ({ ...api, debug: {
     update: (indicators, graph) => {
       p.chartWindows.all().forEach(w => (w.id !== 0) && p.chartWindows.remove(w.id));
