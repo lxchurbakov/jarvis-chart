@@ -1,4 +1,5 @@
-import { getWindowIdThatIsTouchedByBottomBorder, resizeWindowsIncreasingWindowWithId, bound } from './helpers';
+import { getWindowIdThatIsTouchedByBottomBorder, resizeWindowsIncreasingWindowWithId } from './helpers';
+import { bound } from 'lib/lodash';
 
 /**
  * ChartWindowsDrag плагин
@@ -27,7 +28,7 @@ const ChartWindowsDrag = (p, options) => {
         dragId = wId;
         dragStart = y;
         /* Заодно выставим курсор таскания */
-        p.cursor.set('move');
+        p.cursor.set('drag', 'move');
       }
     });
 
@@ -39,11 +40,12 @@ const ChartWindowsDrag = (p, options) => {
         /* Если мы уже тащим какое-то окно за его нижнюю границу */
         const diff = dragStart - y;
 
-        /* Обновим его размеры */
-        p.state.update((state) => ({
-          ...state,
-          chartWindows: resizeWindowsIncreasingWindowWithId(state.chartWindows, dragId, diff),
-        }));
+        const windows = p.chartWindows.all();
+        const newWindows = resizeWindowsIncreasingWindowWithId(windows, dragId, diff);
+
+        newWindows.forEach((w) => {
+          p.chartWindows.update(w.id, (_w) => w);
+        });
 
         dragStart = y;
       }
@@ -53,7 +55,7 @@ const ChartWindowsDrag = (p, options) => {
     p.handler.on('pathend', ({ e }) => {
       if (dragId !== null) {
         /* Если мы что-то тащили, то уберём курсор */
-        p.cursor.set('auto');
+        p.cursor.reset('drag');
         dragId = null;
       }
     });
@@ -65,9 +67,9 @@ const ChartWindowsDrag = (p, options) => {
       const wId = getWindowIdThatIsTouchedByBottomBorder(chartWindows, y);
 
       if (wId !== null) {
-        p.cursor.set('move');
+        p.cursor.set('drag', 'move');
       } else if (dragId === null) {
-        // p.cursor.set('auto');
+        p.cursor.reset('drag');
       }
     });
   });

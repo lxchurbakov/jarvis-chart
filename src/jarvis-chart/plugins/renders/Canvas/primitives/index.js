@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 
 const circle = (context, { cx, cy, radius, color, matrix, opacity = 1, crop = true }) => {
   if (matrix) {

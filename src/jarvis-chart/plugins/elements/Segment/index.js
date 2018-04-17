@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 
 const drawSegment = (p, context, segment) => {
   const { start, end } = segment;

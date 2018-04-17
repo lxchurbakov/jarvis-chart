@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix.js'
+import { Matrix } from 'lib/geometry'
 
 const last = (arr) => arr[arr.length - 1];
 

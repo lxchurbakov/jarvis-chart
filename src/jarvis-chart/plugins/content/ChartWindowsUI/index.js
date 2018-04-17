@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 
 const drawTimeline = (p, context, translate, zoom, config, id) => {
   /* Развернём конфиг */

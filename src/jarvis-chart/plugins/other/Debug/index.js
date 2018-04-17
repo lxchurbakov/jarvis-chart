@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 
 const fpsColor = (fps) => {
   const hue = 113 * (fps / 60);
@@ -76,17 +76,14 @@ const DebugInfo = (p, options) => {
     return { context, id };
   });
 
-  p.on('chart-windows/init', () => {
+  p.on('indicators/register', () => {
     p.chartWindows.create();
-    // p.chartWindows.create();
 
-    p.chartWindows.get(0).indicators.push({ type: 'candles' });
-    // p.chartWindows.get(0).indicators.push({ type: 'bollinger', meta: { tl: 5, bl: 5 } });
-    // p.chartWindows.get(1).indicators.push({ type: 'stochastic', meta: { distance: 5 } });
-    // p.chartWindows.get(1).chartWindowsScaleTranslate.autoZoom = true;
+    p.indicators.create(0, 'candles', {});
   });
 
-  const indicatorsOnMain = ['bollinger', 'highest-high', 'darvas-box', 'lowest-low', 'moving-average']
+  const indicatorsOnMain = ['bollinger', 'highest-high', 'darvas-box', 'lowest-low', 'moving-average', 'parabolic-sar'];
+
   p.on('api', (api) => ({ ...api, debug: {
     update: (indicators, graph) => {
       p.chartWindows.all().forEach(w => (w.id !== 0) && p.chartWindows.remove(w.id));
