@@ -149,8 +149,8 @@ const ChartWindowsScaleTranslate = (p, options) => {
         zoomY = bound(zoomY, 0.1, 10);
 
         p.state.update((state) => {
-          const buffer = update(state, 'chartWindowsScaleTranslate', (cswt) =>
-            ({ ...cswt, translateX, zoomX })
+          const buffer = update(state, 'chartWindowsScaleTranslate', (cwst) =>
+            ({ ...cwst, translateX, zoomX })
           );
 
           return update(buffer, 'chartWindows', (cw) =>
@@ -173,7 +173,7 @@ const ChartWindowsScaleTranslate = (p, options) => {
 
         p.state.update((state) =>
           update(state, 'chartWindowsScaleTranslate', (cwst) =>
-            ({ ...cswt, translateX, zoomX })
+            ({ ...cwst, translateX, zoomX })
           )
         );
 
