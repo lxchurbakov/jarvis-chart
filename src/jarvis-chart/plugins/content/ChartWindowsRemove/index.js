@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix, Trigonometry } from 'lib/geometry';
 
 /**
  * ChartWindowsRemove плагин
@@ -14,7 +14,7 @@ const ChartWindowsRemove = (p, options) => {
     const opacity = hoveredId === id ? 0.5 : 0.2;
 
     context.api.matrix.push(Matrix.translate(26, height - 27.5));
-    context.api.matrix.push(Matrix.rotate(Matrix.toRad(45)));
+    context.api.matrix.push(Matrix.rotate(Trigonometry.toRad(45)));
     p.render.primitives.rectangle(context, { x: 0, y: 0, width: 3, height: 20, color: '#FA2C50', opacity })
     p.render.primitives.rectangle(context, { x: -10 + 1.5, y: 10 - 1.5, width: 20, height: 3, color: '#FA2C50', opacity })
     context.api.matrix.pop();

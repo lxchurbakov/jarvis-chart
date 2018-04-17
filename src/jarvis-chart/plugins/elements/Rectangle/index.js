@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 
 const drawRectangle = (p, context, rectangle) => {
   const { start, end } = rectangle;

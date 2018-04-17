@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 
 import { movingAverage, actionOnSelection } from '../helpers';
 

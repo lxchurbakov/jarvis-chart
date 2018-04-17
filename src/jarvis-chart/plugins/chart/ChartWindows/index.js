@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 
 /**
  * Построить матрицу преобразований для окна
@@ -117,7 +117,7 @@ const ChartWindows = (p, options) => {
         ...state,
         chartWindows: state.chartWindows.map(cw => cw.id === id ? updater(cw) : cw)
       }));
-      
+
       p.emitSync('chart-windows/updated', id);
     },
     /**

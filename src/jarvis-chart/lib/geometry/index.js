@@ -1,4 +1,4 @@
 import Matrix from './matrix';
-import Trigonometry from './trigonometry';
+import * as Trigonometry from './trigonometry';
 
 export { Matrix, Trigonometry };

@@ -1,4 +1,4 @@
-import Matrix from 'lib/matrix';
+import { Matrix } from 'lib/geometry';
 
 /**
  * Собственно сам метод нахождения GridConfig'а
