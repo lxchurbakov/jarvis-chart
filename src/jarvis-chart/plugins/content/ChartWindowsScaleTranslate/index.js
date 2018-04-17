@@ -166,7 +166,7 @@ const ChartWindowsScaleTranslate = (p, options) => {
            )
         }));
 
-        p.emitSync('chart-windows-scale-translate/change', id);
+        p.emitSync('chart-windows-scale-translate/changed', id);
       },
       x: ({ translateX, zoomX }) => {
 
@@ -180,6 +180,8 @@ const ChartWindowsScaleTranslate = (p, options) => {
             translateX, zoomX
           },
         }));
+
+        p.emitSync('chart-windows-scale-translate/changed', id);
       },
     },
   };

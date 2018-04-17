@@ -117,6 +117,8 @@ const ChartWindows = (p, options) => {
         ...state,
         chartWindows: state.chartWindows.map(cw => cw.id === id ? updater(cw) : cw)
       }));
+      
+      p.emitSync('chart-windows/updated', id);
     },
     /**
      * Удаляет окно

@@ -39,11 +39,12 @@ const ChartWindowsDrag = (p, options) => {
         /* Если мы уже тащим какое-то окно за его нижнюю границу */
         const diff = dragStart - y;
 
-        /* Обновим его размеры */
-        p.state.update((state) => ({
-          ...state,
-          chartWindows: resizeWindowsIncreasingWindowWithId(state.chartWindows, dragId, diff),
-        }));
+        const windows = p.chartWindows.all();
+        const newWindows = resizeWindowsIncreasingWindowWithId(windows, dragId, diff);
+
+        newWindows.forEach((w) => {
+          p.chartWindows.update(w.id, (_w) => w);
+        });
 
         dragStart = y;
       }

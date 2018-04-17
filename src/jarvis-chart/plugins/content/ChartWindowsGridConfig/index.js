@@ -45,8 +45,26 @@ const getGridConfig = (p, id) => {
  *
  */
 const ChartWindowsGridConfig = (p, options) => {
+  let gridConfigsCache = {};
+
+  /* Если обновляется скейл транслэйт - инвалидируем кэш для всех окон */
+  p.on('chart-windows-scale-translate/changed', () => {
+    gridConfigsCache = {};
+  });
+
+  /* Если обновляется стейт окна - инвалидируем грид конфиг */
+  p.on('chart-windows/updated', (id) => {
+    gridConfigsCache[id] = null;
+  });
+
   p.chartWindowsGridConfig = {
-    get: (id) => getGridConfig(p, id)
+    get: (id) => {
+      if (!gridConfigsCache[id]) {
+        gridConfigsCache[id] = getGridConfig(p, id);
+      }
+
+      return gridConfigsCache[id];
+    }
   };
 };
 
