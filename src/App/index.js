@@ -1,6 +1,6 @@
 import React from 'react';
 
-import values from './values';
+import values from './values.ts';
 
 import Chart from '../jarvis-chart/react';
 import UI from './UI';

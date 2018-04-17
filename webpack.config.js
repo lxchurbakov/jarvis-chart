@@ -18,6 +18,7 @@ module.exports = (env) => {
 
     module: {
       rules: [
+        { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
         { test: /\.jsx?$/, loader: 'babel-loader' },
         { test: /\.html$/, loader: 'file-loader?name=[name].html' },
         { test: /\.svg$/, loader: 'file-loader' },
