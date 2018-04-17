@@ -181,7 +181,7 @@ const ChartWindowsScaleTranslate = (p, options) => {
           },
         }));
 
-        p.emitSync('chart-windows-scale-translate/changed', id);
+        p.emitSync('chart-windows-scale-translate/changed-all');
       },
     },
   };
