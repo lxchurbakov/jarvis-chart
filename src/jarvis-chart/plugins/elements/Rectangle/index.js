@@ -15,8 +15,15 @@ const Rectangle = (p) => {
   /* Создаём элемент кисть */
   p.on('elements/register', () => {
     p.elements.register('rectangle', {
-      inside: (context, rectangle) => {
-        drawRectangle(p, context, rectangle);
+      inside: (context, rectangle, id) => {
+        const { start, end } = rectangle;
+
+        if (
+          p.chartWindowsCrop.point(id, start.x, start.y) ||
+          p.chartWindowsCrop.point(id, end.x, end.y)
+        ) {
+          drawRectangle(p, context, rectangle);
+        }
       }
     });
   });
