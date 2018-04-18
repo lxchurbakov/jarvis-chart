@@ -1,9 +1,11 @@
 import { Matrix } from 'lib/geometry';
 
 const drawBrush = (p, context, brush) => {
-  brush.forEach((curr, index) => {
+  const { points } = brush;
+
+  points.forEach((curr, index) => {
     if (index > 0) {
-      const prev = brush[index - 1];
+      const prev = points[index - 1];
       p.render.primitives.line(context, { x0: prev.x, y0: prev.y, x1: curr.x, y1: curr.y, color: '#FA2C50' });
     }
   });
@@ -28,7 +30,17 @@ const Brush = (p) => {
   /* Создаём элемент кисть */
   p.on('elements/register', () => {
     p.elements.register('brush', {
-      inside: (context, brush) => {
+      inside: (context, brush, id) => {
+        const { bounds } = brush;
+
+        if (bounds) {
+          const { mx, mn } = bounds;
+
+          if (
+            !(p.chartWindowsCrop.point(id, mx.x, mx.y) || p.chartWindowsCrop.point(id, mn.x, mn.y))
+          ) return;
+        }
+
         drawBrush(p, context, brush);
       }
     });
@@ -49,7 +61,7 @@ const Brush = (p) => {
 
   p.on('handler/attach', () => {
     p.handler.on('chart-windows-modes/brush/pathstart', ({ x, y, e, id }) => {
-      p.chartWindows.update(id, (w) => ({ ...w, brush: [] }));
+      p.chartWindows.update(id, (w) => ({ ...w, brush: { points: [], bounds: null } }));
     });
 
     p.handler.on('chart-windows-modes/brush/path', ({ x, y, e, id }) => {
@@ -61,11 +73,25 @@ const Brush = (p) => {
 
       const newPoint = { x: xreal, y: yreal };
 
-      p.chartWindows.update(id, (w) => ({ ...w, brush: w.brush.concat([ newPoint ]) }));
+      p.chartWindows.update(id, (w) => ({ ...w, brush: { ...w.brush, points: w.brush.points.concat([ newPoint ]) } }));
     });
 
     p.handler.on('chart-windows-modes/brush/pathend', ({ x, y, e, id }) => {
       const { brush } = p.chartWindows.get(id);
+
+      const { points } = brush;
+
+      const mx = {
+        x: points.reduce((acc, point) => Math.max(acc, point.x), -Infinity),
+        y: points.reduce((acc, point) => Math.max(acc, point.y), -Infinity),
+      };
+
+      const mn = {
+        x: points.reduce((acc, point) => Math.min(acc, point.x), Infinity),
+        y: points.reduce((acc, point) => Math.min(acc, point.y), Infinity),
+      };
+
+      brush.bounds = { mx, mn };
 
       p.elements.push(id, { type: 'brush', meta: brush });
 
