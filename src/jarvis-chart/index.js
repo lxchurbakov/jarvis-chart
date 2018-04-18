@@ -14,7 +14,6 @@ import ChartValues from './plugins/chart/ChartValues';
 import ChartWindows from './plugins/chart/ChartWindows';
 import ChartWindowsEvents from './plugins/chart/ChartWindowsEvents';
 import ChartWindowsDrag from './plugins/chart/ChartWindowsDrag';
-import ChartWindowsCrop from './plugins/chart/ChartWindowsCrop';
 import ChartWindowsModes from './plugins/chart/ChartWindowsModes';
 
 /* Content плагины */
@@ -22,6 +21,7 @@ import ChartWindowsModes from './plugins/chart/ChartWindowsModes';
 import ChartWindowsRemove from './plugins/content/ChartWindowsRemove';
 import ChartWindowsLayers from './plugins/content/ChartWindowsLayers';
 import ChartWindowsScaleTranslate from './plugins/content/ChartWindowsScaleTranslate';
+import ChartWindowsCrop from './plugins/content/ChartWindowsCrop';
 import ChartWindowsGridConfig from './plugins/content/ChartWindowsGridConfig';
 import ChartWindowsGrid from './plugins/content/ChartWindowsGrid';
 import ChartWindowsUI from './plugins/content/ChartWindowsUI';
@@ -89,7 +89,6 @@ export default (node, options) => {
   p.plugin(ChartWindows, options);
   p.plugin(ChartWindowsEvents, options);
   p.plugin(ChartWindowsDrag, options);
-  p.plugin(ChartWindowsCrop, options);
   p.plugin(ChartWindowsModes, options);
 
   /* Content плагины */
@@ -97,6 +96,7 @@ export default (node, options) => {
   p.plugin(ChartWindowsRemove, options);
   p.plugin(ChartWindowsLayers, options);
   p.plugin(ChartWindowsScaleTranslate, options);
+  p.plugin(ChartWindowsCrop, options);
   p.plugin(ChartWindowsGridConfig, options);
   p.plugin(ChartWindowsGrid, options);
   p.plugin(ChartWindowsUI, options);
