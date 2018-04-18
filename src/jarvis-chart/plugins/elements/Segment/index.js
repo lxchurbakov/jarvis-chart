@@ -25,8 +25,15 @@ const Segment = (p) => {
   /* Создаём элемент кисть */
   p.on('elements/register', () => {
     p.elements.register('segment', {
-      inside: (context, segment) => {
-        drawSegment(p, context, segment);
+      inside: (context, segment, id) => {
+        const { start, end } = segment;
+        
+        if (
+          p.chartWindowsCrop.point(id, start.x, start.y) ||
+          p.chartWindowsCrop.point(id, end.x, end.y)
+        ) {
+          drawSegment(p, context, segment);
+        }
       }
     });
   });

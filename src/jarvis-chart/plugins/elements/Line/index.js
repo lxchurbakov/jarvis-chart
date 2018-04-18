@@ -62,7 +62,7 @@ const Line = (p) => {
 
     p.handler.on('chart-windows-modes/line/pathend', ({ x, y, e, id }) => {
       const { line } = p.chartWindows.get(id);
-
+      console.warn('Line инструмент не оптимизирован')
       p.elements.push(id, { type: 'line', meta: line });
 
       p.chartWindows.update(id, (w) => ({ ...w, line: null }));

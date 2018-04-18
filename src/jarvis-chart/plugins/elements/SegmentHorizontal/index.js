@@ -25,8 +25,15 @@ const SegmentHorizontal = (p) => {
   /* Создаём элемент кисть */
   p.on('elements/register', () => {
     p.elements.register('segment-horizontal', {
-      inside: (context, segmentHorizontal) => {
-        drawSegment(p, context, segmentHorizontal);
+      inside: (context, segmentHorizontal, id) => {
+        const { start, end } = segmentHorizontal;
+
+        if (
+          p.chartWindowsCrop.point(id, start.x, start.y) ||
+          p.chartWindowsCrop.point(id, end.x, end.y, true, false)
+        ) {
+          drawSegment(p, context, segmentHorizontal);
+        }
       }
     });
   });

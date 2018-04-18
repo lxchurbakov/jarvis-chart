@@ -7,6 +7,10 @@ import { Matrix } from 'lib/geometry';
  *
  */
 const ChartCrop = (p, options) => {
+  /**
+   * Находит количество и начальный индекс элементов, которые начинаются с точки start по X и имеют ширину len.
+   * Метод существует специально для таймлайна и видимости свечей/values
+   */
   const horizontal = (id, start, len) => {
     const matrix = p.chartWindowsScaleTranslate.matrix.x(id);
 
@@ -23,7 +27,10 @@ const ChartCrop = (p, options) => {
 
     return { offset: firstVisibleCandleIndex, count: visibleCandlesCount };
   };
-
+  /**
+   * Находит количество и начальный индекс элементов, которые начинаются с точки start по Y и имеют высоту len.
+   * Метод существует специально для прайслайна и Volume Profile
+   */
   const vertical = (id, start, len) => {
     const matrix = p.chartWindowsScaleTranslate.matrix.y(id);
 
@@ -40,14 +47,35 @@ const ChartCrop = (p, options) => {
 
     return { offset: firstVisibleCandleIndex, count: visibleCandlesCount };
   };
+  /**
+   * Определяет, видима ли точка x;y в окне id
+   */
+  const point = (id, x, y, checkX = true, checkY = true) => {
+    const matrix = p.chartWindowsScaleTranslate.matrix.xy(id);
+    const { width, height } = p.chartWindows.get(id);
+    const [ xreal, yreal ] = Matrix.apply([ x, y ], matrix);
 
-  p.chartWindowsCrop = { horizontal, vertical };
+    if (checkX) {
+      if (xreal < 0 || xreal >= width) return false;
+    }
+
+    if (checkY) {
+      if (yreal < 0 || yreal >= height) return false;
+    }
+
+    return true;
+  };
+  /**
+   * Строим API
+   */
+  p.chartWindowsCrop = { horizontal, vertical, point };
 };
 
 ChartCrop.plugin = {
   name: 'chart-crop',
   dependencies: {
     'chart-windows': '1.0.0',
+    'chart-windows-scale-translate': '1.0.0',
   },
 };
 
