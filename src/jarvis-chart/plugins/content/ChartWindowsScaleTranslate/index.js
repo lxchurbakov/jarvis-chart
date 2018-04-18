@@ -179,8 +179,8 @@ const ChartWindowsScaleTranslate = (p, options) => {
           );
         });
 
-        windowMatrixes[id] = null;
-        pricelineMatrixes[id] = null;
+        windowMatrixes = {};
+        pricelineMatrixes = {};
         timelineMatrix = null;
 
         p.emitSync('chart-windows-scale-translate/changed', id);
@@ -198,6 +198,8 @@ const ChartWindowsScaleTranslate = (p, options) => {
           )
         );
 
+        windowMatrixes = {};
+        pricelineMatrixes = {};
         timelineMatrix = null;
 
         p.emitSync('chart-windows-scale-translate/changed-all');
