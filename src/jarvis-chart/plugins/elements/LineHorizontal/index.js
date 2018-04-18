@@ -14,8 +14,12 @@ const LineHorizontal = (p) => {
   /* Создаём элемент кисть */
   p.on('elements/register', () => {
     p.elements.register('line-horizontal', {
-      inside: (context, lineHorizontal) => {
-        drawLine(p, context, lineHorizontal);
+      inside: (context, lineHorizontal, id) => {
+        const { start } = lineHorizontal;
+
+        if (p.chartWindowsCrop.point(id, start.x, start.y, false, true)) {
+          drawLine(p, context, lineHorizontal);
+        }
       }
     });
   });

@@ -50,17 +50,20 @@ const ChartCrop = (p, options) => {
   /**
    * Определяет, видима ли точка x;y в окне id
    */
-  const point = (id, x, y) => {
+  const point = (id, x, y, checkX = true, checkY = true) => {
     const matrix = p.chartWindowsScaleTranslate.matrix.xy(id);
     const { width, height } = p.chartWindows.get(id);
     const [ xreal, yreal ] = Matrix.apply([ x, y ], matrix);
 
-    return (
-      xreal >= 0 &&
-      xreal < width &&
-      yreal >= 0 &&
-      yreal < height
-    );
+    if (checkX) {
+      if (xreal < 0 || xreal >= width) return false;
+    }
+
+    if (checkY) {
+      if (yreal < 0 || yreal >= height) return false;
+    }
+
+    return true;
   };
   /**
    * Строим API
