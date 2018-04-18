@@ -41,7 +41,20 @@ const ChartCrop = (p, options) => {
     return { offset: firstVisibleCandleIndex, count: visibleCandlesCount };
   };
 
-  p.chartWindowsCrop = { horizontal, vertical };
+  const point = (id, x, y) => {
+    const matrix = p.chartWindowsScaleTranslate.matrix.xy(id);
+    const { width, height } = p.chartWindows.get(id);
+    const [ xreal, yreal ] = Matrix.apply([ x, y ], matrix);
+
+    return (
+      xreal >= 0 &&
+      xreal < width &&
+      yreal >= 0 &&
+      yreal < height
+    );
+  };
+
+  p.chartWindowsCrop = { horizontal, vertical, point };
 };
 
 ChartCrop.plugin = {

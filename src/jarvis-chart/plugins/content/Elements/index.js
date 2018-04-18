@@ -14,7 +14,7 @@ const Elements = (p) => {
       const config = elementsConfigs[type];
 
       if (config.inside) {
-        config.inside(context, meta);
+        config.inside(context, meta, id);
       } else {
         console.warnOnce(`Элемент ${type} не имеет метода отрисовки`);
       }
