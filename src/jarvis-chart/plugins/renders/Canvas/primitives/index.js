@@ -104,6 +104,39 @@ const polyline = (context, { points, width, opacity = 1, color, matrix }) => {
   }
 };
 
+const polygone = (context, { points, width, opacity = 1, color, matrix }) => {
+  if (matrix) {
+    context.api.matrix.push(matrix);
+  }
+
+  context.beginPath();
+
+  points.forEach((point, index) => {
+    const { x, y } = point;
+
+    if (index === 0) {
+      context.moveTo(x, y);
+    } else {
+      context.lineTo(x, y);
+    }
+  });
+
+  context.lineWidth = 0;
+  context.globalAlpha = opacity;
+  context.fillStyle = color;
+
+  /* Descale line */
+  context.api.matrix.replace(Matrix.identity());
+
+  context.fill();
+
+  context.api.matrix.pop();
+
+  if (matrix) {
+    context.api.matrix.pop();
+  }
+};
+
 const rectangle = (context, { x, y, width, height, opacity = 1, color, matrix }) => {
   if (matrix) {
     context.api.matrix.push(matrix);
@@ -148,4 +181,4 @@ const text = (context, { x, y, font = "13px arial", text, matrix, textAlign = 'c
 
 console.warn('CROP для инструментов canvas\'а не реализован')
 
-export default { circle, ellipse, group, line, polyline, rectangle, text };
+export default { circle, ellipse, group, line, polyline, polygone, rectangle, text };
