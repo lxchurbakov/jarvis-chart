@@ -179,6 +179,4 @@ const text = (context, { x, y, font = "13px arial", text, matrix, textAlign = 'c
   }
 };
 
-console.warn('CROP для инструментов canvas\'а не реализован')
-
-export default { circle, ellipse, group, line, polyline, polygone, rectangle, text };
+export default { circle, ellipse, group, line, polyline, rectangle, text };
