@@ -15,9 +15,37 @@ const Rectangle = (p) => {
   /* Создаём элемент кисть */
   p.on('elements/register', () => {
     p.elements.register('rectangle', {
-      inside: (context, rectangle) => {
-        drawRectangle(p, context, rectangle);
-      }
+      inside: (context, rectangle, id) => {
+        const { start, end } = rectangle;
+
+        if (
+          p.chartWindowsCrop.point(id, start.x, start.y) ||
+          p.chartWindowsCrop.point(id, end.x, end.y)
+        ) {
+          drawRectangle(p, context, rectangle);
+        }
+      },
+      hovers: (id, x, y, meta) => {
+        const { start, end } = meta;
+
+        if (start && end) {
+          const matrix = p.chartWindowsScaleTranslate.matrix.xy(id);
+
+          const [xreal, yreal] = Matrix.apply([x, y], matrix.reverse());
+
+          return (
+            (
+              (xreal > start.x && xreal < end.x) ||
+              (xreal < start.x && xreal > end.x)
+            ) && (
+              (yreal > start.y && yreal < end.y) ||
+              (yreal < start.y && yreal > end.y)
+            )
+          );
+        } else {
+          return false;
+        }
+      },
     });
   });
 

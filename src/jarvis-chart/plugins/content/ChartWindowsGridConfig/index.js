@@ -49,7 +49,7 @@ const ChartWindowsGridConfig = (p, options) => {
 
   /* Если обновляется скейл транслэйт - инвалидируем кэш для всех окон */
   p.on('chart-windows-scale-translate/changed', (id) => {
-    gridConfigsCache[id] = null
+    gridConfigsCache = {};
   });
 
   p.on('chart-windows-scale-translate/changed-all', () => {

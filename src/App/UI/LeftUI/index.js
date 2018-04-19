@@ -34,6 +34,7 @@ const LeftUI = ({
   onEye, onPaint,
   onVector, onLineCircle, onLineCircleHorizontal, onSegmentDiagonal,
   onSegmentHorizontal, onRectangle, onCircle, onTriangle, onText,
+  onGoldenRatio, onEraser,
 }) => (
   <LeftUIWrap>
     {/* <div><FileIcon width={25} height={25} /></div> */}
@@ -46,10 +47,10 @@ const LeftUI = ({
     <div onClick={onSegmentDiagonal}><SegmentDiagonalIcon width={25} height={25} /></div>
     <div onClick={onSegmentHorizontal}><SegmentHorizontalIcon width={25} height={25} /></div>
     <div onClick={onRectangle}><RectangleIcon width={25} height={25} /></div>
-    {/*<div onClick={onCircle}><CircleIcon width={25} height={25} /></div> */}
-    {/*<div onClick={onTriangle}><TriangleIcon width={25} height={25} /></div> */}
-    {/* <div onClick={onFile}><GoldenRatioIcon width={25} height={25} /></div> */}
-    {/* <div onClick={onFile}><EraserIcon width={25} height={25} /></div> */}
+    <div onClick={onCircle}><CircleIcon width={25} height={25} /></div>
+    <div onClick={onTriangle}><TriangleIcon width={25} height={25} /></div>
+    <div onClick={onGoldenRatio}><GoldenRatioIcon width={25} height={25} /></div>
+    <div onClick={onEraser}><EraserIcon width={25} height={25} /></div>
     {/* <div onClick={onFile}><PencilIcon width={25} height={25} /></div> */}
     {/*<div onClick={onText}><TextIcon width={25} height={25} /></div> */}
     {/* <div onClick={onFile}><UndoIcon width={25} height={25} /></div> */}

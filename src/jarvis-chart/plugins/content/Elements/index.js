@@ -14,7 +14,7 @@ const Elements = (p) => {
       const config = elementsConfigs[type];
 
       if (config.inside) {
-        config.inside(context, meta);
+        config.inside(context, meta, id);
       } else {
         console.warnOnce(`Элемент ${type} не имеет метода отрисовки`);
       }
@@ -28,12 +28,26 @@ const Elements = (p) => {
 
   /* Создаём API для элементов */
   p.elements = {
+    /**
+     * Зарегистрировать новый тип элемента
+     */
     register: (type, config) => elementsConfigs[type] = config,
+    /**
+     * Добавить элемент в окно ID
+     */
     push: (id, element) => {
       p.chartWindows.update(id, (w) => ({
         ...w,
         elements: w.elements.concat([element])
       }));
+    },
+    /**
+     * Проверить, попадает ли курсор с координатами x y в элемент
+     */
+    hovers: (id, x, y, element) => {
+      const { type, meta } = element;
+
+      return elementsConfigs[type].hovers && elementsConfigs[type].hovers(id, x, y, meta);
     },
   };
 

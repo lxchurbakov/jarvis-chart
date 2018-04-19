@@ -12,8 +12,8 @@ import CircleButton from '../../components/CircleButton';
 
 const indicators = [
   'bollinger', 'cci', 'rsi', 'stochastic', 'darvas-box', 'moving-average', 'highest-high',
-  'lowest-low', 'macd', 'parabolic-sar',
-  // 'volume', 'volume-profile',
+  'lowest-low', 'macd', 'parabolic-sar', 'volume'
+  // 'volume-profile',
 ];
 
 const Done = ({ onClick   }) => (

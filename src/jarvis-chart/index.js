@@ -14,7 +14,6 @@ import ChartValues from './plugins/chart/ChartValues';
 import ChartWindows from './plugins/chart/ChartWindows';
 import ChartWindowsEvents from './plugins/chart/ChartWindowsEvents';
 import ChartWindowsDrag from './plugins/chart/ChartWindowsDrag';
-import ChartWindowsCrop from './plugins/chart/ChartWindowsCrop';
 import ChartWindowsModes from './plugins/chart/ChartWindowsModes';
 
 /* Content плагины */
@@ -22,6 +21,7 @@ import ChartWindowsModes from './plugins/chart/ChartWindowsModes';
 import ChartWindowsRemove from './plugins/content/ChartWindowsRemove';
 import ChartWindowsLayers from './plugins/content/ChartWindowsLayers';
 import ChartWindowsScaleTranslate from './plugins/content/ChartWindowsScaleTranslate';
+import ChartWindowsCrop from './plugins/content/ChartWindowsCrop';
 import ChartWindowsGridConfig from './plugins/content/ChartWindowsGridConfig';
 import ChartWindowsGrid from './plugins/content/ChartWindowsGrid';
 import ChartWindowsUI from './plugins/content/ChartWindowsUI';
@@ -45,10 +45,12 @@ import HighestHigh from './plugins/indicators/HighestHigh';
 import LowestLow from './plugins/indicators/LowestLow';
 import MACD from './plugins/indicators/MACD';
 import ParabolicSAR from './plugins/indicators/ParabolicSAR';
+import Volume from './plugins/indicators/Volume';
 
 /* Режимы */
 
 import ViewMode from './plugins/modes/ViewMode';
+import EraseMode from './plugins/modes/EraseMode';
 
 /* Элементы */
 
@@ -58,11 +60,15 @@ import LineHorizontal from './plugins/elements/LineHorizontal';
 import Segment from './plugins/elements/Segment';
 import SegmentHorizontal from './plugins/elements/SegmentHorizontal';
 import Rectangle from './plugins/elements/Rectangle';
+import Fibonacci from './plugins/elements/Fibonacci';
+import Ellipse from './plugins/elements/Ellipse';
+import Triangle from './plugins/elements/Triangle';
 
 /* Рендеры */
 
 import RenderCanvas from './plugins/renders/Canvas';
 import RenderSvg from './plugins/renders/Svg';
+import RenderWebGL from './plugins/renders/WebGL';
 
 /* Всякое */
 
@@ -89,7 +95,6 @@ export default (node, options) => {
   p.plugin(ChartWindows, options);
   p.plugin(ChartWindowsEvents, options);
   p.plugin(ChartWindowsDrag, options);
-  p.plugin(ChartWindowsCrop, options);
   p.plugin(ChartWindowsModes, options);
 
   /* Content плагины */
@@ -97,6 +102,7 @@ export default (node, options) => {
   p.plugin(ChartWindowsRemove, options);
   p.plugin(ChartWindowsLayers, options);
   p.plugin(ChartWindowsScaleTranslate, options);
+  p.plugin(ChartWindowsCrop, options);
   p.plugin(ChartWindowsGridConfig, options);
   p.plugin(ChartWindowsGrid, options);
   p.plugin(ChartWindowsUI, options);
@@ -120,10 +126,12 @@ export default (node, options) => {
   p.plugin(LowestLow, options);
   p.plugin(MACD, options);
   p.plugin(ParabolicSAR, options);
+  p.plugin(Volume, options);
 
   /* Режимы */
 
   p.plugin(ViewMode, options);
+  p.plugin(EraseMode, options);
 
   /* Элементы */
 
@@ -133,6 +141,9 @@ export default (node, options) => {
   p.plugin(Segment, options);
   p.plugin(SegmentHorizontal, options);
   p.plugin(Rectangle, options);
+  p.plugin(Fibonacci, options);
+  p.plugin(Ellipse, options);
+  p.plugin(Triangle, options);
 
   /* Всякое */
 
@@ -142,6 +153,7 @@ export default (node, options) => {
 
   p.plugin(RenderCanvas, options);
   p.plugin(RenderSvg, options);
+  p.plugin(RenderWebGL, options);
 
   /* Emit mount action */
 

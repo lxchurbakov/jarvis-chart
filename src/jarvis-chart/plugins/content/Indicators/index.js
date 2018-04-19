@@ -36,6 +36,8 @@ const Indicators = (p) => {
         indicators: w.indicators.concat([newIndicator]),
       }));
 
+      p.emitSync('indicators/created', { id, type, meta, indicatorId });
+
       return indicatorId;
     },
     /**
@@ -46,6 +48,7 @@ const Indicators = (p) => {
         ...w,
         indicators: w.indicators.filter(i => i.indicatorId !== indicatorId),
       }));
+      p.emitSync('indicators/removed', { id, indicatorId });
     },
   };
 

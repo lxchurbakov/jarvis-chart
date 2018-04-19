@@ -9,7 +9,7 @@ import { getParameterByName } from './helpers';
 
 const render       = getParameterByName('render') || 'canvas';
 const doubleBuffer = (getParameterByName('double-buffer') || 'on') === 'on';
-const clickThreshold = 100;
+const clickThreshold = 200;
 
 class App extends React.Component {
   left  = () => this.chart.chartWindowsScaleTranslate.translate(200);
@@ -30,6 +30,12 @@ class App extends React.Component {
   circle    = () => this.chart.chartWindowsModes.set('ellipse');
   triangle  = () => this.chart.chartWindowsModes.set('triangle');
   text      = () => this.chart.chartWindowsModes.set('text');
+
+  fibonacci = () => this.chart.chartWindowsModes.set('fibonacci');
+  ellipse   = () => this.chart.chartWindowsModes.set('ellipse');
+  triangle  = () => this.chart.chartWindowsModes.set('triangle');
+
+  erase  = () => this.chart.chartWindowsModes.set('erase');
 
   /* Временный метод и временный мост с графиком */
   done = ({ indicators, graph }) => this.chart.debug.update(indicators, graph)
@@ -64,6 +70,10 @@ class App extends React.Component {
           onCircle={this.circle}
           onTriangle={this.triangle}
           onText={this.text}
+          onGoldenRatio={this.fibonacci}
+          onCircle={this.ellipse}
+          onTriangle={this.triangle}
+          onEraser={this.erase}
           modal={modal}
           onDone={this.done}
         >

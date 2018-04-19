@@ -56,6 +56,11 @@ const ChartWindowsScaleTranslate = (p, options) => {
   p.on('state/default', (state) => ({ ...state, chartWindowsScaleTranslate: { translateX: 0, zoomX: 1 }}));
   p.on('chart-windows/create', (w) => ({ ...w, chartWindowsScaleTranslate: { translateY: 0, zoomY: 1, autoZoom: true }}));
 
+  let windowMatrixes = {};
+  let pricelineMatrixes = {};
+
+  let timelineMatrix = null;
+
   /* chartWindowsScaleTranslate API */
   p.chartWindowsScaleTranslate = {
     /* Методы для работы с сырыми значениями */
@@ -112,30 +117,42 @@ const ChartWindowsScaleTranslate = (p, options) => {
        * Получить матрицу для переноса и масштаба только по оси X. Y остаётся неизменен
        */
       x: () => {
-        const { translateX, zoomX } = p.chartWindowsScaleTranslate.raw.x();
-        const translate = { x: translateX };
-        const zoom = { x: zoomX };
-        const { width } = options;
+        if (timelineMatrix === null) {
+          const { translateX, zoomX } = p.chartWindowsScaleTranslate.raw.x();
+          const translate = { x: translateX };
+          const zoom = { x: zoomX };
+          const { width } = options;
 
-        return matrixForTimeline(translate, zoom, width);
+          timelineMatrix = matrixForTimeline(translate, zoom, width);
+        }
+
+        return timelineMatrix;
       },
       /**
        * Аналогичная матрица, только для Y - не может быть вызвана в режиме определения автозума
        */
       y: (id) => {
-        const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
-        const { width } = options;
+        if (!pricelineMatrixes[id]) {
+          const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
+          const { width } = options;
 
-        return matrixForPriceline(translate, zoom, width);
+          pricelineMatrixes[id] = matrixForPriceline(translate, zoom, width);
+        }
+
+        return pricelineMatrixes[id];
       },
       /**
        * Аналогичная матрица, только для всего окна - не может быть вызвана в режиме определения автозума
        */
       xy: (id) => {
-        const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
-        const { width } = options;
+        if (!windowMatrixes[id]) {
+          const { translate, zoom } = p.chartWindowsScaleTranslate.get(id);
+          const { width } = options;
 
-        return matrixForWindow(translate, zoom, width);
+          windowMatrixes[id] = matrixForWindow(translate, zoom, width)
+        }
+
+        return windowMatrixes[id];
       },
     },
     /* Обновим перенос и зум */
@@ -162,6 +179,10 @@ const ChartWindowsScaleTranslate = (p, options) => {
           );
         });
 
+        windowMatrixes = {};
+        pricelineMatrixes = {};
+        timelineMatrix = null;
+
         p.emitSync('chart-windows-scale-translate/changed', id);
       },
       /**
@@ -177,10 +198,29 @@ const ChartWindowsScaleTranslate = (p, options) => {
           )
         );
 
+        windowMatrixes = {};
+        pricelineMatrixes = {};
+        timelineMatrix = null;
+
         p.emitSync('chart-windows-scale-translate/changed-all');
       },
     },
   };
+
+  /**
+   * В момент, когда создаётся или удаляется индикатор, мы должны инвалидировать кэш матриц - т.к. наличие индикаторов корректирует автозум
+   * TODO подумать о том, где должен располагаться этот код. Возможно следует сделать API
+   * для инвалидации кэша и в Indicators плагине юзать его
+   */
+  p.on('indicators/created', ({ id }) => {
+    pricelineMatrixes[id] = null;
+    windowMatrixes[id] = null;
+  });
+
+  p.on('indicators/removed', ({ id }) => {
+    pricelineMatrixes[id] = null;
+    windowMatrixes[id] = null;
+  });
 
   p.on('api', (api) => ({ ...api, chartWindowsScaleTranslate: {
     translate: (delta) => {

@@ -48,7 +48,9 @@ export default (options) => {
           entry.acc = entry.matrix;
         } else {
           if (!entry.acc) {
-            entry.acc = Matrix.multiply(stack[index - 1].acc, entry.matrix);
+            entry.acc = options.reverse
+              ? Matrix.multiply(entry.matrix, stack[index - 1].acc)
+              : Matrix.multiply(stack[index - 1].acc, entry.matrix);
           }
         }
       });
