@@ -35,9 +35,7 @@ const Line = (p) => {
 
   p.on('handler/attach', () => {
     p.handler.on('chart-windows-modes/line/pathstart', ({ x, y, e, id }) => {
-      const matrix = Matrix.join(
-        p.chartWindowsScaleTranslate.matrix.xy(id),
-      );
+      const matrix = p.chartWindowsScaleTranslate.matrix.xy(id)
 
       const [ xreal, yreal ] = Matrix.apply([x, y], matrix.reverse());
 
@@ -45,9 +43,7 @@ const Line = (p) => {
     });
 
     p.handler.on('chart-windows-modes/line/path', ({ x, y, e, id }) => {
-      const matrix = Matrix.join(
-        p.chartWindowsScaleTranslate.matrix.xy(id),
-      );
+      const matrix = p.chartWindowsScaleTranslate.matrix.xy(id)
 
       const [ xreal, yreal ] = Matrix.apply([x, y], matrix.reverse());
       const newPoint = { x: xreal, y: yreal };
@@ -62,7 +58,9 @@ const Line = (p) => {
 
     p.handler.on('chart-windows-modes/line/pathend', ({ x, y, e, id }) => {
       const { line } = p.chartWindows.get(id);
-      console.warn('Line инструмент не оптимизирован')
+
+      console.warn('Line инструмент не оптимизирован');
+
       p.elements.push(id, { type: 'line', meta: line });
 
       p.chartWindows.update(id, (w) => ({ ...w, line: null }));

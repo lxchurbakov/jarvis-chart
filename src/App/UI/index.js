@@ -28,7 +28,7 @@ export default ({
   children,
   onPaint, onEye, onVector, onLineCircle, onLineCircleHorizontal, onSegmentDiagonal,
   onSegmentHorizontal, onRectangle, onCircle, onTriangle, onText,
-  onLeft, onRight, onZoomIn, onZoomOut,
+  onLeft, onRight, onZoomIn, onZoomOut, onGoldenRatio,
   modal, onDone,
 }) => (
   <UIWrap>
@@ -39,7 +39,7 @@ export default ({
       onLineCircle={onLineCircle} onLineCircleHorizontal={onLineCircleHorizontal}
       onSegmentDiagonal={onSegmentDiagonal} onSegmentHorizontal={onSegmentHorizontal}
       onRectangle={onRectangle} onCircle={onCircle} onTriangle={onTriangle}
-      onText={onText}
+      onText={onText} onGoldenRatio={onGoldenRatio}
     />
   </UIWrap>
 );
