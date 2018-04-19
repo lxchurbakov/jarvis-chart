@@ -32,6 +32,7 @@ class App extends React.Component {
   text      = () => this.chart.chartWindowsModes.set('text');
 
   fibonacci = () => this.chart.chartWindowsModes.set('fibonacci');
+  ellipse   = () => this.chart.chartWindowsModes.set('ellipse');
 
   /* Временный метод и временный мост с графиком */
   done = ({ indicators, graph }) => this.chart.debug.update(indicators, graph)
@@ -67,6 +68,7 @@ class App extends React.Component {
           onTriangle={this.triangle}
           onText={this.text}
           onGoldenRatio={this.fibonacci}
+          onCircle={this.ellipse}
           modal={modal}
           onDone={this.done}
         >

@@ -39,7 +39,7 @@ export default ({
       onLineCircle={onLineCircle} onLineCircleHorizontal={onLineCircleHorizontal}
       onSegmentDiagonal={onSegmentDiagonal} onSegmentHorizontal={onSegmentHorizontal}
       onRectangle={onRectangle} onCircle={onCircle} onTriangle={onTriangle}
-      onText={onText} onGoldenRatio={onGoldenRatio}
+      onText={onText} onGoldenRatio={onGoldenRatio} onCircle={onCircle}
     />
   </UIWrap>
 );

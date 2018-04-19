@@ -60,6 +60,7 @@ import Segment from './plugins/elements/Segment';
 import SegmentHorizontal from './plugins/elements/SegmentHorizontal';
 import Rectangle from './plugins/elements/Rectangle';
 import Fibonacci from './plugins/elements/Fibonacci';
+import Ellipse from './plugins/elements/Ellipse';
 
 /* Рендеры */
 
@@ -137,6 +138,7 @@ export default (node, options) => {
   p.plugin(SegmentHorizontal, options);
   p.plugin(Rectangle, options);
   p.plugin(Fibonacci, options);
+  p.plugin(Ellipse, options);
 
   /* Всякое */
 
