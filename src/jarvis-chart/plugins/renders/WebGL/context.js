@@ -1,4 +1,5 @@
 import Transform from 'lib/transform';
+import { Matrix } from 'lib/geometry';
 
 // 1.0,  1.0,
 // -1.0,  1.0,
@@ -30,23 +31,21 @@ export default (node, options) => {
 
   /* TODO продолжать только если WebGL доступен и работает */
   context.viewport(0, 0, width, height);
-  context.clearColor(1.0, 0.0, 1.0, 1.0);
-  // context.enable(context.COLOR_BUFFER_BIT);
+  context.clearColor(1.0, 1.0, 1.0, 1.0);
 
-  // Vertex shader program
   const vsSource = `
-    attribute vec3 aVertexPosition;
+    attribute vec4 aVertexPosition;
 
-    uniform mat3 uModelViewMatrix;
+    uniform mat4 uModelViewMatrix;
 
     void main() {
-      gl_Position = vec4((uModelViewMatrix * aVertexPosition).xyz, 1.0);
+      gl_Position = uModelViewMatrix * aVertexPosition;
     }
   `;
 
   const fsSource = `
     void main() {
-      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+      gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
     }
   `;
 
@@ -91,14 +90,6 @@ export default (node, options) => {
   const positionBuffer = context.createBuffer();
   context.bindBuffer(context.ARRAY_BUFFER, positionBuffer);
 
-  const positions = [
-
-    0.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,
-  ];
-
   const numComponents = 2;  // pull out 2 values per iteration
   const type = context.FLOAT;    // the data in the buffer is 32bit floats
   const normalize = false;  // don't normalize
@@ -118,50 +109,71 @@ export default (node, options) => {
     programInfo.attribLocations.vertexPosition
   );
 
+  context.bindBuffer(context.ARRAY_BUFFER, positionBuffer);
+  context.useProgram(programInfo.program);
+
   context.$clear = context.clear;
 
   context.clear = () => {
     context.$clear(context.COLOR_BUFFER_BIT);
+
+    context.api.matrix.push(Matrix.translate(-1, 1));
+    context.api.matrix.push(Matrix.scale(2, -2));
+    context.api.matrix.push(Matrix.scale(1/options.width, 1/options.height));
   };
 
-  context.bindBuffer(context.ARRAY_BUFFER, positionBuffer);
-  context.useProgram(programInfo.program);
-
   context.flush = () => {
-    positions[0] += 0.01;
-    context.bufferData(context.ARRAY_BUFFER, new Float32Array(positions), context.DYNAMIC_DRAW);
-
-    context.uniformMatrix3fv(
-      programInfo.uniformLocations.modelViewMatrix,
-      false,
-      [1, 0, 0, 0, 1, 0, 0, 0, 1]
-    );
-
-    {
-      const offset = 0;
-      const vertexCount = 4;
-      context.drawArrays(context.TRIANGLE_STRIP, offset, vertexCount);
-    }
+    context.api.matrix.pop();
+    context.api.matrix.pop();
+    context.api.matrix.pop();
   };
 
   /* Attach Transform API */
 
   context.api = Transform({
+    reverse: true,
     matrix: {
       push: (matrix) => {
-        // const { a, b, c, d, tx, ty } = matrix.getValues();
-        //
-        // context.save();
-        // context.transform(a, b, c, d, tx, ty);
+        const currentMatrix = context.api.matrix.get();
+
+        const { a, b, c, d, tx, ty } = currentMatrix.getValues();
+
+        context.uniformMatrix4fv(
+          programInfo.uniformLocations.modelViewMatrix,
+          false,
+          [  a,  b, 0, 0,
+             c,  d, 0, 0,
+             0,  0, 1, 0,
+            tx, ty, 0, 1 ]
+        );
       },
       replace: (matrix) => {
-        // const { a, b, c, d, tx, ty } = matrix.getValues();
-        //
-        // context.save();
-        // context.setTransform(a, b, c, d, tx, ty);
+        const currentMatrix = context.api.matrix.get();
+
+        const { a, b, c, d, tx, ty } = currentMatrix.getValues();
+
+        context.uniformMatrix4fv(
+          programInfo.uniformLocations.modelViewMatrix,
+          false,
+          [  a,  b, 0, 0,
+             c,  d, 0, 0,
+             0,  0, 1, 0,
+            tx, ty, 0, 1 ]
+        );
       },
       pop: () => {
-        // context.restore();
+        const currentMatrix = context.api.matrix.get();
+
+        const { a, b, c, d, tx, ty } = currentMatrix.getValues();
+
+        context.uniformMatrix4fv(
+          programInfo.uniformLocations.modelViewMatrix,
+          false,
+          [  a,  b, 0, 0,
+             c,  d, 0, 0,
+             0,  0, 1, 0,
+            tx, ty, 0, 1 ]
+        );
       },
     },
     width,

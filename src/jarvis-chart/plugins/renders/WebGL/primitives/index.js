@@ -49,6 +49,10 @@ const line = (context, { x0, y0, x1, y1, width, opacity = 1, color, matrix, dash
   if (matrix) {
     context.api.matrix.push(matrix);
   }
+  
+  context.lineWidth(width);
+  context.bufferData(context.ARRAY_BUFFER, new Float32Array([ x0, y0, x1, y1 ]), context.DYNAMIC_DRAW);
+  context.drawArrays(context.LINES, 0, 2);
 
   // context.beginPath();
   // context.moveTo(x0, y0);
@@ -108,6 +112,20 @@ const rectangle = (context, { x, y, width, height, opacity = 1, color, matrix })
   if (matrix) {
     context.api.matrix.push(matrix);
   }
+
+  // const x0 = x;
+  // const y0 = y;
+  // const x1 = x + width;
+  // const y1 = y + height;
+  // 
+  // context.bufferData(context.ARRAY_BUFFER, new Float32Array([ 
+  //   x0, y0, 
+  //   x0, y1,
+  //   x1, y0,    
+  //   x1, y1,
+  // ]), context.DYNAMIC_DRAW);
+  // 
+  // context.drawArrays(context.TRIANGLE_STRIP, 0, 2);
 
   // context.beginPath();
   // context.rect(x, y, width, height);
