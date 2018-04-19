@@ -1,4 +1,13 @@
-# Индикаторы
+# Jarvis Chart
+
+В дальнейшем будет называться `qoden-chart` и распространяться через scoped npm либо исходниками на почту
+
+## Чек-лист индикаторов
+
+Готово:
+
+* Обязательные: 8/10
+* Остальные: 3/81
 
 ### Заявленные как обязательные
 
@@ -6,16 +15,19 @@
 - [x] Volume
 - [x] Stochastic Oscillator
 - [x] bollinger bands
-- [x] Relative Strength Index - https://www.investopedia.com/terms/r/rsi.asp
-- [x] Commodity Channel Index http://enc.fxeuroclub.com/112/
-- [ ] Parabolic SAR https://www.fxteam.ru/forex-library/technical-analyse/parabolic-sar/
+- [x] Relative Strength Index
+- [x] Commodity Channel Index
+- [X] Parabolic SAR
+- [X] MACD
 - [ ] Volume profile https://www.tradingview.com/wiki/Volume_Profile
-- [ ] MACD
 - [ ] MACD Histogram
 
 ### Остальные
 
 - [x] Darvas Box
+- [x] Highest High Value
+- [x] Lowest Low Value
+
 - [ ] Fractal Chaos Bands
 - [ ] High Low Bands
 - [ ] Ichimoku Cloud
@@ -23,18 +35,14 @@
 - [ ] Moving Average Envelope
 - [ ] Prime Number Bands
 - [ ] Stoller Average Range Channel
-
 - [ ] Colored Volume
 - [ ] Volume Rate of Change
 - [ ] High Minus Low
-- [x] Highest High Value
-- [x] Lowest Low Value
 - [ ] Median Price
 - [ ] Price Rate of Change
 - [ ] Standard Deviation
 - [ ] Typical Price
 - [ ] Weighted Close
-
 - [ ] Accumulative Swing Index
 - [ ] Chaikin Money Flow
 - [ ] Comparative Relative Strength
@@ -54,12 +62,10 @@
 - [ ] QStick
 - [ ] RAVI
 - [ ] Random Walk Index
-
 - [ ] Stochastic Momentum Index
 - [ ] Swing Index
 - [ ] Trade Volume Index
 - [ ] Twiggs Money Flow
-
 - [ ] Exponential Moving Average
 - [ ] Simple Moving Average
 - [ ] Time Series Moving Average
@@ -68,7 +74,6 @@
 - [ ] Volatility Index Dynamic Average
 - [ ] Weighted Moving Average
 - [ ] Welles Wilder Smoothing
-
 - [ ] Aroon
 - [ ] Aroon Oscillator
 - [ ] Average True Range
@@ -84,7 +89,6 @@
 - [ ] Elder Ray
 - [ ] Fractal Chaos Oscillator
 - [ ] Klinger Volume Oscillator
-
 - [ ] Momentum Oscillator
 - [ ] Pretty Good Oscillator
 - [ ] Price Oscillator
@@ -98,7 +102,6 @@
 - [ ] Volume Oscillator
 - [ ] Williams %R
 - [ ] Williams Accumulation Distribution
-
 - [ ] Linear Regression Forecast
 - [ ] Linear Regression Intercept
 - [ ] Linear Regression R2
