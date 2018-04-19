@@ -64,6 +64,7 @@ import Rectangle from './plugins/elements/Rectangle';
 
 import RenderCanvas from './plugins/renders/Canvas';
 import RenderSvg from './plugins/renders/Svg';
+import RenderWebGL from './plugins/renders/WebGL';
 
 /* Всякое */
 
@@ -144,6 +145,7 @@ export default (node, options) => {
 
   p.plugin(RenderCanvas, options);
   p.plugin(RenderSvg, options);
+  p.plugin(RenderWebGL, options);
 
   /* Emit mount action */
 
