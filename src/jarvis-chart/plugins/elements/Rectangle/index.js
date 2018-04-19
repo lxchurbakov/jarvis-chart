@@ -24,7 +24,28 @@ const Rectangle = (p) => {
         ) {
           drawRectangle(p, context, rectangle);
         }
-      }
+      },
+      hovers: (id, x, y, meta) => {
+        const { start, end } = meta;
+
+        if (start && end) {
+          const matrix = p.chartWindowsScaleTranslate.matrix.xy(id);
+
+          const [xreal, yreal] = Matrix.apply([x, y], matrix.reverse());
+
+          return (
+            (
+              (xreal > start.x && xreal < end.x) ||
+              (xreal < start.x && xreal > end.x)
+            ) && (
+              (yreal > start.y && yreal < end.y) ||
+              (yreal < start.y && yreal > end.y)
+            )
+          );
+        } else {
+          return false;
+        }
+      },
     });
   });
 
