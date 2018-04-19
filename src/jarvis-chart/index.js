@@ -50,6 +50,7 @@ import Volume from './plugins/indicators/Volume';
 /* Режимы */
 
 import ViewMode from './plugins/modes/ViewMode';
+import EraseMode from './plugins/modes/EraseMode';
 
 /* Элементы */
 
@@ -130,6 +131,7 @@ export default (node, options) => {
   /* Режимы */
 
   p.plugin(ViewMode, options);
+  p.plugin(EraseMode, options);
 
   /* Элементы */
 
