@@ -1,15 +1,8 @@
 # Jarvis Chart
 
-В дальнейшем будет называться `qoden-chart` и распространяться через scoped npm либо исходниками на почту
+Trading Chart with superpowers.
 
-## Чек-лист индикаторов
-
-Готово:
-
-* Обязательные: 8/10
-* Остальные: 3/81
-
-### Заявленные как обязательные
+## Indicators TODO list
 
 - [x] Simple Moving Average
 - [x] Volume
@@ -19,15 +12,9 @@
 - [x] Commodity Channel Index
 - [X] Parabolic SAR
 - [X] MACD
-- [ ] Volume profile https://www.tradingview.com/wiki/Volume_Profile
-- [ ] MACD Histogram
-
-### Остальные
-
 - [x] Darvas Box
 - [x] Highest High Value
 - [x] Lowest Low Value
-
 - [ ] Fractal Chaos Bands
 - [ ] High Low Bands
 - [ ] Ichimoku Cloud
